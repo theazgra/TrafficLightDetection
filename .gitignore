@@ -1,0 +1,9 @@
+#ignore output directory
+cmake-build-debug/
+
+#ignore dlib docs
+docs/
+
+#ignote dlib examples
+examples/
+python_examples/
