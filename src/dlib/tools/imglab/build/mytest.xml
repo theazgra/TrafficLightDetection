@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<?xml-stylesheet type='text/xsl' href='image_metadata_stylesheet.xsl'?>
+<dataset>
+<name>imglab dataset</name>
+<comment>Created by imglab tool.</comment>
+<images>
+  <image file='/home/azgra/dlib-19.7/examples/faces/2007_007763.jpg'>
+  </image>
+  <image file='/home/azgra/dlib-19.7/examples/faces/2008_001009.jpg'>
+  </image>
+  <image file='/home/azgra/dlib-19.7/examples/faces/2008_001322.jpg'>
+  </image>
+  <image file='/home/azgra/dlib-19.7/examples/faces/2008_002079.jpg'>
+  </image>
+  <image file='/home/azgra/dlib-19.7/examples/faces/2008_002470.jpg'>
+  </image>
+  <image file='/home/azgra/dlib-19.7/examples/faces/2008_002506.jpg'>
+  </image>
+  <image file='/home/azgra/dlib-19.7/examples/faces/2008_004176.jpg'>
+  </image>
+  <image file='/home/azgra/dlib-19.7/examples/faces/2008_007676.jpg'>
+  </image>
+  <image file='/home/azgra/dlib-19.7/examples/faces/2009_004587.jpg'>
+  </image>
+  <image file='/home/azgra/dlib-19.7/examples/faces/bald_guys.jpg'>
+  </image>
+  <image file='/home/azgra/dlib-19.7/examples/faces/dogs.jpg'>
+  </image>
+</images>
+</dataset>

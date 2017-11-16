@@ -1,0 +1,1 @@
+/usr/bin/c++    -Wreturn-type -O3 -DNDEBUG   CMakeFiles/3d_point_cloud_ex.dir/3d_point_cloud_ex.cpp.o  -o 3d_point_cloud_ex -rdynamic dlib_build/libdlib.a -lpthread -lnsl -lSM -lICE -lX11 -lXext -lpng -lz -ljpeg -latlas -lcblas -llapack 

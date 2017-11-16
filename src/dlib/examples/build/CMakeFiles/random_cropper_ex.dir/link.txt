@@ -1,0 +1,1 @@
+/usr/bin/c++    -Wreturn-type -O3 -DNDEBUG   CMakeFiles/random_cropper_ex.dir/random_cropper_ex.cpp.o  -o random_cropper_ex -rdynamic dlib_build/libdlib.a -lpthread -lnsl -lSM -lICE -lX11 -lXext -lpng -lz -ljpeg -latlas -lcblas -llapack 
