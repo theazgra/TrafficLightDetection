@@ -1,6 +1,0 @@
-/home/azgra/repos/TrafficLightDetection/src/app/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/azgra/repos/TrafficLightDetection/src/app/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/azgra/repos/TrafficLightDetection/src/app/cmake-build-debug/CMakeFiles/Bachelor.dir
-/home/azgra/repos/TrafficLightDetection/src/app/cmake-build-debug/dlib_build/CMakeFiles/rebuild_cache.dir
-/home/azgra/repos/TrafficLightDetection/src/app/cmake-build-debug/dlib_build/CMakeFiles/edit_cache.dir
-/home/azgra/repos/TrafficLightDetection/src/app/cmake-build-debug/dlib_build/CMakeFiles/dlib.dir
