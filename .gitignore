@@ -7,3 +7,9 @@ docs/
 #ignote dlib examples
 examples/
 python_examples/
+
+#ide settings
+.idea/
+
+#test data
+test_data/

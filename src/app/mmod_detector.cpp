@@ -74,7 +74,6 @@ int mmod_train(int argc, char ** argv, bool train, bool test)
         cout << "Net structure:" << endl;
         cout << net << endl;
 
-        return 0;
 
         // Number of filters in the final network layer must be equal to number of windows.
         net.subnet().layer_details().set_num_filters(options.detector_windows.size());

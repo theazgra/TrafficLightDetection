@@ -1,10 +1,7 @@
-#include <dlib/dnn.h>
-#include <dlib/data_io.h>
-#include <iostream>
 #include "mmod_detector.h"
+#include "car_detector.h"
 
 using namespace std;
-using namespace dlib;
 // ----------------------------------------------------------------------------------------
 
 int main(int argc, char** argv)
@@ -22,9 +19,12 @@ int main(int argc, char** argv)
 
     bool train = argv[2] == "1";
     bool test = argv[3] == "1";
-    cout << "argv3 is :" << argv[3] << endl;
 
-    mmod_train(argc, argv, train, false);
+
+
+    //mmod_train(argc, argv, train, false);
+    car_detection(argv[1], train, test);
+
 
     return 0;
 }
