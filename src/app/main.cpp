@@ -20,7 +20,7 @@ int main(int argc, char** argv)
 
     auto start = std::chrono::high_resolution_clock::now();
 
-    cout << "writing to console" << endl;
+    train(argv[1]);
 
     auto finish = std::chrono::high_resolution_clock::now();
 
