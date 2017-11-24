@@ -1,5 +1,6 @@
 #ignore output directory
 cmake-build-debug/
+build/
 
 #ignore dlib docs
 docs/
