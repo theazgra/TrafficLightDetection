@@ -51,8 +51,9 @@ int ignore_overlapped_boxes(std::vector<mmod_rect> boxes, const test_box_overlap
 
             }
         }
-
     }
+
+    return num_ignored;
 }
 
 void car_detection(char* folderPath, bool train, bool test)

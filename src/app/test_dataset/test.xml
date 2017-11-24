@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<?xml-stylesheet type='text/xsl' href='image_metadata_stylesheet.xsl'?>
+<dataset>
+<name>imglab dataset</name>
+<comment>Created by imglab tool.</comment>
+<images>
+  <image file='test/img_00171.png'>
+  </image>
+  <image file='test/img_00072.png'>
+    <box top='312' left='685' width='17' height='34'>
+      <label>green</label>
+    </box>
+    <box top='413' left='816' width='13' height='28'>
+      <label>green</label>
+    </box>
+    <box top='423' left='555' width='9' height='21'>
+      <label>green</label>
+    </box>
+  </image>
+  <image file='test/img_00354.png'>
+    <box top='349' left='680' width='15' height='23'>
+      <label>green</label>
+    </box>
+    <box top='334' left='523' width='19' height='27'>
+      <label>green</label>
+    </box>
+    <box top='418' left='728' width='9' height='26'>
+      <label>green</label>
+    </box>
+  </image>
+  <image file='test/img_01458.png'>
+    <box top='355' left='626' width='16' height='26'>
+      <label>orange</label>
+    </box>
+    <box top='414' left='682' width='17' height='21'>
+      <label>orange</label>
+    </box>
+  </image>
+  <image file='test/img_01004.png'>
+    <box top='120' left='582' width='28' height='61'>
+      <label>green</label>
+    </box>
+    <box top='314' left='867' width='22' height='55'>
+      <label>green</label>
+    </box>
+    <box top='331' left='316' width='20' height='55'>
+      <label>green</label>
+    </box>
+  </image>
+  <image file='test/img_00108.png'>
+    <box top='235' left='692' width='30' height='50'>
+      <label>green</label>
+    </box>
+    <box top='382' left='878' width='20' height='44'>
+      <label>green</label>
+    </box>
+    <box top='384' left='504' width='15' height='44'>
+      <label>green</label>
+    </box>
+  </image>
+  <image file='test/img_00725.png'>
+    <box top='289' left='466' width='14' height='40'>
+      <label>green</label>
+    </box>
+    <box top='289' left='686' width='14' height='32'>
+      <label>green</label>
+    </box>
+    <box top='381' left='755' width='20' height='42'>
+      <label>green</label>
+    </box>
+  </image>
+  <image file='test/img_00242.png'>
+    <box top='377' left='596' width='15' height='22'>
+      <label>red</label>
+    </box>
+    <box top='376' left='662' width='15' height='20'>
+      <label>green</label>
+    </box>
+  </image>
+  <image file='test/img_00304.png'>
+    <box top='213' left='653' width='38' height='56'>
+      <label>green</label>
+    </box>
+    <box top='366' left='807' width='13' height='41'>
+      <label>green</label>
+    </box>
+    <box top='369' left='793' width='12' height='39'>
+      <label>red</label>
+    </box>
+    <box top='224' left='480' width='33' height='56'>
+      <label>red</label>
+    </box>
+  </image>
+  <image file='test/img_00233.png'>
+    <box top='318' left='581' width='10' height='20'>
+      <label>orange</label>
+    </box>
+    <box top='327' left='771' width='15' height='25'>
+      <label>orange</label>
+    </box>
+  </image>
+  <image file='test/img_01272.png'>
+    <box top='338' left='639' width='13' height='28'>
+      <label>orange</label>
+    </box>
+    <box top='415' left='684' width='10' height='23'>
+      <label>orange</label>
+    </box>
+  </image>
+  <image file='test/img_00521.png'>
+    <box top='405' left='628' width='11' height='14'>
+      <label>red</label>
+    </box>
+  </image>
+</images>
+</dataset>
