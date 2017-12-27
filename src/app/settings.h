@@ -37,30 +37,36 @@ const int MIN_TARGET_SIZE = 20;
  */
 const unsigned int CHIP_SIZE = 200;
 
+const unsigned int CHIP_WIDTH = 400;
+const unsigned int CHIP_HEIGHT = 1000;
+
 /**
  * Angle used for random rotation.
  */
 const unsigned int RANDOM_ROTATION_ANGLE = 2;
 
 /**
- * Minimal object size in relation to CHIP_SIZE
+ * Minimal object sizes
  */
-const float MIN_OBJECT_SIZE = 0.4f;
+///short side
+const long MIN_OBJECT_SIZE_S = 13;
+///long side
+const long MIN_OBJECT_SIZE_L = 25;
 
 /**
  * Maximal object size in relation to CHIP_SIZE
  */
-const float MAX_OBJECT_SIZE = 0.9f;
+const float MAX_OBJECT_SIZE = 0.5f;
 
 /**
  * True if random flip images.
  */
-const bool RANDOM_FLIP = true;
+const bool RANDOM_FLIP = false;
 
 /**
  * Batch size for one step.
  */
-const unsigned int BATCH_SIZE = 30;
+const unsigned int BATCH_SIZE = 100;
 
 ///*******</CROPPER SETTINGS>*******
 

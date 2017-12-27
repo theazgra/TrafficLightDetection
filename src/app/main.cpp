@@ -3,7 +3,6 @@
 #include "cropper_test.h"
 //#include "traffic_light_train.h"
 
-using namespace std;
 // ----------------------------------------------------------------------------------------
 
 int main(int argc, char** argv)
