@@ -365,6 +365,12 @@ namespace dlib
 // ----------------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------------
 
+    enum class use_image_pyramid : uint8_t
+    {
+        no,
+        yes
+    };
+
     struct mmod_options
     {
         /*!
@@ -420,6 +426,10 @@ namespace dlib
         // don't care if the detector gets them or not.  
         test_box_overlap overlaps_ignore;
 
+        // Usually the detector would be scale-invariant, and used with an image pyramid.
+        // However, sometimes scale-invariance may not be desired.
+        use_image_pyramid assume_image_pyramid = use_image_pyramid::yes;
+
         mmod_options (
             const std::vector<std::vector<mmod_rect>>& boxes,
             const unsigned long target_size,      
@@ -431,6 +441,9 @@ namespace dlib
                 - 0 < min_target_size <= target_size
                 - 0.5 < min_detector_window_overlap_iou < 1
             ensures
+                - use_image_pyramid_ == use_image_pyramid::yes
+                - This function should be used when scale-invariance is desired, and
+                  input_rgb_image_pyramid is therefore used as the input layer.
                 - This function tries to automatically set the MMOD options to reasonable
                   values, assuming you have a training dataset of boxes.size() images, where
                   the ith image contains objects boxes[i] you want to detect.
@@ -458,6 +471,33 @@ namespace dlib
                   emphasized that the detector isn't going to be able to detect objects
                   smaller than any of the detector windows.  So consider that when setting
                   these sizes.
+                - This function will also set the overlaps_nms tester to the most
+                  restrictive tester that doesn't reject anything in boxes.
+        !*/
+
+        mmod_options (
+            use_image_pyramid use_image_pyramid,
+            const std::vector<std::vector<mmod_rect>>& boxes,
+            const double min_detector_window_overlap_iou = 0.75
+        );
+        /*!
+            requires
+                - use_image_pyramid == use_image_pyramid::no
+                - 0.5 < min_detector_window_overlap_iou < 1
+            ensures
+                - This function should be used when scale-invariance is not desired, and
+                  there is no intention to apply an image pyramid.
+                - This function tries to automatically set the MMOD options to reasonable
+                  values, assuming you have a training dataset of boxes.size() images, where
+                  the ith image contains objects boxes[i] you want to detect.
+                - The most important thing this function does is decide what detector
+                  windows should be used.  This is done by finding a set of detector
+                  windows that are sized such that:
+                    - When slid over an image, each box in boxes will have an
+                      intersection-over-union with one of the detector windows of at least
+                      min_detector_window_overlap_iou.  That is, we will make sure that
+                      each box in boxes could potentially be detected by one of the
+                      detector windows.
                 - This function will also set the overlaps_nms tester to the most
                   restrictive tester that doesn't reject anything in boxes.
         !*/
@@ -690,6 +730,194 @@ namespace dlib
 
     template <typename SUBNET>
     using loss_metric = add_loss_layer<loss_metric_, SUBNET>;
+
+// ----------------------------------------------------------------------------------------
+
+    class loss_ranking_
+    {
+        /*!
+            WHAT THIS OBJECT REPRESENTS
+                This object implements the loss layer interface defined above by
+                EXAMPLE_LOSS_LAYER_.  In particular, it implements the pairwise ranking
+                loss described in the paper:
+                    Optimizing Search Engines using Clickthrough Data by Thorsten Joachims
+
+                This is the same loss function used by the dlib::svm_rank_trainer object.
+                Therefore, it is generally appropriate when you have a two class problem
+                and you want to learn a function that ranks one class before the other.  
+
+                So for example, suppose you have two classes of data.  Objects of type A
+                and objects of type B.  Moreover, suppose that you want to sort the objects
+                so that A objects always come before B objects.  This loss will help you
+                learn a function that assigns a real number to each object such that A
+                objects get a larger number assigned to them than B objects.  This lets you
+                then sort the objects according to the output of the neural network and
+                obtain the desired result of having A objects come before B objects.
+
+                The training labels should be positive values for objects you want to get
+                high scores and negative for objects that should get small scores.  So
+                relative to our A/B example, you would give A objects labels of +1 and B
+                objects labels of -1.  This should cause the learned network to give A
+                objects large positive values and B objects negative values.
+
+
+                Finally, the specific loss function is:
+                    For all pairs of positive vs negative training examples A_i and B_j respectively:
+                      sum_ij:  max(0, B_i - A_j + margin_ij)
+                where margin_ij = the label for A_j minus the label for B_i.  If you
+                always use +1 and -1 labels then the margin is always 2.  However, this
+                formulation allows you to give certain training samples different weight by
+                adjusting the training labels appropriately.  
+        !*/
+
+    public:
+
+        typedef float training_label_type;
+        typedef float output_label_type;
+
+        template <
+            typename SUB_TYPE,
+            typename label_iterator
+            >
+        void to_label (
+            const tensor& input_tensor,
+            const SUB_TYPE& sub,
+            label_iterator iter
+        ) const;
+        /*!
+            This function has the same interface as EXAMPLE_LOSS_LAYER_::to_label() except
+            it has the additional calling requirements that:
+                - sub.get_output().nr() == 1
+                - sub.get_output().nc() == 1
+                - sub.get_output().k() == 1
+                - sub.get_output().num_samples() == input_tensor.num_samples()
+                - sub.sample_expansion_factor() == 1
+            and the output label is the predicted ranking score.
+        !*/
+
+        template <
+            typename const_label_iterator,
+            typename SUBNET
+            >
+        double compute_loss_value_and_gradient (
+            const tensor& input_tensor,
+            const_label_iterator truth,
+            SUBNET& sub
+        ) const;
+        /*!
+            This function has the same interface as EXAMPLE_LOSS_LAYER_::compute_loss_value_and_gradient()
+            except it has the additional calling requirements that:
+                - sub.get_output().nr() == 1
+                - sub.get_output().nc() == 1
+                - sub.get_output().k() == 1
+                - sub.get_output().num_samples() == input_tensor.num_samples()
+                - sub.sample_expansion_factor() == 1
+        !*/
+
+    };
+
+    template <typename SUBNET>
+    using loss_ranking = add_loss_layer<loss_ranking_, SUBNET>;
+
+// ----------------------------------------------------------------------------------------
+
+    class loss_epsilon_insensitive_
+    {
+        /*!
+            WHAT THIS OBJECT REPRESENTS
+                This object implements the loss layer interface defined above by
+                EXAMPLE_LOSS_LAYER_.  In particular, it implements the epsilon insensitive
+                loss, which is appropriate for regression problems.  In particular, this
+                loss function is;
+                    loss(y1,y2) = abs(y1-y2)<epsilon ? 0 : abs(y1-y2)-epsilon
+
+                Therefore, the loss is basically just the abs() loss except there is a dead
+                zone around zero, causing the loss to not care about mistakes of magnitude
+                smaller than epsilon.
+        !*/
+    public:
+
+        typedef float training_label_type;
+        typedef float output_label_type;
+
+        loss_epsilon_insensitive_(
+        ) = default;
+        /*!
+            ensures
+                - #get_epsilon() == 1
+        !*/
+
+        loss_epsilon_insensitive_(
+            double eps
+        );
+        /*!
+            requires
+                - eps >= 0
+            ensures
+                - #get_epsilon() == eps
+        !*/
+
+        double get_epsilon (
+        ) const;
+        /*!
+            ensures
+                - returns the epsilon value used in the loss function.  Mistakes in the
+                  regressor smaller than get_epsilon() are ignored by the loss function.
+        !*/
+
+        void set_epsilon(
+            double eps
+        );
+        /*!
+            requires
+                - eps >= 0
+            ensures
+                - #get_epsilon() == eps
+        !*/
+
+        template <
+            typename SUB_TYPE,
+            typename label_iterator
+            >
+        void to_label (
+            const tensor& input_tensor,
+            const SUB_TYPE& sub,
+            label_iterator iter
+        ) const;
+        /*!
+            This function has the same interface as EXAMPLE_LOSS_LAYER_::to_label() except
+            it has the additional calling requirements that:
+                - sub.get_output().nr() == 1
+                - sub.get_output().nc() == 1
+                - sub.get_output().k() == 1
+                - sub.get_output().num_samples() == input_tensor.num_samples()
+                - sub.sample_expansion_factor() == 1
+            and the output label is the predicted continuous variable.
+        !*/
+
+        template <
+            typename const_label_iterator,
+            typename SUBNET
+            >
+        double compute_loss_value_and_gradient (
+            const tensor& input_tensor,
+            const_label_iterator truth,
+            SUBNET& sub
+        ) const;
+        /*!
+            This function has the same interface as EXAMPLE_LOSS_LAYER_::compute_loss_value_and_gradient()
+            except it has the additional calling requirements that:
+                - sub.get_output().nr() == 1
+                - sub.get_output().nc() == 1
+                - sub.get_output().k() == 1
+                - sub.get_output().num_samples() == input_tensor.num_samples()
+                - sub.sample_expansion_factor() == 1
+        !*/
+
+    };
+
+    template <typename SUBNET>
+    using loss_epsilon_insensitive = add_loss_layer<loss_epsilon_insensitive_, SUBNET>;
 
 // ----------------------------------------------------------------------------------------
 
@@ -1021,6 +1249,68 @@ namespace dlib
 
     template <typename SUBNET>
     using loss_mean_squared_per_pixel = add_loss_layer<loss_mean_squared_per_pixel_, SUBNET>;
+
+// ----------------------------------------------------------------------------------------
+
+    class loss_dot_ 
+    {
+        /*!
+            WHAT THIS OBJECT REPRESENTS
+                This object implements the loss layer interface defined above by
+                EXAMPLE_LOSS_LAYER_.  In particular, selecting this loss means you want
+                maximize the dot product between the output of a network and a set of
+                training vectors.  The loss is therefore the negative dot product.  To be
+                very specific, if X is the output vector of a network and Y is a training
+                label (also a vector), then the loss for this training sample is: -dot(X,Y)
+        !*/
+
+    public:
+
+        typedef matrix<float,0,1> training_label_type;
+        typedef matrix<float,0,1> output_label_type;
+
+        template <
+            typename SUB_TYPE,
+            typename label_iterator
+            >
+        void to_label (
+            const tensor& input_tensor,
+            const SUB_TYPE& sub,
+            label_iterator iter
+        ) const;
+        /*!
+            This function has the same interface as EXAMPLE_LOSS_LAYER_::to_label() except
+            it has the additional calling requirements that:
+                - sub.get_output().num_samples() == input_tensor.num_samples()
+                - sub.sample_expansion_factor() == 1
+            and the output labels are simply the final network outputs stuffed into a
+            vector.  To be very specific, the output is the following for all valid i:
+                *(iter+i) == trans(rowm(mat(sub.get_output()),i))
+        !*/
+
+
+        template <
+            typename const_label_iterator,
+            typename SUBNET
+            >
+        double compute_loss_value_and_gradient (
+            const tensor& input_tensor,
+            const_label_iterator truth, 
+            SUBNET& sub
+        ) const;
+        /*!
+            This function has the same interface as EXAMPLE_LOSS_LAYER_::compute_loss_value_and_gradient()
+            except it has the additional calling requirements that:
+                - sub.get_output().num_samples() == input_tensor.num_samples()
+                - sub.sample_expansion_factor() == 1
+                - Let NETWORK_OUTPUT_DIMS == sub.get_output().size()/sub.get_output().num_samples()
+                - for all idx such that 0 <= idx < sub.get_output().num_samples():
+                    - NETWORK_OUTPUT_DIMS == (*(truth + idx)).size()
+        !*/
+    };
+
+    template <typename SUBNET>
+    using loss_dot = add_loss_layer<loss_dot_, SUBNET>;
 
 // ----------------------------------------------------------------------------------------
 

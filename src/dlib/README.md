@@ -21,6 +21,11 @@ mkdir build; cd build; cmake .. -DUSE_AVX_INSTRUCTIONS=1; cmake --build .
 
 Doing so will make some things run faster.
 
+Finally, Visual Studio users should usually do everything in 64bit mode.  By default Visual Studio is 32bit, both in its outputs and its own execution, so you have to explicitly tell it to use 64bits.  Since it's not the 1990s anymore you probably want to use 64bits.  Do that with a cmake invocation like this:
+```bash
+cmake .. -G "Visual Studio 14 2015 Win64" -T host=x64 
+```
+
 ## Compiling your own C++ programs that use dlib
 
 The examples folder has a [CMake tutorial](https://github.com/davisking/dlib/blob/master/examples/CMakeLists.txt) that tells you what to do.  There are also additional instructions on the [dlib web site](http://dlib.net/compile.html).
@@ -64,6 +69,3 @@ This library is licensed under the Boost Software License, which can be found in
 
 This research is based in part upon work supported by the Office of the Director of National Intelligence (ODNI), Intelligence Advanced Research Projects Activity (IARPA) under contract number 2014-14071600010. The views and conclusions contained herein are those of the authors and should not be interpreted as necessarily representing the official policies or endorsements, either expressed or implied, of ODNI, IARPA, or the U.S. Government.
 
-Version: 19.7
-Date:    Sun Sep 17 08:28:45 EDT 2017
-Mercurial Revision ID: 6ee27f33d90c

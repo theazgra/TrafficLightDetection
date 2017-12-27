@@ -20,6 +20,8 @@ void bind_shape_predictors();
 void bind_correlation_tracker();
 void bind_face_recognition();
 void bind_cnn_face_detection();
+void bind_global_optimization();
+void bind_numpy_returns();
 
 #ifndef DLIB_NO_GUI_SUPPORT
 void bind_gui();
@@ -53,6 +55,8 @@ BOOST_PYTHON_MODULE(dlib)
     bind_correlation_tracker();
     bind_face_recognition();
     bind_cnn_face_detection();
+    bind_global_optimization();
+    bind_numpy_returns();
 #ifndef DLIB_NO_GUI_SUPPORT
     bind_gui();
 #endif

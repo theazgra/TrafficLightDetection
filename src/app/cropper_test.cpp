@@ -19,9 +19,9 @@ void test_cropper(char* fileArg)
 
         random_cropper cropper;
 
-        cropper.set_chip_dims(CHIP_SIZE, CHIP_SIZE);
-        cropper.set_min_object_size(MIN_SIZE);
-        cropper.set_max_object_size(MAX_SIZE);
+        cropper.set_chip_dims(800, 500);
+        cropper.set_min_object_size(0.05);
+        cropper.set_max_object_size(0.9);
         cropper.set_randomly_flip(RANDOM_FLIP);
         cropper.set_max_rotation_degrees(RANDOM_ROTATION_ANGLE);
 
@@ -49,9 +49,9 @@ void test_cropper(char* fileArg)
                 // crop_boxes.  Moreover, objects that are not well contained within
                 // the crop are also set to ignore.
                 if (b.ignore)
-                    win.add_overlay(b.rect, rgb_pixel(255,255,0)); // draw ignored boxes as orange
+                    win.add_overlay(b.rect, rgb_pixel(255,0,0)); // draw ignored boxes as orange
                 else
-                    win.add_overlay(b.rect, rgb_pixel(255,0,0));   // draw other boxes as red
+                    win.add_overlay(b.rect, rgb_pixel(0,255,0));   // draw other boxes as red
             }
             cout << "Hit enter to view the next random crop.";
             cin.get();
