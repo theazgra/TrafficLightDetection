@@ -1,5 +1,6 @@
 #include "cropper_test.h"
 #include "traffic_light_train.h"
+#include "traffic_light_test.h"
 #include "utils.h"
 
 // ----------------------------------------------------------------------------------------
@@ -82,6 +83,22 @@ int main(int argc, char** argv)
         cout << "Training finished after: "; display_time(timeElapsed.count());
     }
 
+    if (arguments[1] == "--test")
+    {
+        string netFile = arguments[2];
+        string testFile  = arguments[3];
+        if (netFile.length() == 0 || !file_exists(netFile))
+        {
+            cout << "Net file does not exist!" << endl;
+            return 1;
+        }
+        if (testFile.length() == 0 || !file_exists(testFile))
+        {
+            cout << "Xml file containing testing data annotations does not exist!" << endl;
+            return 1;
+        }
+        test(netFile, testFile);
+    }
 
     return 0;
 }

@@ -5,7 +5,6 @@
 #include <dlib/data_io.h>
 #include <dlib/gui_widgets.h>
 #include "settings.h"
-#include <string>
 
 void train(const std::string trainFile);
 void train(const std::string trainFile, const std::string testFile);
