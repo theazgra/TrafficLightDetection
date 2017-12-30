@@ -2,7 +2,10 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+#include <vector>
+
 //#define MULTIPLE_GPUS
+const std::vector<int> CUDA_DEVICES = {0, 1, 2, 3};
 
 ///*******<BOUNDING BOX SETTINGS>*******
 
@@ -10,7 +13,7 @@
  * Minimal size of bounding box.
  * If both width and height are smaller than this constant, bounding box is ignored.
  */
-const unsigned int MIN_BOUNDING_BOX_SIZE = 35;
+const unsigned int MIN_BOUNDING_BOX_SIZE = 15;
 
 /**
  * If intersect of two boxes over their union is larget than this value, they are overlapping.
@@ -27,16 +30,16 @@ const float COVERED_THRESHOLD = 0.9;
  * in that case the shortest side will be set to MIN_TARGET_SIZE and the longest side will be set automatically to preserve
  * aspect ratio of the detector window.
  */
-const int TARGET_SIZE = 60;
-const int MIN_TARGET_SIZE = 20;
+///How much pixels must the boundix box have in its longer side to still be recognizible
+const int MIN_LONG_SIDE_SIZE = 25;
+///How much pixels must the boundix box have in its shorter side to still be recognizible
+const int MIN_SMALL_SIDE_SIZE = 13;
 ///*******</BOUNDING BOX SETTINGS>*******
 
 ///*******<CROPPER SETTINGS>*******
 /**
  * Size of cropped images.
  */
-const unsigned int CHIP_SIZE = 200;
-
 const unsigned int CHIP_WIDTH = 400;
 const unsigned int CHIP_HEIGHT = 1000;
 
@@ -86,12 +89,13 @@ const unsigned int SYNC_INTERVAL = 5;
 const float SGD_WEIGHT_DECAY = 0.0005;
 const float SGD_MOMENTUM = 0.9;
 const float LEARNING_RATE = 0.1;
-const float LEARNING_RATE_LIMIT = 0.0001; //1e-4
+const float TARGET_LEARNING_RATE = 0.0001; //1e-4
 /**
  * When testing or training will not progress in given iteration count, learning rate will be lowered.
- * This settings means that training progress is not that important as testing progress. Once we observe TEST_ITERATION_WITHOUT_PROGRESS_THRESHOLD
- * testing iterations without progress we will lower the learning rate.
  */
+///Settings for first method pure learning without testing
+const int TRAIN_ITERATION_WITHOUT_PROGRESS_THRESHOLD = 1000;
+///Settings for second method where every 30 iteration we will the test network
 const int ITERATION_WITHOUT_PROGRESS_THRESHOLD = 50000;
 const int TEST_ITERATION_WITHOUT_PROGRESS_THRESHOLD = 1000;
 

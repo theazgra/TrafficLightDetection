@@ -5,7 +5,10 @@
 #include <dlib/data_io.h>
 #include <dlib/gui_widgets.h>
 #include "settings.h"
+#include <string>
 
-void train(const char* folder);
+void train(const std::string trainFile);
+void train(const std::string trainFile, const std::string testFile);
+int overlapped_boxes_count(std::vector<dlib::mmod_rect> boxes, const dlib::test_box_overlap& overlaps);
 
 #endif //BACHELOR_TRAFFIC_LIGHT_TRAIN_H

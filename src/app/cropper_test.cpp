@@ -1,21 +1,16 @@
 #include "cropper_test.h"
 
-#include <iostream>
-#include <dlib/data_io.h>
-#include <dlib/gui_widgets.h>
-#include <dlib/image_transforms.h>
-
 using namespace std;
 using namespace dlib;
 
-void test_cropper(char* fileArg)
+void test_cropper(const std::string xmlFile, bool display)
 {
     try
     {
         std::vector<matrix<rgb_pixel>>      imgs;
         std::vector<std::vector<mmod_rect>> boxes;
 
-        load_image_dataset(imgs, boxes, fileArg);
+        load_image_dataset(imgs, boxes, xmlFile);
 
         random_cropper cropper;
 
@@ -26,56 +21,56 @@ void test_cropper(char* fileArg)
 
         cropper.set_background_crops_fraction(0.25);
 
+        //defaulted to false
         cropper.set_randomly_flip(RANDOM_FLIP);
         cropper.set_max_rotation_degrees(RANDOM_ROTATION_ANGLE);
 
         std::vector<matrix<rgb_pixel>>      batchImgs;
         std::vector<std::vector<mmod_rect>> batchBoxes;
 
-        cout << "number of images " << imgs.size() << endl;
-        cout << "number of boxes " << boxes.size() << endl;
-        cout << "batch size " << BATCH_SIZE << endl;
+        cout << "Number of images: " << imgs.size() << endl;
+        cout << "Number of labeling boxes: " << boxes.size() << endl;
+        cout << "Batch size is set to: " << BATCH_SIZE << endl << endl;
 
         cropper(BATCH_SIZE, imgs, boxes, batchImgs, batchBoxes);
 
-        cout << "batch img size: " << batchImgs.size() << endl;
 
-        image_window win;
-
-        int num_ignored = 0;
-        int num_correct = 0;
+        int numIgnored = 0;
+        int numCorrect = 0;
         for (size_t i = 0; i < batchImgs.size(); ++i)
         {
             for (auto b : batchBoxes[i])
             {
                 if (b.ignore)
-                    ++num_ignored;
+                    ++numIgnored;
                 else
-                    ++num_correct;
+                    ++numCorrect;
             }
         }
 
-        cout << "Number of correct boxes: " << num_correct << endl;
-        cout << "Number of ignored boxes: " << num_ignored << endl;
+        cout << "Number of correct boxes: " << numCorrect << endl;
+        cout << "Number of ignored boxes: " << numIgnored << endl;
+        float percentCorrect = ((float)numCorrect / (float)(numCorrect + numIgnored)) * 100.0f;
+        cout << "Percent of boxes correct: " << percentCorrect << endl;
 
-        for (size_t i = 0; i < batchImgs.size(); ++i)
+        if (display)
         {
-            cout << "Img num: " << i << endl;
-            win.clear_overlay();
-            win.set_image(batchImgs[i]);
-            for (auto b : batchBoxes[i])
+            image_window win;
+            for (size_t i = 0; i < batchImgs.size(); ++i)
             {
-                // Note that mmod_rect has an ignore field.  If an object was labeled
-                // ignore in boxes then it will still be labeled as ignore in
-                // crop_boxes.  Moreover, objects that are not well contained within
-                // the crop are also set to ignore.
-                if (b.ignore)
-                    win.add_overlay(b.rect, rgb_pixel(255,0,0)); // draw ignored boxes as red
-                else
-                    win.add_overlay(b.rect, rgb_pixel(0,255,0));   // draw other boxes as green
+                cout << "Img #: " << i << endl;
+                win.clear_overlay();
+                win.set_image(batchImgs[i]);
+                for (auto b : batchBoxes[i])
+                {
+                    if (b.ignore)
+                        win.add_overlay(b.rect, rgb_pixel(255,0,0));
+                    else
+                        win.add_overlay(b.rect, rgb_pixel(0,255,0));
+                }
+                cout << "Hit enter to view the next random crop.";
+                cin.get();
             }
-            cout << "Hit enter to view the next random crop.";
-            cin.get();
         }
     }
     catch (std::exception& e)
@@ -83,5 +78,4 @@ void test_cropper(char* fileArg)
         cout << "Exception occured!" << endl;
         cout << e.what() << endl;
     }
-
 }
