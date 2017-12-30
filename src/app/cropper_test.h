@@ -3,8 +3,7 @@
 
 #include "settings.h"
 #include <iostream>
-#include <dlib/data_io.h>
-#include <dlib/gui_widgets.h>
+#include "traffic_light_train.h"
 #include <dlib/image_transforms.h>
 
 

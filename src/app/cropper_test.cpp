@@ -37,8 +37,11 @@ void test_cropper(const std::string xmlFile, bool display)
 
         int numIgnored = 0;
         int numCorrect = 0;
+	int numOverlapped = 0;
+	
         for (size_t i = 0; i < batchImgs.size(); ++i)
         {
+	    numOverlapped += overlapped_boxes_count(batchBoxes[i], test_box_overlap(OVERLAP_IOU, COVERED_THRESHOLD));
             for (auto b : batchBoxes[i])
             {
                 if (b.ignore)
@@ -48,6 +51,7 @@ void test_cropper(const std::string xmlFile, bool display)
             }
         }
 
+	cout << "Number of overlapping boxes: " << numOverlapped << endl;
         cout << "Number of correct boxes: " << numCorrect << endl;
         cout << "Number of ignored boxes: " << numIgnored << endl;
         float percentCorrect = ((float)numCorrect / (float)(numCorrect + numIgnored)) * 100.0f;

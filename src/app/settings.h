@@ -5,7 +5,7 @@
 #include <vector>
 
 #define MULTIPLE_GPUS
-const std::vector<int> CUDA_DEVICES = {0, 1, 2, 3};
+const std::vector<int> CUDA_DEVICES = {0, 1}; //{0, 1, 2, 3};
 
 ///*******<BOUNDING BOX SETTINGS>*******
 
@@ -13,7 +13,7 @@ const std::vector<int> CUDA_DEVICES = {0, 1, 2, 3};
  * Minimal size of bounding box.
  * If both width and height are smaller than this constant, bounding box is ignored.
  */
-const unsigned int MIN_BOUNDING_BOX_SIZE = 15;
+const unsigned int MIN_BOUNDING_BOX_SIZE = 20;
 
 /**
  * If intersect of two boxes over their union is larget than this value, they are overlapping.
@@ -31,9 +31,10 @@ const float COVERED_THRESHOLD = 0.9;
  * aspect ratio of the detector window.
  */
 ///How much pixels must the boundix box have in its longer side to still be recognizible
-const int MIN_LONG_SIDE_SIZE = 25;
+//original 25x13, testing new values
+const int DW_LONG_SIDE = 25;
 ///How much pixels must the boundix box have in its shorter side to still be recognizible
-const int MIN_SMALL_SIDE_SIZE = 13;
+const int DW_SHORT_SIDE = 13;
 ///*******</BOUNDING BOX SETTINGS>*******
 
 ///*******<CROPPER SETTINGS>*******
@@ -69,7 +70,7 @@ const bool RANDOM_FLIP = false;
 /**
  * Batch size for one step.
  */
-const unsigned int BATCH_SIZE = 100;
+const unsigned int BATCH_SIZE = 30;
 
 ///*******</CROPPER SETTINGS>*******
 
@@ -94,7 +95,7 @@ const float TARGET_LEARNING_RATE = 0.0001; //1e-4
  * When testing or training will not progress in given iteration count, learning rate will be lowered.
  */
 ///Settings for first method pure learning without testing
-const int TRAIN_ITERATION_WITHOUT_PROGRESS_THRESHOLD = 1000;
+const int TRAIN_ITERATION_WITHOUT_PROGRESS_THRESHOLD = 500;
 ///Settings for second method where every 30 iteration we will the test network
 const int ITERATION_WITHOUT_PROGRESS_THRESHOLD = 50000;
 const int TEST_ITERATION_WITHOUT_PROGRESS_THRESHOLD = 1000;

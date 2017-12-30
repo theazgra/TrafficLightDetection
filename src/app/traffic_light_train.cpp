@@ -90,7 +90,8 @@ void train(const std::string trainFile)
 
         cout << "Number of training images: " << trainingImages.size() << endl;
         //mmod_options options(trainingBoxes, MIN_LONG_SIDE_SIZE, MIN_SMALL_SIDE_SIZE);
-        mmod_options options(trainingBoxes, MIN_OBJECT_SIZE_L, MIN_OBJECT_SIZE_S);
+        //mmod_options options(trainingBoxes, MIN_OBJECT_SIZE_L, MIN_OBJECT_SIZE_S);
+	mmod_options options(trainingBoxes, DW_LONG_SIDE, DW_SHORT_SIDE);
         options.overlaps_ignore = test_box_overlap(OVERLAP_IOU, COVERED_THRESHOLD);
 
         cout << "Number of detector windows " << options.detector_windows.size() << endl;
@@ -124,6 +125,7 @@ void train(const std::string trainFile)
         //defaulted to false
         cropper.set_randomly_flip(RANDOM_FLIP);
         cropper.set_max_rotation_degrees(RANDOM_ROTATION_ANGLE);
+	cropper.set_translate_amount(0);
 
         dlib::rand rnd;
 
