@@ -4,7 +4,7 @@
 
 #include <vector>
 
-//#define MULTIPLE_GPUS
+#define MULTIPLE_GPUS
 const std::vector<int> CUDA_DEVICES = {0, 1, 2, 3};
 
 ///*******<BOUNDING BOX SETTINGS>*******
