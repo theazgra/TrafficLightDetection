@@ -7,6 +7,7 @@
 #include <dlib/gui_widgets.h>
 #include <dlib/image_processing.h>
 #include <dlib/data_io.h>
+#include "settings.h"
 
 void test(std::string netFile, std::string testFile);
 

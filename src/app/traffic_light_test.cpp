@@ -19,8 +19,22 @@ template <typename SUBNET> using rcon3 = relu<bn_con<con3<32, SUBNET>>>;
 
 using net_type = loss_mmod<con<1, 6, 6, 1, 1, rcon3<rcon3<rcon3<downsampler<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>;
 
+void test2(std::string netFile, std::string testFile)
+{
+//    cout << "training results: " << test_object_detection_function(net, images_train, boxes_train, test_box_overlap(), 0, options.overlaps_ignore);
+	net_type net;
+	deserialize(netFile) >> net;
+	std::vector<matrix<rgb_pixel>> imgs;
+	std::vector<std::vector<mmod_rect>> boxes;
+	load_image_dataset(imgs, boxes, testFile);
+	mmod_options options(boxes, DW_LONG_SIDE, DW_SHORT_SIDE);
+	cout << "Training results: " << test_object_detection_function(net, imgs, boxes, test_box_overlap(), 0, options.overlaps_ignore) << endl;
+}
+
 void test(std::string netFile, std::string testFile)
 {
+    test2(netFile, testFile);
+    return;
     net_type net;
     shape_predictor shapePredictor;
     deserialize(netFile) >> net >> shapePredictor;

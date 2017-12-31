@@ -151,6 +151,7 @@ void train(const std::string trainFile)
         serialize("TL_net.dat") << net;
 
         cout << "Training is completed." << endl;
+        cout << "Training results: " << test_object_detection_function(net, trainingImages, trainingBoxes, test_box_overlap(), 0, options.overlaps_ignore) << endl;
 
     }
     catch (std::exception& e)
