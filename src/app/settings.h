@@ -70,7 +70,7 @@ const bool RANDOM_FLIP = false;
 /**
  * Batch size for one step.
  */
-const unsigned int BATCH_SIZE = 30;
+const unsigned int BATCH_SIZE = 10;//30;
 
 ///*******</CROPPER SETTINGS>*******
 
