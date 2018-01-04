@@ -98,6 +98,8 @@ int main(int argc, char** argv)
     {
         string netFile = arguments[2];
         string testFile  = arguments[3];
+        string displayArg = arguments[4];
+
         if (netFile.length() == 0 || !file::file_exists(netFile))
         {
             cout << "Net file does not exist!" << endl;
@@ -108,7 +110,8 @@ int main(int argc, char** argv)
             cout << "Xml file containing testing data annotations does not exist!" << endl;
             return 1;
         }
-        test(netFile, testFile);
+        bool display = displayArg == "--display";
+        test(netFile, testFile, display);
     }
 
     return 0;

@@ -3,57 +3,46 @@
 using namespace std;
 using namespace dlib;
 
-
-void test2(std::string netFile, std::string testFile)
+void test(std::string netFile, std::string testFile, bool display)
 {
-//    cout << "training results: " << test_object_detection_function(net, images_train, boxes_train, test_box_overlap(), 0, options.overlaps_ignore);
-	net_type net;
-	deserialize(netFile) >> net;
-	std::vector<matrix<rgb_pixel>> imgs;
-	std::vector<std::vector<mmod_rect>> boxes;
-	load_image_dataset(imgs, boxes, testFile);
-	mmod_options options(boxes, DW_LONG_SIDE, DW_SHORT_SIDE);
-	cout << "Training results: " << test_object_detection_function(net, imgs, boxes, test_box_overlap(), 0, options.overlaps_ignore) << endl;
-}
-
-void test(std::string netFile, std::string testFile)
-{
-    test2(netFile, testFile);
-    return;
     net_type net;
-    shape_predictor shapePredictor;
-    deserialize(netFile) >> net >> shapePredictor;
+    deserialize(netFile) >> net;
 
-    //boxes does not really have to be loaded, but can we load dataset without boxes?
-    std::vector<matrix<rgb_pixel>>      testImages;
-    std::vector<std::vector<mmod_rect>> testBoxes;
+    std::vector<matrix<rgb_pixel>> testImages;
+    std::vector<std::vector<mmod_rect>> boxes;
+    load_image_dataset(testImages, boxes, testFile);
+    mmod_options options(boxes, DW_LONG_SIDE, DW_SHORT_SIDE);
 
-    load_image_dataset(testImages, testBoxes, testFile);
+    dlib::matrix<double, 1, 3> testResult = test_object_detection_function(net, testImages, boxes, test_box_overlap(), 0, options.overlaps_ignore);
 
-    image_window window;
-    for (matrix<rgb_pixel>& img : testImages)
+    cout << "Precision:                 " << testResult(0) << endl;
+    cout << "1 means no false alarms, 0 means all hits were false alarms." << endl << endl;
+
+    cout << "Fraction of found objects: " << testResult(0) << endl;
+    cout << "1 means all targets were found, 0 mean that detector did not locate any object." << endl << endl;
+
+    cout << "Average precision:         " << testResult(0) << endl;
+    cout << "Overall quality of the detector.." << endl << endl;
+
+    if (display)
     {
-        window.clear_overlay();
-        window.set_image(img);
-        for(auto&& mmodRect : net(img))
+        image_window window;
+
+        for (matrix<rgb_pixel>& image : testImages)
         {
-            full_object_detection fd = shapePredictor(img, mmodRect);
-            rectangle rect;
-            for (unsigned int i; i << fd.num_parts(); ++i)
-                rect += fd.part(i);
+            window.clear_overlay();
 
-            if (mmodRect.label == "r") //red
-                window.add_overlay(rect, rgb_pixel(255, 0, 0), mmodRect.label);
-            else if (mmodRect.label == "y") //yellow
-                window.add_overlay(rect, rgb_pixel(255, 255, 0), mmodRect.label);
-            else if (mmodRect.label == "g") //green
-                window.add_overlay(rect, rgb_pixel(0, 255, 0), mmodRect.label);
+            pyramid_up(image);
+            std::vector<mmod_rect> detections = net(image);
+            window.set_image(image);
 
+            for (mmod_rect d : detections)
+            {
+                window.add_overlay(d);
+            }
 
+            cout << "Press enter for next image." << endl;
+            cin.get();
         }
-
-        cout << "Hit enter to view the next test image.";
-        cin.get();
     }
-
 }
