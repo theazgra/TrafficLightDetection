@@ -45,13 +45,16 @@ int main(int argc, char** argv)
         }
 
         int method = 1;
-        try {
-            method = stoi(arguments[4].substr(2,1), nullptr, 0);
-        }
-        catch (std::exception)
+        if (arguments[4].length() != 0)
         {
-            cout << "Wrong method number. Defaulting to 1." << endl;
-            method = 1;
+            try {
+                method = stoi(arguments[4].substr(2,1), nullptr, 0);
+            }
+            catch (std::exception)
+            {
+                cout << "Wrong method number. Defaulting to 1." << endl;
+                method = 1;
+            }
         }
 
 
