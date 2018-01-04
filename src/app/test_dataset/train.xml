@@ -11,6 +11,9 @@
     <box top='534' left='1200' width='32' height='72'>
       <label>g</label>
     </box>
+    <box top='540' left='204' width='30' height='55'>
+      <label>g</label>
+    </box>
   </image>
   <image file='train/img_00010.png'>
     <box top='255' left='793' width='51' height='87'>
