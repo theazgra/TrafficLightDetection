@@ -16,13 +16,13 @@ void test(std::string netFile, std::string testFile, bool display)
     dlib::matrix<double, 1, 3> testResult = test_object_detection_function(net, testImages, boxes, test_box_overlap(), 0, options.overlaps_ignore);
 
     cout << "Precision:                 " << testResult(0) << endl;
-    cout << "1 means no false alarms, 0 means all hits were false alarms." << endl << endl;
+    cout << "Fraction of found objects: " << testResult(1) << endl;
+    cout << "Average precision:         " << testResult(2) << endl << endl;
 
-    cout << "Fraction of found objects: " << testResult(0) << endl;
-    cout << "1 means all targets were found, 0 mean that detector did not locate any object." << endl << endl;
+    cout << "Precision: 1 means no false alarms, 0 means all hits were false alarms." << endl;
+    cout << "Fraction: 	1 means all targets were found, 0 mean that detector did not locate any object." << endl;
+    cout << "Average: 	Overall quality of the detector.." << endl;
 
-    cout << "Average precision:         " << testResult(0) << endl;
-    cout << "Overall quality of the detector.." << endl << endl;
 
     if (display)
     {
@@ -32,13 +32,18 @@ void test(std::string netFile, std::string testFile, bool display)
         {
             window.clear_overlay();
 
-            pyramid_up(image);
+//            pyramid_up(image); image is not sampled down, is it???
             std::vector<mmod_rect> detections = net(image);
             window.set_image(image);
 
             for (mmod_rect d : detections)
             {
-                window.add_overlay(d);
+		if (d.label == "r")
+			window.add_overlay(d.rect, rgb_pixel(255, 0, 0), "red");
+		else if (d.label == "y")
+			window.add_overlay(d.rect, rgb_pixel(255, 255, 0), "yellow");
+		else if (d.label == "g")
+			window.add_overlay(d.rect, rgb_pixel(0, 255, 0), "green");
             }
 
             cout << "Press enter for next image." << endl;

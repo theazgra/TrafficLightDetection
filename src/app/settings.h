@@ -6,8 +6,8 @@
 #include <vector>
 
 
-//#define MULTIPLE_GPUS
-const std::vector<int> CUDA_DEVICES = {0, 1}; //{0, 1, 2, 3};
+#define MULTIPLE_GPUS
+const std::vector<int> CUDA_DEVICES = {0, 1, 2, 3}; //{0, 1, 2, 3};
 
 ///*******<BOUNDING BOX SETTINGS>*******
 
@@ -72,7 +72,7 @@ const bool RANDOM_FLIP = false;
 /**
  * Batch size for one step.
  */
-const unsigned int BATCH_SIZE = 10;//30;
+const unsigned int BATCH_SIZE = 20;//30;
 
 ///*******</CROPPER SETTINGS>*******
 
