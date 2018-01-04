@@ -1,7 +1,7 @@
 #ifndef BACHELOR_TRAFFIC_LIGHT_TRAIN_H
 #define BACHELOR_TRAFFIC_LIGHT_TRAIN_H
 
-#include "settings.h"
+#include "net_definition.h"
 
 void train(const std::string trainFile);
 void train(const std::string trainFile, const std::string testFile);
