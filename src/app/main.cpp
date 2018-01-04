@@ -6,7 +6,15 @@
 // ----------------------------------------------------------------------------------------
 using namespace std;
 
-bool file_exists(std::string file);
+namespace file
+{
+	bool file_exists(std::string file)
+	{	
+    		std::ifstream infile(file);
+	    	return infile.good();
+	}
+}
+
 int main(int argc, char** argv)
 {
     const uint ARGCOUNT = 5;
@@ -38,7 +46,7 @@ int main(int argc, char** argv)
         string trainFile = arguments[2];
         string testFile  = arguments[3];
 
-        if (trainFile.length() == 0 || !file_exists(trainFile))
+        if (trainFile.length() == 0 || !file::file_exists(trainFile))
         {
             cout << "Xml file containing training data annotations does not exist!" << endl;
             return 1;
@@ -61,7 +69,7 @@ int main(int argc, char** argv)
 
         if (method == 2)
         {
-            if (testFile.length() == 0 || !file_exists(testFile))
+            if (testFile.length() == 0 || !file::file_exists(testFile))
             {
                 cout << "Xml file containing testing data annotations does not exist!" << endl;
                 cout << "This file is needed for this learning method!" << endl;
@@ -90,12 +98,12 @@ int main(int argc, char** argv)
     {
         string netFile = arguments[2];
         string testFile  = arguments[3];
-        if (netFile.length() == 0 || !file_exists(netFile))
+        if (netFile.length() == 0 || !file::file_exists(netFile))
         {
             cout << "Net file does not exist!" << endl;
             return 1;
         }
-        if (testFile.length() == 0 || !file_exists(testFile))
+        if (testFile.length() == 0 || !file::file_exists(testFile))
         {
             cout << "Xml file containing testing data annotations does not exist!" << endl;
             return 1;
@@ -106,8 +114,3 @@ int main(int argc, char** argv)
     return 0;
 }
 
-bool file_exists(std::string file)
-{
-    std::ifstream infile(file);
-    return infile.good();
-}

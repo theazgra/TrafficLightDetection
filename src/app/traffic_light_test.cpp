@@ -3,21 +3,6 @@
 using namespace std;
 using namespace dlib;
 
-///testing net from "http://dlib.net/dnn_mmod_train_find_cars_ex.cpp.html"
-
-//5x5 conv layer that does 2x downsampling
-template <long num_filters, typename SUBNET> using con5d = con<num_filters, 5, 5, 2, 2, SUBNET>;
-
-//3x3 conv layer that does not do any downsampling
-template <long num_filters, typename SUBNET> using con3 = con<num_filters, 3, 3, 1, 1, SUBNET>;
-
-//downsampler 3x con5d => 8x downsampling; relu and batch normalization in standard way?
-template <typename SUBNET> using downsampler = relu<bn_con<con5d<32, relu<bn_con<con5d<32, relu<bn_con<con5d<32, SUBNET>>>>>>>>>;
-
-//3x3 conv layer with batch normalization and relu.
-template <typename SUBNET> using rcon3 = relu<bn_con<con3<32, SUBNET>>>;
-
-using net_type = loss_mmod<con<1, 6, 6, 1, 1, rcon3<rcon3<rcon3<downsampler<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>;
 
 void test2(std::string netFile, std::string testFile)
 {
