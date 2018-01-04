@@ -2,10 +2,9 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+#include "net_definition.h"
 #include <vector>
-#include <dlib/dnn.h>
-#include <dlib/data_io.h>
-#include <dlib/gui_widgets.h>
+
 
 #define MULTIPLE_GPUS
 const std::vector<int> CUDA_DEVICES = {0, 1}; //{0, 1, 2, 3};

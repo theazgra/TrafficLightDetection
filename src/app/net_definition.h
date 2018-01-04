@@ -1,7 +1,9 @@
 #ifndef NET_DEFINITION_H
 #define NET_DEFINITION_H
 
-#include "settings.h"
+#include <dlib/dnn.h>
+#include <dlib/data_io.h>
+#include <dlib/gui_widgets.h>
 
 using namespace dlib;
 
