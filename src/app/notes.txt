@@ -1,3 +1,8 @@
 0.598806, with that really small dataset of just 2 images, 2GPUs, batch size of 10 images
 0.457151 with 4 gpus and batch 20
 training with just one label instead of two did not help, next improve train.xml dataset and try again
+
+changing chip size to 200x500 did not help, but improved speed of learning by probably 20 times, lets try even less resolution
+100x250 0.66 training result worse than 200x500, going back up
+200x500 is sweet spot
+going up with batch size overfitted the model, but that is probably because we have this really small test dataset

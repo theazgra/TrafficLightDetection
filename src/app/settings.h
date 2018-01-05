@@ -43,8 +43,8 @@ const int DW_SHORT_SIDE = 13;
 /**
  * Size of cropped images.
  */
-const unsigned int CHIP_WIDTH = 400;
-const unsigned int CHIP_HEIGHT = 1000;
+const unsigned int CHIP_WIDTH = 200;//200;//400;
+const unsigned int CHIP_HEIGHT = 500;//500;//1000;
 
 /**
  * Angle used for random rotation.
@@ -68,9 +68,13 @@ const float MAX_OBJECT_SIZE = 0.5f;
  * True if random flip images.
  */
 const bool RANDOM_FLIP = false;
-
+/**
+* Defines fraction of crops with negative targets
+*/
+const float BACKGROUND_CROP_FRACTION = 0.25f;
 /**
  * Batch size for one step.
+ * If we set high batch size with small dataset we will overfit our network model.
  */
 const unsigned int BATCH_SIZE = 20;//30;
 

@@ -120,7 +120,7 @@ void train(const std::string trainFile)
         cropper.set_min_object_size(MIN_OBJECT_SIZE_L, MIN_OBJECT_SIZE_S);
         cropper.set_max_object_size(MAX_OBJECT_SIZE);
 
-        cropper.set_background_crops_fraction(0.25);
+        cropper.set_background_crops_fraction(BACKGROUND_CROP_FRACTION);
 
         //defaulted to false
         cropper.set_randomly_flip(RANDOM_FLIP);
