@@ -29,11 +29,12 @@ void display_help()
     cout << "--h or --help to display this help" << endl << endl;
 
     cout << "--c or --cropper to check cropper settings" << endl;
-    cout << "  Additional --display argument could be specified to display bouding boxes" << endl << endl;
+    cout << "  Additional --display argument could be specified to display bouding boxes" << endl;
+    cout << "  Use --display-only to go straigt to visual testing." << endl << endl;
 
     cout << "--train with next argument specifiing XML file containing data annotations" << endl;
-    cout << "  if you want to train with train-test method specify xml file for testing data and --2 argument for method" << endl;
-    cout << "  eg. --traing ../test/train.xml {../test/test.xml} {--{1|2}}" << endl << endl;
+    cout << "  if you want to train with train-test method specify xml file for testing data and change method in xml settings to 2" << endl;
+    cout << "  eg. --traing ../test/train.xml {../test/test.xml}" << endl << endl;
 
     cout << "--test with next argument specifiing net dat file and XML file annotating test data" << endl;
     cout << "  eg. --test TL_net.dat ../test/test.xml" << endl << endl;

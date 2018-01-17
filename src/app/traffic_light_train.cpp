@@ -1,5 +1,5 @@
-
 #include "traffic_light_train.h"
+
 using namespace std;
 using namespace dlib;
 
@@ -135,7 +135,7 @@ void train(const std::string trainFile)
         std::vector<std::vector<mmod_rect>> miniBatchLabels;
 
 
-        while (trainer.get_learning_rate() >= TARGET_LEARNING_RATE)
+        while (trainer.get_learning_rate() >= MINIMAL_LEARNING_RATE)
         {
             cropper(BATCH_SIZE, trainingImages, trainingBoxes, miniBatchImages, miniBatchLabels);
 
@@ -258,7 +258,7 @@ void train(const std::string trainFile, const std::string testFile)
 
         int cnt = 1;
 
-        while (trainer.get_learning_rate() >= TARGET_LEARNING_RATE)
+        while (trainer.get_learning_rate() >= MINIMAL_LEARNING_RATE)
         {
             if (cnt % 30 != 0 || testingImages.size() == 0)
             {

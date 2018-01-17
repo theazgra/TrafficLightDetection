@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<app_settings>
+    <cuda_devices>
+        <device>0</device>
+        <device>1</device>
+        <device>2</device>
+        <device>3</device>
+    </cuda_devices>
+    <cropper>
+	<batch_size>20</batch_size>
+	<!--200x500 is default chip size for now -->
+        <chip_width>400</chip_width>
+        <chip_height>900</chip_height>
+        <random_rotation_angle>2</random_rotation_angle>
+        <min_object_size_smaller_side>13</min_object_size_smaller_side>
+        <min_object_size_larger_side>25</min_object_size_larger_side>
+        <max_object_size>0.8</max_object_size>
+        <background_crop_fraction>0.25</background_crop_fraction>
+    </cropper>
+    <mmod_settings>
+        <min_bounding_box_size>20</min_bounding_box_size>
+        <overlap_iou>0.5</overlap_iou>
+        <covered_threshold>0.9</covered_threshold>
+        <detector_window>
+            <long_side>25</long_side>
+            <short_side>13</short_side>
+        </detector_window>
+    </mmod_settings>
+    <sync_settings>
+        <sync_interval>5</sync_interval>
+    </sync_settings>
+    <net_settings>
+        <sgd_weight_decay>0.0005</sgd_weight_decay>
+        <sgd_momentum>0.9</sgd_momentum>
+        <learning_rate>0.1</learning_rate>
+        <minimal_learning_rate>0.0001</minimal_learning_rate>
+        <training>
+            <!--Avaible methods are 1 or 2, 2 for testing while training-->
+            <method>1</method>
+            <!--TRAIN_ITERATION_WITHOUT_PROGRESS_THRESHOLD-->
+            <tr_iter_wo_prog_threshold>500</tr_iter_wo_prog_threshold>
+            <!--TEST_ITERATION_WITHOUT_PROGRESS_THRESHOLD used for second method-->
+            <test_iter_wo_prog_threshold>1000</test_iter_wo_prog_threshold>
+            <!--TRAIN_ITERATION_WITHOUT_PROGRESS_THRESHOLD used for second method-->
+            <iter_wo_prog_threshold>50000</iter_wo_prog_threshold>
+        </training>
+    </net_settings>
+</app_settings>

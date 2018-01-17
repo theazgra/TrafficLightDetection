@@ -1,438 +1,434 @@
 <?xml version='1.0' encoding='ISO-8859-1'?>
 <?xml-stylesheet type='text/xsl' href='image_metadata_stylesheet.xsl'?>
 <dataset>
-<name>imglab dataset</name>
-<comment>Created by imglab tool.</comment>
-<images>
-  <image file='train_new/IMG_20180111_084421.jpg'>
-    <box top='390' left='726' width='181' height='367'>
-      <label>r</label>
-    </box>
-    <box top='1416' left='1845' width='136' height='373'>
-      <label>r</label>
-    </box>
-    <box top='1413' left='2004' width='145' height='373'>
-      <label>r</label>
-    </box>
-    <box top='1383' left='2775' width='169' height='370'>
-      <label>y</label>
-    </box>
-    <box top='1380' left='2949' width='145' height='289' ignore='1'>
-      <label>y</label>
-    </box>
-  </image>
-  <image file='train_new/IMG_20180111_084423.jpg'>
-    <box top='369' left='729' width='190' height='373'>
-      <label>r</label>
-    </box>
-    <box top='1410' left='1847' width='144' height='360'>
-      <label>r</label>
-    </box>
-    <box top='1408' left='2010' width='150' height='353'>
-      <label>r</label>
-    </box>
-    <box top='1365' left='2807' width='133' height='371'>
-      <label>g</label>
-    </box>
-    <box top='1376' left='2952' width='157' height='273' ignore='1'>
-      <label>p</label>
-    </box>
-    <box top='2000' left='2424' width='185' height='131' ignore='1'>
-      <label>p</label>
-    </box>
-  </image>
-  <image file='train_new/IMG_20180111_093713.jpg'>
-    <box top='1278' left='1976' width='79' height='145'>
-      <label>r</label>
-    </box>
-    <box top='1718' left='2592' width='57' height='125'>
-      <label>r</label>
-    </box>
-    <box top='1721' left='2654' width='41' height='49' ignore='1'>
-      <label>r</label>
-    </box>
-    <box top='1867' left='2958' width='24' height='41' ignore='1'>
-      <label>r</label>
-    </box>
-    <box top='1852' left='3075' width='25' height='32' ignore='1'>
-      <label>r</label>
-    </box>
-    <box top='1753' left='1374' width='38' height='113'>
-      <label>r</label>
-    </box>
-  </image>
-  <image file='train_new/IMG_20180111_093719.jpg'>
-    <box top='1267' left='1904' width='65' height='139'>
-      <label>r</label>
-    </box>
-    <box top='1704' left='2512' width='50' height='118'>
-      <label>r</label>
-    </box>
-    <box top='1737' left='1283' width='51' height='118'>
-      <label>r</label>
-    </box>
-    <box top='1856' left='2873' width='20' height='34' ignore='1'>
-      <label>r</label>
-    </box>
-    <box top='1835' left='2985' width='24' height='43' ignore='1'>
-      <label>r</label>
-    </box>
-    <box top='1707' left='2567' width='44' height='46' ignore='1'>
-      <label>y</label>
-    </box>
-  </image>
-  <image file='train_new/IMG_20180111_093733.jpg'>
-    <box top='1122' left='2141' width='74' height='148'>
-      <label>y</label>
-    </box>
-    <box top='1629' left='1528' width='34' height='118'>
-      <label>y</label>
-    </box>
-    <box top='1574' left='2797' width='59' height='123'>
-      <label>y</label>
-    </box>
-    <box top='1564' left='2858' width='51' height='59' ignore='1'>
-      <label>y</label>
-    </box>
-    <box top='1704' left='3286' width='27' height='44' ignore='1'>
-      <label>y</label>
-    </box>
-    <box top='1724' left='3157' width='26' height='43' ignore='1'>
-      <label>y</label>
-    </box>
-  </image>
-  <image file='train_new/IMG_20180111_093735.jpg'>
-    <box top='1641' left='1513' width='40' height='119'>
-      <label>g</label>
-    </box>
-    <box top='1134' left='2122' width='77' height='144'>
-      <label>g</label>
-    </box>
-    <box top='1582' left='2787' width='56' height='119'>
-      <label>g</label>
-    </box>
-    <box top='1729' left='3142' width='25' height='35' ignore='1'>
-      <label>g</label>
-    </box>
-    <box top='1710' left='3272' width='28' height='39' ignore='1'>
-      <label>g</label>
-    </box>
-  </image>
-  <image file='train_new/IMG_20180111_093740.jpg'>
-    <box top='1524' left='2874' width='78' height='160'>
-      <label>g</label>
-    </box>
-    <box top='930' left='2034' width='100' height='191'>
-      <label>g</label>
-    </box>
-    <box top='1562' left='1208' width='68' height='158'>
-      <label>g</label>
-    </box>
-    <box top='1765' left='3056' width='18' height='35' ignore='1'>
-      <label>g</label>
-    </box>
-    <box top='1736' left='3230' width='21' height='42' ignore='1'>
-      <label>g</label>
-    </box>
-  </image>
-  <image file='train_new/IMG_20180111_093741.jpg'>
-    <box top='522' left='2067' width='139' height='289'>
-      <label>g</label>
-    </box>
-    <box top='1389' left='3273' width='121' height='241'>
-      <label>g</label>
-    </box>
-    <box top='1416' left='801' width='112' height='253'>
-      <label>g</label>
-    </box>
-    <box top='1816' left='3078' width='29' height='44' ignore='1'>
-      <label>g</label>
-    </box>
-    <box top='1783' left='3314' width='36' height='35' ignore='1'>
-      <label>g</label>
-    </box>
-  </image>
-  <image file='train_new/IMG_20180111_094007.jpg'>
-    <box top='1766' left='2336' width='36' height='93'>
-      <label>g</label>
-    </box>
-    <box top='1431' left='1864' width='56' height='108'>
-      <label>g</label>
-    </box>
-    <box top='1867' left='1642' width='11' height='22'>
-      <label>r</label>
-    </box>
-    <box top='1869' left='1738' width='14' height='24'>
-      <label>r</label>
-    </box>
-    <box top='1876' left='2069' width='14' height='35'>
-      <label>g</label>
-    </box>
-  </image>
-  <image file='train_new/IMG_20180111_094009.jpg'>
-    <box top='892' left='1764' width='111' height='239'>
-      <label>g</label>
-    </box>
-    <box top='1618' left='2784' width='95' height='201'>
-      <label>g</label>
-    </box>
-    <box top='1968' left='1583' width='13' height='28'>
-      <label>r</label>
-    </box>
-    <box top='1973' left='1697' width='11' height='26'>
-      <label>r</label>
-    </box>
-    <box top='1962' left='2082' width='29' height='53'>
-      <label>g</label>
-    </box>
-  </image>
-  <image file='train_new/IMG_20180111_094019.jpg'>
-    <box top='1327' left='1475' width='50' height='91'>
-      <label>r</label>
-    </box>
-    <box top='1349' left='1867' width='47' height='95'>
-      <label>r</label>
-    </box>
-    <box top='1615' left='433' width='38' height='84'>
-      <label>r</label>
-    </box>
-    <box top='1685' left='2367' width='29' height='78'>
-      <label>r</label>
-    </box>
-    <box top='1685' left='2333' width='30' height='78'>
-      <label>r</label>
-    </box>
-    <box top='1736' left='2519' width='25' height='41' ignore='1'>
-      <label>r</label>
-    </box>
-    <box top='1767' left='2402' width='20' height='38' ignore='1'>
-      <label>r</label>
-    </box>
-    <box top='1742' left='728' width='41' height='41' ignore='1'>
-      <label>r</label>
-    </box>
-  </image>
-  <image file='train_new/IMG_20180111_094021.jpg'>
-    <box top='1258' left='1364' width='61' height='125'>
-      <label>r</label>
-    </box>
-    <box top='1286' left='1846' width='67' height='117'>
-      <label>r</label>
-    </box>
-    <box top='1706' left='2439' width='37' height='95'>
-      <label>r</label>
-    </box>
-    <box top='1706' left='2480' width='39' height='94'>
-      <label>r</label>
-    </box>
-    <box top='1777' left='2634' width='31' height='48' ignore='1'>
-      <label>r</label>
-    </box>
-    <box top='1782' left='576' width='35' height='75' ignore='1'>
-      <label>r</label>
-    </box>
-  </image>
-  <image file='train_new/IMG_20180111_094059.jpg'>
-    <box top='1664' left='2740' width='77' height='183'>
-      <label>r</label>
-    </box>
-    <box top='1662' left='2832' width='59' height='184'>
-      <label>g</label>
-    </box>
-    <box top='1855' left='2945' width='45' height='76' ignore='1'>
-      <label>g</label>
-    </box>
-    <box top='1931' left='2685' width='33' height='57' ignore='1'>
-      <label>g</label>
-    </box>
-    <box top='944' left='1698' width='111' height='203'>
-      <label>g</label>
-    </box>
-    <box top='902' left='840' width='121' height='209'>
-      <label>r</label>
-    </box>
-  </image>
-  <image file='train_new/IMG_20180111_094217.jpg'>
-    <box top='1407' left='1438' width='50' height='93'>
-      <label>r</label>
-    </box>
-    <box top='1420' left='2131' width='48' height='100'>
-      <label>r</label>
-    </box>
-    <box top='1720' left='2227' width='30' height='70'>
-      <label>r</label>
-    </box>
-  </image>
-  <image file='train_new/IMG_20180111_094221.jpg'>
-    <box top='874' left='2502' width='169' height='309'>
-      <label>r</label>
-    </box>
-    <box top='1842' left='2852' width='109' height='197'>
-      <label>r</label>
-    </box>
-    <box top='780' left='308' width='157' height='321'>
-      <label>r</label>
-    </box>
-  </image>
-  <image file='train_new/IMG_20180111_094505.jpg'>
-    <box top='1394' left='2208' width='53' height='109'>
-      <label>g</label>
-    </box>
-    <box top='1877' left='2701' width='43' height='95'>
-      <label>g</label>
-    </box>
-    <box top='1474' left='780' width='57' height='117'>
-      <label>g</label>
-    </box>
-  </image>
-  <image file='train_new/IMG_20180111_094510.jpg'>
-    <box top='1607' left='2419' width='68' height='172'>
-      <label>g</label>
-    </box>
-    <box top='750' left='1568' width='103' height='199'>
-      <label>g</label>
-    </box>
-  </image>
-  <image file='train_new/IMG_20180111_094532.jpg'>
-    <box top='1186' left='2110' width='75' height='142'>
-      <label>g</label>
-    </box>
-    <box top='1622' left='2295' width='45' height='122'>
-      <label>g</label>
-    </box>
-    <box top='1755' left='2518' width='79' height='73' ignore='1'>
-      <label>g</label>
-    </box>
-  </image>
-  <image file='train_new/IMG_20180111_094621.jpg'>
-    <box top='1027' left='2045' width='112' height='197'>
-      <label>y</label>
-    </box>
-    <box top='1589' left='2557' width='56' height='142'>
-      <label>y</label>
-    </box>
-    <box top='1813' left='2746' width='23' height='37' ignore='1'>
-      <label>y</label>
-    </box>
-  </image>
-  <image file='train_new/IMG_20180111_094622.jpg'>
-    <box top='991' left='2006' width='119' height='199'>
-      <label>y</label>
-    </box>
-    <box top='1556' left='2511' width='61' height='143'>
-      <label>y</label>
-    </box>
-    <box top='1776' left='2704' width='25' height='46' ignore='1'>
-      <label>y</label>
-    </box>
-  </image>
-  <image file='train_new/IMG_20180111_094622_1.jpg'>
-    <box top='948' left='1992' width='113' height='209'>
-      <label>g</label>
-    </box>
-    <box top='1524' left='2488' width='77' height='145'>
-      <label>g</label>
-    </box>
-    <box top='1744' left='2688' width='17' height='41' ignore='1'>
-      <label>g</label>
-    </box>
-  </image>
-  <image file='train_new/IMG_20180111_094642.jpg'>
-    <box top='1363' left='1782' width='64' height='109'>
-      <label>r</label>
-    </box>
-    <box top='1310' left='2009' width='62' height='118'>
-      <label>r</label>
-    </box>
-    <box top='1765' left='1529' width='31' height='79'>
-      <label>r</label>
-    </box>
-    <box top='1769' left='2644' width='29' height='79'>
-      <label>r</label>
-    </box>
-    <box top='1875' left='2579' width='29' height='30' ignore='1'>
-      <label>r</label>
-    </box>
-  </image>
-  <image file='train_new/IMG_20180111_094651.jpg'>
-    <box top='1185' left='1569' width='124' height='205'>
-      <label>r</label>
-    </box>
-    <box top='1042' left='2006' width='125' height='218'>
-      <label>r</label>
-    </box>
-    <box top='1925' left='3208' width='84' height='157'>
-      <label>r</label>
-    </box>
-  </image>
-  <image file='train_new/IMG_20180111_094707.jpg'>
-    <box top='1113' left='1689' width='122' height='195'>
-      <label>r</label>
-    </box>
-    <box top='947' left='2121' width='129' height='218'>
-      <label>y</label>
-    </box>
-    <box top='1810' left='3366' width='81' height='153'>
-      <label>y</label>
-    </box>
-  </image>
-  <image file='train_new/IMG_20180111_094709.jpg'>
-    <box top='1122' left='1708' width='115' height='193'>
-      <label>r</label>
-    </box>
-    <box top='957' left='2144' width='121' height='218'>
-      <label>g</label>
-    </box>
-    <box top='1098' left='2271' width='61' height='69' ignore='1'>
-      <label>g</label>
-    </box>
-    <box top='1817' left='3384' width='82' height='162'>
-      <label>g</label>
-    </box>
-    <box top='1923' left='3477' width='62' height='56' ignore='1'>
-      <label>g</label>
-    </box>
-  </image>
-  <image file='train_new/IMG_20180111_094721.jpg'>
-    <box top='1312' left='1444' width='333' height='553'>
-      <label>r</label>
-    </box>
-    <box top='824' left='2680' width='365' height='641'>
-      <label>g</label>
-    </box>
-    <box top='1232' left='3056' width='173' height='209' ignore='1'>
-      <label>g</label>
-    </box>
-  </image>
-  <image file='train_new/IMG_20180111_094730.jpg'>
-    <box top='480' left='2636' width='257' height='449'>
-      <label>g</label>
-    </box>
-    <box top='772' left='2896' width='125' height='141' ignore='1'>
-      <label>g</label>
-    </box>
-    <box top='840' left='1752' width='253' height='397'>
-      <label>y</label>
-    </box>
-  </image>
-  <image file='train_new/IMG_20180111_094731.jpg'>
-    <box top='876' left='1736' width='237' height='385'>
-      <label>g</label>
-    </box>
-    <box top='504' left='2620' width='253' height='449'>
-      <label>g</label>
-    </box>
-    <box top='784' left='2876' width='121' height='137' ignore='1'>
-      <label>g</label>
-    </box>
-  </image>
-  <image file='train_new/IMG_20180111_094829.jpg'>
-    <box top='1117' left='2022' width='68' height='155'>
-      <label>y</label>
-    </box>
-    <box top='1733' left='2457' width='63' height='130'>
-      <label>y</label>
-    </box>
-  </image>
-</images>
+	<name>imglab dataset</name>
+	<comment>Created by imglab tool.</comment>
+	<images>
+	  <image file='train_new/IMG_20180111_084421.jpg'>
+	    <box top='390' left='726' width='181' height='367'>
+	      <label>r</label>
+	    </box>
+	    <box top='1416' left='1845' width='136' height='373'>
+	      <label>r</label>
+	    </box>
+	    <box top='1413' left='2004' width='145' height='373'>
+	      <label>r</label>
+	    </box>
+	    <box top='1383' left='2775' width='169' height='370'>
+	      <label>y</label>
+	    </box>
+	    <box top='1380' left='2949' width='145' height='289' ignore='1'>
+	      <label>y</label>
+	    </box>
+	  </image>
+	  <image file='train_new/IMG_20180111_084423.jpg'>
+	    <box top='369' left='729' width='190' height='373'>
+	      <label>r</label>
+	    </box>
+	    <box top='1410' left='1847' width='144' height='360'>
+	      <label>r</label>
+	    </box>
+	    <box top='1408' left='2010' width='150' height='353'>
+	      <label>r</label>
+	    </box>
+	    <box top='1365' left='2807' width='133' height='371'>
+	      <label>g</label>
+	    </box>
+	    <box top='1376' left='2952' width='157' height='273' ignore='1'/>
+	    <box top='2016' left='2430' width='166' height='111' ignore='1'/>
+	  </image>
+	  <image file='train_new/IMG_20180111_093713.jpg'>
+	    <box top='1278' left='1976' width='79' height='145'>
+	      <label>r</label>
+	    </box>
+	    <box top='1718' left='2592' width='57' height='125'>
+	      <label>r</label>
+	    </box>
+	    <box top='1721' left='2654' width='41' height='49' ignore='1'>
+	      <label>r</label>
+	    </box>
+	    <box top='1867' left='2958' width='24' height='41' ignore='1'>
+	      <label>r</label>
+	    </box>
+	    <box top='1852' left='3075' width='25' height='32' ignore='1'>
+	      <label>r</label>
+	    </box>
+	    <box top='1753' left='1374' width='38' height='113'>
+	      <label>r</label>
+	    </box>
+	  </image>
+	  <image file='train_new/IMG_20180111_093719.jpg'>
+	    <box top='1267' left='1904' width='65' height='139'>
+	      <label>r</label>
+	    </box>
+	    <box top='1704' left='2512' width='50' height='118'>
+	      <label>r</label>
+	    </box>
+	    <box top='1737' left='1283' width='51' height='118'>
+	      <label>r</label>
+	    </box>
+	    <box top='1856' left='2873' width='20' height='34' ignore='1'>
+	      <label>r</label>
+	    </box>
+	    <box top='1835' left='2985' width='24' height='43' ignore='1'>
+	      <label>r</label>
+	    </box>
+	    <box top='1707' left='2567' width='44' height='46' ignore='1'>
+	      <label>y</label>
+	    </box>
+	  </image>
+	  <image file='train_new/IMG_20180111_093733.jpg'>
+	    <box top='1122' left='2141' width='74' height='148'>
+	      <label>y</label>
+	    </box>
+	    <box top='1629' left='1528' width='34' height='118'>
+	      <label>y</label>
+	    </box>
+	    <box top='1574' left='2797' width='59' height='123'>
+	      <label>y</label>
+	    </box>
+	    <box top='1564' left='2858' width='51' height='59' ignore='1'>
+	      <label>y</label>
+	    </box>
+	    <box top='1704' left='3286' width='27' height='44' ignore='1'>
+	      <label>y</label>
+	    </box>
+	    <box top='1724' left='3157' width='26' height='43' ignore='1'>
+	      <label>y</label>
+	    </box>
+	  </image>
+	  <image file='train_new/IMG_20180111_093735.jpg'>
+	    <box top='1641' left='1513' width='40' height='119'>
+	      <label>g</label>
+	    </box>
+	    <box top='1134' left='2122' width='77' height='144'>
+	      <label>g</label>
+	    </box>
+	    <box top='1582' left='2787' width='56' height='119'>
+	      <label>g</label>
+	    </box>
+	    <box top='1729' left='3142' width='25' height='35' ignore='1'>
+	      <label>g</label>
+	    </box>
+	    <box top='1710' left='3272' width='28' height='39' ignore='1'>
+	      <label>g</label>
+	    </box>
+	  </image>
+	  <image file='train_new/IMG_20180111_093740.jpg'>
+	    <box top='1524' left='2874' width='78' height='160'>
+	      <label>g</label>
+	    </box>
+	    <box top='930' left='2034' width='100' height='191'>
+	      <label>g</label>
+	    </box>
+	    <box top='1562' left='1208' width='68' height='158'>
+	      <label>g</label>
+	    </box>
+	    <box top='1765' left='3056' width='18' height='35' ignore='1'>
+	      <label>g</label>
+	    </box>
+	    <box top='1736' left='3230' width='21' height='42' ignore='1'>
+	      <label>g</label>
+	    </box>
+	  </image>
+	  <image file='train_new/IMG_20180111_093741.jpg'>
+	    <box top='522' left='2067' width='139' height='289'>
+	      <label>g</label>
+	    </box>
+	    <box top='1389' left='3273' width='121' height='241'>
+	      <label>g</label>
+	    </box>
+	    <box top='1416' left='801' width='112' height='253'>
+	      <label>g</label>
+	    </box>
+	    <box top='1816' left='3078' width='29' height='44' ignore='1'>
+	      <label>g</label>
+	    </box>
+	    <box top='1783' left='3314' width='36' height='35' ignore='1'>
+	      <label>g</label>
+	    </box>
+	  </image>
+	  <image file='train_new/IMG_20180111_094007.jpg'>
+	    <box top='1766' left='2336' width='36' height='93'>
+	      <label>g</label>
+	    </box>
+	    <box top='1431' left='1864' width='56' height='108'>
+	      <label>g</label>
+	    </box>
+	    <box top='1867' left='1642' width='11' height='22'>
+	      <label>r</label>
+	    </box>
+	    <box top='1869' left='1738' width='14' height='24'>
+	      <label>r</label>
+	    </box>
+	    <box top='1876' left='2069' width='14' height='35'>
+	      <label>g</label>
+	    </box>
+	  </image>
+	  <image file='train_new/IMG_20180111_094009.jpg'>
+	    <box top='892' left='1764' width='111' height='239'>
+	      <label>g</label>
+	    </box>
+	    <box top='1618' left='2784' width='95' height='201'>
+	      <label>g</label>
+	    </box>
+	    <box top='1968' left='1583' width='13' height='28'>
+	      <label>r</label>
+	    </box>
+	    <box top='1973' left='1697' width='11' height='26'>
+	      <label>r</label>
+	    </box>
+	    <box top='1962' left='2082' width='29' height='53'>
+	      <label>g</label>
+	    </box>
+	  </image>
+	  <image file='train_new/IMG_20180111_094019.jpg'>
+	    <box top='1327' left='1475' width='50' height='91'>
+	      <label>r</label>
+	    </box>
+	    <box top='1349' left='1867' width='47' height='95'>
+	      <label>r</label>
+	    </box>
+	    <box top='1615' left='433' width='38' height='84'>
+	      <label>r</label>
+	    </box>
+	    <box top='1685' left='2367' width='29' height='78'>
+	      <label>r</label>
+	    </box>
+	    <box top='1685' left='2333' width='30' height='78'>
+	      <label>r</label>
+	    </box>
+	    <box top='1736' left='2519' width='25' height='41' ignore='1'>
+	      <label>r</label>
+	    </box>
+	    <box top='1767' left='2402' width='20' height='38' ignore='1'>
+	      <label>r</label>
+	    </box>
+	    <box top='1742' left='728' width='41' height='41' ignore='1'>
+	      <label>r</label>
+	    </box>
+	  </image>
+	  <image file='train_new/IMG_20180111_094021.jpg'>
+	    <box top='1258' left='1364' width='61' height='125'>
+	      <label>r</label>
+	    </box>
+	    <box top='1286' left='1846' width='67' height='117'>
+	      <label>r</label>
+	    </box>
+	    <box top='1706' left='2439' width='37' height='95'>
+	      <label>r</label>
+	    </box>
+	    <box top='1706' left='2480' width='39' height='94'>
+	      <label>r</label>
+	    </box>
+	    <box top='1777' left='2634' width='31' height='48' ignore='1'>
+	      <label>r</label>
+	    </box>
+	    <box top='1782' left='576' width='35' height='75' ignore='1'>
+	      <label>r</label>
+	    </box>
+	  </image>
+	  <image file='train_new/IMG_20180111_094059.jpg'>
+	    <box top='1664' left='2740' width='77' height='183'>
+	      <label>r</label>
+	    </box>
+	    <box top='1662' left='2832' width='59' height='184'>
+	      <label>g</label>
+	    </box>
+	    <box top='1855' left='2945' width='45' height='76' ignore='1'>
+	      <label>g</label>
+	    </box>
+	    <box top='1931' left='2685' width='33' height='57' ignore='1'>
+	      <label>g</label>
+	    </box>
+	    <box top='944' left='1698' width='111' height='203'>
+	      <label>g</label>
+	    </box>
+	    <box top='902' left='840' width='121' height='209'>
+	      <label>r</label>
+	    </box>
+	  </image>
+	  <image file='train_new/IMG_20180111_094217.jpg'>
+	    <box top='1407' left='1438' width='50' height='93'>
+	      <label>r</label>
+	    </box>
+	    <box top='1420' left='2131' width='48' height='100'>
+	      <label>r</label>
+	    </box>
+	    <box top='1720' left='2227' width='30' height='70'>
+	      <label>r</label>
+	    </box>
+	  </image>
+	  <image file='train_new/IMG_20180111_094221.jpg'>
+	    <box top='874' left='2502' width='169' height='309'>
+	      <label>r</label>
+	    </box>
+	    <box top='1842' left='2852' width='109' height='197'>
+	      <label>r</label>
+	    </box>
+	    <box top='780' left='308' width='157' height='321'>
+	      <label>r</label>
+	    </box>
+	  </image>
+	  <image file='train_new/IMG_20180111_094505.jpg'>
+	    <box top='1394' left='2208' width='53' height='109'>
+	      <label>g</label>
+	    </box>
+	    <box top='1877' left='2701' width='43' height='95'>
+	      <label>g</label>
+	    </box>
+	    <box top='1474' left='780' width='57' height='117'>
+	      <label>g</label>
+	    </box>
+	  </image>
+	  <image file='train_new/IMG_20180111_094510.jpg'>
+	    <box top='1607' left='2419' width='68' height='172'>
+	      <label>g</label>
+	    </box>
+	    <box top='750' left='1568' width='103' height='199'>
+	      <label>g</label>
+	    </box>
+	  </image>
+	  <image file='train_new/IMG_20180111_094532.jpg'>
+	    <box top='1186' left='2110' width='75' height='142'>
+	      <label>g</label>
+	    </box>
+	    <box top='1622' left='2295' width='45' height='122'>
+	      <label>g</label>
+	    </box>
+	    <box top='1755' left='2518' width='79' height='73' ignore='1'>
+	      <label>g</label>
+	    </box>
+	  </image>
+	  <image file='train_new/IMG_20180111_094621.jpg'>
+	    <box top='1027' left='2045' width='112' height='197'>
+	      <label>y</label>
+	    </box>
+	    <box top='1589' left='2557' width='56' height='142'>
+	      <label>y</label>
+	    </box>
+	    <box top='1813' left='2746' width='23' height='37' ignore='1'>
+	      <label>y</label>
+	    </box>
+	  </image>
+	  <image file='train_new/IMG_20180111_094622.jpg'>
+	    <box top='991' left='2006' width='119' height='199'>
+	      <label>y</label>
+	    </box>
+	    <box top='1556' left='2511' width='61' height='143'>
+	      <label>y</label>
+	    </box>
+	    <box top='1776' left='2704' width='25' height='46' ignore='1'>
+	      <label>y</label>
+	    </box>
+	  </image>
+	  <image file='train_new/IMG_20180111_094622_1.jpg'>
+	    <box top='948' left='1992' width='113' height='209'>
+	      <label>g</label>
+	    </box>
+	    <box top='1524' left='2488' width='77' height='145'>
+	      <label>g</label>
+	    </box>
+	    <box top='1744' left='2688' width='17' height='41' ignore='1'>
+	      <label>g</label>
+	    </box>
+	  </image>
+	  <image file='train_new/IMG_20180111_094642.jpg'>
+	    <box top='1363' left='1782' width='64' height='109'>
+	      <label>r</label>
+	    </box>
+	    <box top='1310' left='2009' width='62' height='118'>
+	      <label>r</label>
+	    </box>
+	    <box top='1765' left='1529' width='31' height='79'>
+	      <label>r</label>
+	    </box>
+	    <box top='1769' left='2644' width='29' height='79'>
+	      <label>r</label>
+	    </box>
+	    <box top='1875' left='2579' width='29' height='30' ignore='1'>
+	      <label>r</label>
+	    </box>
+	  </image>
+	  <image file='train_new/IMG_20180111_094651.jpg'>
+	    <box top='1185' left='1569' width='124' height='205'>
+	      <label>r</label>
+	    </box>
+	    <box top='1042' left='2006' width='125' height='218'>
+	      <label>r</label>
+	    </box>
+	    <box top='1925' left='3208' width='84' height='157'>
+	      <label>r</label>
+	    </box>
+	  </image>
+	  <image file='train_new/IMG_20180111_094707.jpg'>
+	    <box top='1113' left='1689' width='122' height='195'>
+	      <label>r</label>
+	    </box>
+	    <box top='947' left='2121' width='129' height='218'>
+	      <label>y</label>
+	    </box>
+	    <box top='1810' left='3366' width='81' height='153'>
+	      <label>y</label>
+	    </box>
+	  </image>
+	  <image file='train_new/IMG_20180111_094709.jpg'>
+	    <box top='1122' left='1708' width='115' height='193'>
+	      <label>r</label>
+	    </box>
+	    <box top='957' left='2144' width='121' height='218'>
+	      <label>g</label>
+	    </box>
+	    <box top='1098' left='2271' width='61' height='69' ignore='1'>
+	      <label>g</label>
+	    </box>
+	    <box top='1817' left='3384' width='82' height='162'>
+	      <label>g</label>
+	    </box>
+	    <box top='1923' left='3477' width='62' height='56' ignore='1'>
+	      <label>g</label>
+	    </box>
+	  </image>
+	  <image file='train_new/IMG_20180111_094721.jpg'>
+	    <box top='1312' left='1444' width='333' height='553'>
+	      <label>r</label>
+	    </box>
+	    <box top='824' left='2680' width='365' height='641'>
+	      <label>g</label>
+	    </box>
+	    <box top='1232' left='3056' width='173' height='209' ignore='1'>
+	      <label>g</label>
+	    </box>
+	  </image>
+	  <image file='train_new/IMG_20180111_094730.jpg'>
+	    <box top='480' left='2636' width='257' height='449'>
+	      <label>g</label>
+	    </box>
+	    <box top='772' left='2896' width='125' height='141' ignore='1'>
+	      <label>g</label>
+	    </box>
+	    <box top='840' left='1752' width='253' height='397'>
+	      <label>y</label>
+	    </box>
+	  </image>
+	  <image file='train_new/IMG_20180111_094731.jpg'>
+	    <box top='876' left='1736' width='237' height='385'>
+	      <label>g</label>
+	    </box>
+	    <box top='504' left='2620' width='253' height='449'>
+	      <label>g</label>
+	    </box>
+	    <box top='784' left='2876' width='121' height='137' ignore='1'>
+	      <label>g</label>
+	    </box>
+	  </image>
+	  <image file='train_new/IMG_20180111_094829.jpg'>
+	    <box top='1117' left='2022' width='68' height='155'>
+	      <label>y</label>
+	    </box>
+	    <box top='1733' left='2457' width='63' height='130'>
+	      <label>y</label>
+	    </box>
+	  </image>
+	</images>
 </dataset>

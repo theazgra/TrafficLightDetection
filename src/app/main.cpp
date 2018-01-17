@@ -17,6 +17,7 @@ namespace file
 
 int main(int argc, char** argv)
 {
+
     const uint ARGCOUNT = 5;
     string arguments[ARGCOUNT];
     for (unsigned int i = 0; i < argc && i < ARGCOUNT; ++i)
@@ -26,7 +27,15 @@ int main(int argc, char** argv)
     if (argc == 1 || arguments[1] == "--h" || arguments[1] == "--help")
     {
         display_help();
+        return 0;
     }
+
+
+
+    if (!load_settings("../app_settings.xml"))
+        return 1;
+    else
+        cout  << endl << "Loaded settings from xml." << endl;
 
     if (arguments[1] == "--c" || arguments[1] == "--cropper")
     {
@@ -38,7 +47,9 @@ int main(int argc, char** argv)
         }
 
         bool display = arguments[3] == "--display";
-        test_cropper(xmlFile, display);
+        bool displayOnly = arguments[3] == "--display-only";
+        test_cropper(xmlFile, display, displayOnly);
+        return 0;
     }
 
     if (arguments[1] == "--train")
@@ -52,34 +63,21 @@ int main(int argc, char** argv)
             return 1;
         }
 
-        int method = 1;
-        if (arguments[4].length() != 0)
-        {
-            try {
-                method = stoi(arguments[4].substr(2,1), nullptr, 0);
-            }
-            catch (std::exception)
-            {
-                cout << "Wrong method number. Defaulting to 1." << endl;
-                method = 1;
-            }
-        }
+        cout << "Choosen training method (in xml):" << TRAINING_METHOD << endl;
 
-
-
-        if (method == 2)
+        if (TRAINING_METHOD == 2)
         {
             if (testFile.length() == 0 || !file::file_exists(testFile))
             {
                 cout << "Xml file containing testing data annotations does not exist!" << endl;
-                cout << "This file is needed for this learning method!" << endl;
+                cout << "This file is needed for this training method!" << endl;
                 return 1;
             }
         }
 
         auto start = chrono::high_resolution_clock::now();
 
-        switch (method)
+        switch (TRAINING_METHOD)
         {
             case 1:
                 train(trainFile);

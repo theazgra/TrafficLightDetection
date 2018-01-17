@@ -7,6 +7,6 @@
 #include <dlib/image_transforms.h>
 
 
-void test_cropper(const std::string xmlFile, bool display);
+void test_cropper(const std::string xmlFile, bool display, bool displayOnly);
 
 #endif //BACHELOR_CROPPER_TEST_H

@@ -3,10 +3,11 @@
 using namespace std;
 using namespace dlib;
 
-void test_cropper(const std::string xmlFile, bool display)
+void test_cropper(const std::string xmlFile, bool display, bool displayOnly)
 {
     try
     {
+        cout << endl << "Loading images..." << endl;
         std::vector<matrix<rgb_pixel>>      imgs;
         std::vector<std::vector<mmod_rect>> boxes;
 
@@ -35,30 +36,37 @@ void test_cropper(const std::string xmlFile, bool display)
         cropper(BATCH_SIZE, imgs, boxes, batchImgs, batchBoxes);
 
 
-        int numIgnored = 0;
-        int numCorrect = 0;
-	int numOverlapped = 0;
-	
-        for (size_t i = 0; i < batchImgs.size(); ++i)
+        if (!displayOnly)
         {
-	    numOverlapped += overlapped_boxes_count(batchBoxes[i], test_box_overlap(OVERLAP_IOU, COVERED_THRESHOLD));
-            for (auto b : batchBoxes[i])
+            cout << endl << "Testing boxes..." << endl;
+            int numIgnored = 0;
+            int numCorrect = 0;
+            int numOverlapped = 0;
+
+            for (size_t i = 0; i < batchImgs.size(); ++i)
             {
-                if (b.ignore)
-                    ++numIgnored;
-                else
-                    ++numCorrect;
+            numOverlapped += overlapped_boxes_count(batchBoxes[i], test_box_overlap(OVERLAP_IOU, COVERED_THRESHOLD));
+                for (auto b : batchBoxes[i])
+                {
+                    if (b.ignore)
+                        ++numIgnored;
+                    else
+                        ++numCorrect;
+                }
             }
+
+            cout << "Number of overlapping boxes: " << numOverlapped << endl;
+            cout << "Number of correct boxes: " << numCorrect << endl;
+            cout << "Number of ignored boxes: " << numIgnored << endl;
+            float percentCorrect = ((float)numCorrect / (float)(numCorrect + numIgnored)) * 100.0f;
+            cout << "Percent of boxes correct: " << percentCorrect << endl;
+
         }
 
-	cout << "Number of overlapping boxes: " << numOverlapped << endl;
-        cout << "Number of correct boxes: " << numCorrect << endl;
-        cout << "Number of ignored boxes: " << numIgnored << endl;
-        float percentCorrect = ((float)numCorrect / (float)(numCorrect + numIgnored)) * 100.0f;
-        cout << "Percent of boxes correct: " << percentCorrect << endl;
 
-        if (display)
+        if (display || displayOnly)
         {
+            cout << endl << "Showing images with boxes, greed for good, red for ignored box." << endl;
             image_window win;
             for (size_t i = 0; i < batchImgs.size(); ++i)
             {
