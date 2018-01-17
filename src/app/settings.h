@@ -8,7 +8,7 @@
 bool load_settings(const char* xmlSettingsFile);
 
 
-//#define MULTIPLE_GPUS
+#define MULTIPLE_GPUS
 extern std::vector<int> CUDA_DEVICES;// = {0, 1, 2, 3}; //{0, 1, 2, 3};
 
 ///*******<BOUNDING BOX SETTINGS>*******
