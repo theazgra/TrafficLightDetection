@@ -14,13 +14,10 @@
         <random_rotation_angle>0</random_rotation_angle>
         <min_object_size_smaller_side>13</min_object_size_smaller_side>
         <min_object_size_larger_side>25</min_object_size_larger_side>
-<<<<<<< HEAD
         <max_object_size>0.8</max_object_size>
         <background_crop_fraction>0.2</background_crop_fraction>
-=======
         <max_object_size>0.9</max_object_size>
         <background_crop_fraction>0.25</background_crop_fraction>
->>>>>>> c909a37fa858a443ffc4f5c8b7798b767d9c26fe
     </cropper>
     <mmod_settings>
         <min_bounding_box_size>20</min_bounding_box_size>
