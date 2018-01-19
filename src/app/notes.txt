@@ -6,3 +6,9 @@ changing chip size to 200x500 did not help, but improved speed of learning by pr
 100x250 0.66 training result worse than 200x500, going back up
 200x500 is sweet spot
 going up with batch size overfitted the model, but that is probably because we have this really small test dataset
+
+
+
+loss 2.04 with max object size at 0.8, max object size does not make difference in loss
+trying lower learning rate 0.5
+

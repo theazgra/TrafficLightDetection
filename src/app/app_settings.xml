@@ -9,13 +9,13 @@
     <cropper>
 	<batch_size>20</batch_size>
 	<!--200x500 is default chip size for now -->
-        <chip_width>400</chip_width>
-        <chip_height>900</chip_height>
-        <random_rotation_angle>2</random_rotation_angle>
+        <chip_width>200</chip_width>
+        <chip_height>500</chip_height>
+        <random_rotation_angle>0</random_rotation_angle>
         <min_object_size_smaller_side>13</min_object_size_smaller_side>
         <min_object_size_larger_side>25</min_object_size_larger_side>
         <max_object_size>0.8</max_object_size>
-        <background_crop_fraction>0.25</background_crop_fraction>
+        <background_crop_fraction>0.2</background_crop_fraction>
     </cropper>
     <mmod_settings>
         <min_bounding_box_size>20</min_bounding_box_size>
@@ -32,13 +32,13 @@
     <net_settings>
         <sgd_weight_decay>0.0005</sgd_weight_decay>
         <sgd_momentum>0.9</sgd_momentum>
-        <learning_rate>0.1</learning_rate>
+        <learning_rate>0.05</learning_rate>
         <minimal_learning_rate>0.0001</minimal_learning_rate>
         <training>
             <!--Avaible methods are 1 or 2, 2 for testing while training-->
             <method>1</method>
             <!--TRAIN_ITERATION_WITHOUT_PROGRESS_THRESHOLD-->
-            <tr_iter_wo_prog_threshold>500</tr_iter_wo_prog_threshold>
+            <tr_iter_wo_prog_threshold>800</tr_iter_wo_prog_threshold>
             <!--TEST_ITERATION_WITHOUT_PROGRESS_THRESHOLD used for second method-->
             <test_iter_wo_prog_threshold>1000</test_iter_wo_prog_threshold>
             <!--TRAIN_ITERATION_WITHOUT_PROGRESS_THRESHOLD used for second method-->
