@@ -9,15 +9,15 @@
     <cropper>
 	<batch_size>20</batch_size>
 	<!--200x500 is default chip size for now -->
-        <chip_width>200</chip_width>
-        <chip_height>200</chip_height>
+        <chip_width>400</chip_width>
+        <chip_height>1000</chip_height>
         <random_rotation_angle>0</random_rotation_angle>
         <min_object_size_smaller_side>13</min_object_size_smaller_side>
         <min_object_size_larger_side>25</min_object_size_larger_side>
         <max_object_size>0.8</max_object_size>
         <background_crop_fraction>0.2</background_crop_fraction>
         <max_object_size>0.9</max_object_size>
-        <background_crop_fraction>0.25</background_crop_fraction>
+        <background_crop_fraction>0.2</background_crop_fraction>
     </cropper>
     <mmod_settings>
         <min_bounding_box_size>20</min_bounding_box_size>
