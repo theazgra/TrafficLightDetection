@@ -14,7 +14,7 @@
         <random_rotation_angle>2</random_rotation_angle>
         <min_object_size_smaller_side>13</min_object_size_smaller_side>
         <min_object_size_larger_side>25</min_object_size_larger_side>
-        <max_object_size>0.8</max_object_size>
+        <max_object_size>0.9</max_object_size>
         <background_crop_fraction>0.25</background_crop_fraction>
     </cropper>
     <mmod_settings>
