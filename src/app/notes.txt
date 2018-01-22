@@ -10,5 +10,11 @@ going up with batch size overfitted the model, but that is probably because we h
 
 
 loss 2.04 with max object size at 0.8, max object size does not make difference in loss
-trying lower learning rate 0.5
+trying lower learning rate 0.5, did not help
 
+Increasing training rate without threshold to 2000 helped a lot, trying 2500=worse
+
+actual best result
+20.01.2018
+step#: 7478  learning rate: 0.0005  average loss: 0.460558     steps without apparent progress: 177
+Training results:        1 0.833333 0.83333
