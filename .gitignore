@@ -14,3 +14,9 @@ python_examples/
 
 #test data
 test_data/
+test_dataset/
+
+#working data
+work_data/
+
+
