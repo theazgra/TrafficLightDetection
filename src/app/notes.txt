@@ -18,3 +18,18 @@ actual best result
 20.01.2018
 step#: 7478  learning rate: 0.0005  average loss: 0.460558     steps without apparent progress: 177
 Training results:        1 0.833333 0.83333
+
+
+orange(label y[also must be renamed to o as orange]) is probably labeled wrong, 
+it is labeled like one color (middle) or like two colors (top and middle one).
+It would be probably best to go through dataset and clean this.
+Pure orange is never option on working traffic light, when only orange color is on, 
+TL is blinking as inactive.
+
+dataset train2.xml
+====================================
+step#: 21199  learning rate: 0.0001  average loss: 0.72625      steps without apparent progress: 1796
+Saved state to TL_SYNC_FILE
+Training is completed.
+Training results:  0.94382 0.743363 0.734304 
+
