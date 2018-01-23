@@ -109,7 +109,8 @@ int main(int argc, char** argv)
             return 1;
         }
         bool display = displayArg == "--display";
-        test(netFile, testFile, display);
+        bool displayOnly = displayArg == "--display-only";
+        test(netFile, testFile, display, displayOnly);
     }
 
     return 0;

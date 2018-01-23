@@ -63,15 +63,18 @@ void test_cropper(const std::string xmlFile, bool display, bool displayOnly)
 
         }
 
+        dlib::rand rnd;
 
         if (display || displayOnly)
         {
             cout << endl << "Showing images with boxes, greed for good, red for ignored box." << endl;
             image_window win;
+
             for (size_t i = 0; i < batchImgs.size(); ++i)
             {
                 cout << "Img #: " << i << endl;
                 win.clear_overlay();
+
                 win.set_image(batchImgs[i]);
                 for (auto b : batchBoxes[i])
                 {

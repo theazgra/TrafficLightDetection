@@ -6,7 +6,7 @@
 #include <dlib/image_processing.h>
 #include "settings.h"
 
-void test(std::string netFile, std::string testFile, bool display = false);
+void test(std::string netFile, std::string testFile, bool display = false, bool displayOnly = false);
 
 
 

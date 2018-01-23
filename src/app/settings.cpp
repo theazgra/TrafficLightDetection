@@ -49,6 +49,7 @@ bool load_settings(const char* xmlSettingsFile)
     for (xml_node cuda_device : cuda_devices.children("device"))
     {
         CUDA_DEVICES.push_back(cuda_device.text().as_int());
+        std::cout << "Setting cuda device: " << cuda_device.text().as_int() << std::endl;
     }
 
     //Cropper settings

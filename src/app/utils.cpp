@@ -2,25 +2,39 @@
 // Created by azgra on 30.12.17.
 //
 
+#include <tgmath.h>
 #include "utils.h"
 
 using namespace std;
 
 void display_time(double time)
 {
-    double min = 0;
-    double sec = 0;
-    double hour = 0;
-    ///TODO :Logic is wrong c'mon, fix it
-    /*
-    hour = (time / 60) / 60;
-    time -= hour * 60 * 60;
-    min = time / 60;
-    time-= min * 60;
-    sec = time;
-    */	
-    //cout << hour << " hours " << min << " minutes " << sec << " seconds" << endl;
-    cout << time << " seconds" << endl;
+    double minutes = 0;
+    double seconds = 0;
+    double hours = 0;
+    
+    minutes = time / 60;
+    hours = minutes / 60;
+
+    if (hours >= 1)
+    {
+        double flooredHours = std::floor(hours);
+        minutes = (hours - flooredHours) * 60;
+        double flooredMinutes = std::floor(minutes);
+        seconds = std::round((minutes - flooredMinutes) * 60);
+
+        cout << flooredHours << ((flooredHours == 1) ? " hour " : " hours ") << flooredMinutes
+             << ((flooredMinutes == 1) ? " minute and " : " minutes and ")
+             << seconds << ((seconds == 1) ? " second" : " seconds") << endl;
+    }
+    else
+    {
+        double flooredMinutes = std::floor(minutes);
+
+        seconds = std::round((minutes - flooredMinutes) * 60);
+        cout << ((flooredMinutes == 1) ? " minute and " : " minutes and ")
+             << seconds << ((seconds == 1) ? " second" : " seconds") << endl;
+    }
 }
 
 void display_help()
@@ -37,6 +51,7 @@ void display_help()
     cout << "  eg. --traing ../test/train.xml {../test/test.xml}" << endl << endl;
 
     cout << "--test with next argument specifiing net dat file and XML file annotating test data" << endl;
+    cout << "  Use --display-only to go straigt to visual testing." << endl;
     cout << "  eg. --test TL_net.dat ../test/test.xml" << endl << endl;
 }
 
