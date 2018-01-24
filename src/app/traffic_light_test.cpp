@@ -11,6 +11,8 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
     std::vector<matrix<rgb_pixel>> testImages;
     std::vector<std::vector<mmod_rect>> boxes;
     load_image_dataset(testImages, boxes, testFile);
+
+    mmod_rect m;
     mmod_options options(boxes, DW_LONG_SIDE, DW_SHORT_SIDE);
 
     if (testType == FullTest || testType == NoDisplay)
@@ -39,6 +41,10 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
 
             std::vector<mmod_rect> detections = net(image);
 
+            cout << "Image #" << imgIndex << ". Ground truth: " << boxes.at(imgIndex).size()
+                 << " bounding boxes. Found: " << detections.size() << " bounding boxes." << endl;
+
+
             if (testType == OnlyErrorDisplay && !detections.empty())
                 continue;
 
@@ -46,6 +52,8 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
 
             for (mmod_rect d : detections)
             {
+                cout << "Bounding box with label: " << d.label << ". Detection confidence " << d.detection_confidence << endl;
+                
                 if (d.label == "r")
                     window.add_overlay(d.rect, rgb_pixel(255, 0, 0), "red");
                 else if (d.label == "y") //y for orange, WTF?
