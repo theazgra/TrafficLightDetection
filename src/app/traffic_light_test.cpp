@@ -39,7 +39,7 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
 
             std::vector<mmod_rect> detections = net(image);
 
-            if (testType == OnlyErrorDisplay && detections.empty())
+            if (testType == OnlyErrorDisplay && !detections.empty())
                 continue;
 
             window.set_image(image);
