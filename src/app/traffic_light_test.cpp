@@ -52,6 +52,7 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
         image_window window;
 
         int imgIndex = -1;
+        float overallFoundPercent = 0.0f;
         for (matrix<rgb_pixel>& image : testImages)
         {
             ++imgIndex;
@@ -59,8 +60,13 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
 
             std::vector<mmod_rect> detections = net(image);
 
-            cout << "Image #" << imgIndex << ". Ground truth: " << number_of_label_boxes(boxes.at(imgIndex))
-                 << " bounding boxes. Found: " << detections.size() << " bounding boxes." << endl;
+            int groundTruth = number_of_label_boxes(boxes.at(imgIndex));
+            float foundPercent = ((float)detections.size() / (float)groundTruth) * 100.0f;
+
+            overallFoundPercent += foundPercent;
+
+            cout << "Image #" << imgIndex << ". Ground truth: " << groundTruth
+                 << " bounding boxes. Found: " << detections.size() << " bounding boxes.  " << foundPercent  << " %" << endl;
 
 
             if (testType == OnlyErrorDisplay && !detections.empty())
@@ -73,7 +79,7 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
             {
                 ++labelIndex;
 
-                cout << "Bounding box with label: " << d.label << ". Detection confidence " << d.detection_confidence << endl;
+                cout << "\tBounding box with label: " << d.label << " Detection confidence " << d.detection_confidence << endl;
 
                 if (d.label == "r")
                     window.add_overlay(d.rect, rgb_pixel(255, 0, 0), "red_" + to_string(labelIndex));
@@ -87,13 +93,20 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
 
             if (saveImages)
             {
-                save_png(image, "detected_" + to_string(imgIndex));
+                cout << "Press s to save image, otherwise press enter for next image." << endl;
+                std::string input;
+                cin >> input;
+                if (input == "s")
+                {
+                    save_png(image, "detected_" + to_string(imgIndex));
+                }
             }
-
-
-            cout << "Press enter for next image." << endl;
-            cin.get();
-
+            else
+            {
+                cout << "Press enter for next image." << endl;
+                cin.get();
+            }
         }
+        cout << "Overall found: " << overallFoundPercent / (float)(imgIndex + 1) << " %." << endl;
     }
 }
