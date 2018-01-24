@@ -18,7 +18,7 @@ namespace file
 int main(int argc, char** argv)
 {
 
-    const uint ARGCOUNT = 5;
+    const uint ARGCOUNT = 8;
     string arguments[ARGCOUNT];
     for (unsigned int i = 0; i < argc && i < ARGCOUNT; ++i)
         arguments[i] = argv[i];
@@ -108,9 +108,18 @@ int main(int argc, char** argv)
             cout << "Xml file containing testing data annotations does not exist!" << endl;
             return 1;
         }
-        bool display = displayArg == "--display";
-        bool displayOnly = displayArg == "--display-only";
-        test(netFile, testFile, display, displayOnly);
+        TestType testType = NoDisplay;
+
+        if (displayArg == "--display")
+            testType = FullTest;
+        else if (displayArg == "--display-only")
+            testType = DisplayOnly;
+        else if (displayArg == "--display-error")
+            testType = OnlyErrorDisplay;
+
+        bool save = arguments[5] == "--save";
+
+        test(netFile, testFile, testType, save);
     }
 
     return 0;

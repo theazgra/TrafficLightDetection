@@ -3,7 +3,7 @@
 using namespace std;
 using namespace dlib;
 
-void test(std::string netFile, std::string testFile, bool display, bool displayOnly)
+void test(std::string netFile, std::string testFile, TestType testType, bool saveImages)
 {
     net_type net;
     deserialize(netFile) >> net;
@@ -13,7 +13,7 @@ void test(std::string netFile, std::string testFile, bool display, bool displayO
     load_image_dataset(testImages, boxes, testFile);
     mmod_options options(boxes, DW_LONG_SIDE, DW_SHORT_SIDE);
 
-    if (!displayOnly)
+    if (testType == FullTest || testType == NoDisplay)
     {
         dlib::matrix<double, 1, 3> testResult = test_object_detection_function(net, testImages, boxes, test_box_overlap(), 0, options.overlaps_ignore);
 
@@ -27,16 +27,21 @@ void test(std::string netFile, std::string testFile, bool display, bool displayO
     }
 
 
-    if (display || displayOnly)
+    if (testType == FullTest || testType == DisplayOnly || testType == OnlyErrorDisplay)
     {
         image_window window;
 
+        int imgIndex = -1;
         for (matrix<rgb_pixel>& image : testImages)
         {
+            ++imgIndex;
             window.clear_overlay();
 
-//            pyramid_up(image); image is not sampled down, is it???
             std::vector<mmod_rect> detections = net(image);
+
+            if (testType == OnlyErrorDisplay && detections.empty())
+                continue;
+
             window.set_image(image);
 
             for (mmod_rect d : detections)
@@ -47,12 +52,19 @@ void test(std::string netFile, std::string testFile, bool display, bool displayO
                     window.add_overlay(d.rect, rgb_pixel(255, 255, 0), "orange");
                 else if (d.label == "g")
 			        window.add_overlay(d.rect, rgb_pixel(0, 255, 0), "green");
-		else if (d.label == "s")
-			window.add_overlay(d.rect, rgb_pixel(0,255,0), "semafor");
+                else if (d.label == "s")
+                    window.add_overlay(d.rect, rgb_pixel(0,255,0), "semafor");
             }
+
+            if (saveImages)
+            {
+                save_png(image, "detected_" + to_string(imgIndex));
+            }
+
 
             cout << "Press enter for next image." << endl;
             cin.get();
+
         }
     }
 }

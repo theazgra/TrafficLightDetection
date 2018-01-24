@@ -6,7 +6,16 @@
 #include <dlib/image_processing.h>
 #include "settings.h"
 
-void test(std::string netFile, std::string testFile, bool display = false, bool displayOnly = false);
+enum TestType
+{
+    FullTest,
+    DisplayOnly,
+    NoDisplay,
+    OnlyErrorDisplay
+};
+
+
+void test(std::string netFile, std::string testFile, TestType testType, bool saveImages);
 
 
 

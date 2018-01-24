@@ -32,7 +32,7 @@ void display_time(double time)
         double flooredMinutes = std::floor(minutes);
 
         seconds = std::round((minutes - flooredMinutes) * 60);
-        cout << ((flooredMinutes == 1) ? " minute and " : " minutes and ")
+        cout << flooredMinutes << ((flooredMinutes == 1) ? " minute and " : " minutes and ")
              << seconds << ((seconds == 1) ? " second" : " seconds") << endl;
     }
 }
@@ -52,6 +52,8 @@ void display_help()
 
     cout << "--test with next argument specifiing net dat file and XML file annotating test data" << endl;
     cout << "  Use --display-only to go straigt to visual testing." << endl;
+    cout << "  Use --display-error to show only images without detection." << endl;
+    cout << "  Use --save to save displayed images (only used with display)." << endl;
     cout << "  eg. --test TL_net.dat ../test/test.xml" << endl << endl;
 }
 
