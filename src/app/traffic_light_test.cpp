@@ -68,18 +68,21 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
 
             window.set_image(image);
 
+            int labelIndex = -1;
             for (mmod_rect d : detections)
             {
+                ++labelIndex;
+
                 cout << "Bounding box with label: " << d.label << ". Detection confidence " << d.detection_confidence << endl;
 
                 if (d.label == "r")
-                    window.add_overlay(d.rect, rgb_pixel(255, 0, 0), "red");
+                    window.add_overlay(d.rect, rgb_pixel(255, 0, 0), "red_" + to_string(labelIndex));
                 else if (d.label == "y") //y for orange, WTF?
-                    window.add_overlay(d.rect, rgb_pixel(255, 255, 0), "orange");
+                    window.add_overlay(d.rect, rgb_pixel(255, 255, 0), "orange" + to_string(labelIndex));
                 else if (d.label == "g")
-			        window.add_overlay(d.rect, rgb_pixel(0, 255, 0), "green");
+			        window.add_overlay(d.rect, rgb_pixel(0, 255, 0), "green" + to_string(labelIndex));
                 else if (d.label == "s")
-                    window.add_overlay(d.rect, rgb_pixel(0,255,0), "semafor");
+                    window.add_overlay(d.rect, rgb_pixel(0,255,0), "semafor" + to_string(labelIndex));
             }
 
             if (saveImages)
