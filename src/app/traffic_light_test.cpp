@@ -47,6 +47,8 @@ void test(std::string netFile, std::string testFile, bool display, bool displayO
                     window.add_overlay(d.rect, rgb_pixel(255, 255, 0), "orange");
                 else if (d.label == "g")
 			        window.add_overlay(d.rect, rgb_pixel(0, 255, 0), "green");
+		else if (d.label == "s")
+			window.add_overlay(d.rect, rgb_pixel(0,255,0), "semafor");
             }
 
             cout << "Press enter for next image." << endl;

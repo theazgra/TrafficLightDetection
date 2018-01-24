@@ -74,7 +74,7 @@ void test_cropper(const std::string xmlFile, bool display, bool displayOnly)
             {
                 cout << "Img #: " << i << endl;
                 win.clear_overlay();
-
+		//dlib::equalize_histogram(batchImgs[i], batchImgs[i]);
                 win.set_image(batchImgs[i]);
                 for (auto b : batchBoxes[i])
                 {

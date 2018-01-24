@@ -34,5 +34,11 @@ Saved state to TL_SYNC_FILE
 Training is completed.
 Training results:  0.94382 0.743363 0.734304 
 
+with one label
+step#: 20074  learning rate: 0.0001  average loss: 0.430356     steps without apparent progress: 1631
+Saved state to TL_SYNC_FILE
+Training is completed.
+Training results: 0.912844 0.880531 0.864567
+
 
 
