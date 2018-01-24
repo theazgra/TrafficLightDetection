@@ -3,6 +3,24 @@
 using namespace std;
 using namespace dlib;
 
+/**
+ * Get the number of not ignored label boxes.
+ * @param boxes Vector of mmod_rectangles.
+ * @return Number of boxes which are not ignored.
+ */
+int number_of_label_boxes(std::vector<dlib::mmod_rect> boxes)
+{
+    int count = 0;
+
+    for (mmod_rect box : boxes)
+    {
+        if (!box.ignore)
+            ++count;
+    }
+
+    return count;
+}
+
 void test(std::string netFile, std::string testFile, TestType testType, bool saveImages)
 {
     net_type net;
@@ -41,7 +59,7 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
 
             std::vector<mmod_rect> detections = net(image);
 
-            cout << "Image #" << imgIndex << ". Ground truth: " << boxes.at(imgIndex).size()
+            cout << "Image #" << imgIndex << ". Ground truth: " << number_of_label_boxes(boxes.at(imgIndex))
                  << " bounding boxes. Found: " << detections.size() << " bounding boxes." << endl;
 
 
@@ -53,7 +71,7 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
             for (mmod_rect d : detections)
             {
                 cout << "Bounding box with label: " << d.label << ". Detection confidence " << d.detection_confidence << endl;
-                
+
                 if (d.label == "r")
                     window.add_overlay(d.rect, rgb_pixel(255, 0, 0), "red");
                 else if (d.label == "y") //y for orange, WTF?
