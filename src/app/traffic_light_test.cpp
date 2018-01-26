@@ -53,6 +53,7 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
 
         int imgIndex = -1;
         float overallFoundPercent = 0.0f;
+        float overallConfidence = 0.0f;
         for (matrix<rgb_pixel>& image : testImages)
         {
             ++imgIndex;
@@ -75,9 +76,11 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
             window.set_image(image);
 
             int labelIndex = -1;
+            float labelsConfidence = 0.0f;
             for (mmod_rect d : detections)
             {
                 ++labelIndex;
+                labelsConfidence += d.detection_confidence;
 
                 cout << "\tBounding box with label: " << d.label << " Detection confidence " << d.detection_confidence << endl;
 
@@ -91,6 +94,8 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
                     window.add_overlay(d.rect, rgb_pixel(0,255,0), "semafor" + to_string(labelIndex));
             }
 
+            overallConfidence += (labelsConfidence / (float)(labelIndex + 1));
+
             if (saveImages)
             {
                 cout << "Press s to save image, otherwise press enter for next image." << endl;
@@ -98,7 +103,7 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
                 cin >> input;
                 if (input == "s")
                 {
-                    save_png(image, "detected_" + to_string(imgIndex));
+                    save_png(image, "detected_" + to_string(imgIndex) + ".png");
                 }
             }
             else
@@ -108,5 +113,6 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
             }
         }
         cout << "Overall found: " << overallFoundPercent / (float)(imgIndex + 1) << " %." << endl;
+        cout << "Overall confidence: " << overallConfidence / (float)(imgIndex + 1) << " %." << endl;
     }
 }
