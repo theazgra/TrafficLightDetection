@@ -37,87 +37,94 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
     {
         dlib::matrix<double, 1, 3> testResult = test_object_detection_function(net, testImages, boxes, test_box_overlap(), 0, options.overlaps_ignore);
 
+        cout << "==============================================" << endl;
+        cout << endl << "Dlib test method: " << endl;
         cout << "Precision:                 " << testResult(0) << endl;
         cout << "Fraction of found objects: " << testResult(1) << endl;
         cout << "Average precision:         " << testResult(2) << endl << endl;
 
         cout << "Precision: 1 means no false alarms, 0 means all hits were false alarms." << endl;
         cout << "Fraction: 	1 means all targets were found, 0 mean that detector did not locate any object." << endl;
-        cout << "Average: 	Overall quality of the detector.." << endl;
+        cout << "Average: 	Overall quality of the detector..." << endl;
+        cout << "==============================================" << endl;
     }
 
+    image_window window;
 
-    if (testType == FullTest || testType == DisplayOnly || testType == OnlyErrorDisplay)
+    if (testType == NoDisplay)
+        window.close_window();
+
+
+    int imgIndex = -1;
+    float overallFoundPercent = 0.0f;
+    int falseDetectionCount = 0;
+    for (matrix<rgb_pixel>& image : testImages)
     {
-        image_window window;
+        ++imgIndex;
 
-        int imgIndex = -1;
-        float overallFoundPercent = 0.0f;
-        int falseDetectionCount = 0;
-        for (matrix<rgb_pixel>& image : testImages)
+
+        std::vector<mmod_rect> detections = net(image);
+        int detectionCount = detections.size();
+
+        int groundTruth = number_of_label_boxes(boxes.at(imgIndex));
+        float foundPercent = (detectionCount > groundTruth) ? 100.0f : (((float)detectionCount / (float)groundTruth) * 100.0f);
+
+        if (detections.size() > groundTruth)
         {
-            ++imgIndex;
-            window.clear_overlay();
+            falseDetectionCount += detectionCount - groundTruth;
+            cout << "Image #" << imgIndex << " " << detectionCount - groundTruth  << " false detections!" << endl;
+        }
 
-            std::vector<mmod_rect> detections = net(image);
-            int detectionCount = detections.size();
+        overallFoundPercent += foundPercent;
 
-            int groundTruth = number_of_label_boxes(boxes.at(imgIndex));
-            float foundPercent = (detectionCount > groundTruth) ? 100.0f : (((float)detectionCount / (float)groundTruth) * 100.0f);
+        cout << "Image #" << imgIndex << ". Ground truth: " << groundTruth
+             << " bounding boxes. Found: " << detectionCount << " bounding boxes.  " << foundPercent  << " %" << endl;
 
-            if (detections.size() > groundTruth)
+
+        //if (testType == OnlyErrorDisplay && !detections.empty())
+        if ((testType == OnlyErrorDisplay && (detectionCount == groundTruth)) || testType == NoDisplay)
+            continue;
+
+        window.clear_overlay();
+        window.set_image(image);
+
+        int labelIndex = -1;
+        for (mmod_rect d : detections)
+        {
+            ++labelIndex;
+
+            cout << "\tBounding box " << labelIndex << " with label: " << d.label << " Detection confidence " << d.detection_confidence << endl;
+
+            if (d.label == "r")
+                window.add_overlay(d.rect, rgb_pixel(255, 0, 0), "red_" + to_string(labelIndex));
+            else if (d.label == "y") //y for orange, WTF?
+                window.add_overlay(d.rect, rgb_pixel(255, 255, 0), "orange" + to_string(labelIndex));
+            else if (d.label == "g")
+                window.add_overlay(d.rect, rgb_pixel(0, 255, 0), "green" + to_string(labelIndex));
+            else if (d.label == "s")
+                window.add_overlay(d.rect, rgb_pixel(0,255,0), "semaphore" + to_string(labelIndex));
+        }
+
+        if (saveImages)
+        {
+            cout << "Press s to save image, otherwise press enter for next image." << endl;
+            std::string input;
+            cin >> input;
+            if (input == "s")
             {
-                falseDetectionCount += detectionCount - groundTruth;
-                cout << "Image " << imgIndex << " " << detectionCount - groundTruth  << " false detections!" << endl;
-            }
-
-            overallFoundPercent += foundPercent;
-
-            cout << "Image #" << imgIndex << ". Ground truth: " << groundTruth
-                 << " bounding boxes. Found: " << detectionCount << " bounding boxes.  " << foundPercent  << " %" << endl;
-
-
-            //if (testType == OnlyErrorDisplay && !detections.empty())
-            if (testType == OnlyErrorDisplay && (detectionCount == groundTruth))
-                continue;
-
-            window.set_image(image);
-
-            int labelIndex = -1;
-            for (mmod_rect d : detections)
-            {
-                ++labelIndex;
-
-                cout << "\tBounding box " << labelIndex << " with label: " << d.label << " Detection confidence " << d.detection_confidence << endl;
-
-                if (d.label == "r")
-                    window.add_overlay(d.rect, rgb_pixel(255, 0, 0), "red_" + to_string(labelIndex));
-                else if (d.label == "y") //y for orange, WTF?
-                    window.add_overlay(d.rect, rgb_pixel(255, 255, 0), "orange" + to_string(labelIndex));
-                else if (d.label == "g")
-			        window.add_overlay(d.rect, rgb_pixel(0, 255, 0), "green" + to_string(labelIndex));
-                else if (d.label == "s")
-                    window.add_overlay(d.rect, rgb_pixel(0,255,0), "semaphore" + to_string(labelIndex));
-            }
-
-            if (saveImages)
-            {
-                cout << "Press s to save image, otherwise press enter for next image." << endl;
-                std::string input;
-                cin >> input;
-                if (input == "s")
-                {
-                    save_png(image, "detected_" + to_string(imgIndex) + ".png");
-                }
-            }
-            else
-            {
-                cout << "Press enter for next image." << endl;
-                cin.get();
+                save_png(image, "detected_" + to_string(imgIndex) + ".png");
             }
         }
-        cout << endl;
-        cout << "False detections: " << falseDetectionCount << endl;
-        cout << "Overall found: " << overallFoundPercent / (float)(imgIndex + 1) << " %." << endl;
+        else
+        {
+            cout << "Press enter for next image." << endl;
+            cin.get();
+        }
     }
+
+    cout << "==============================================" << endl;
+    cout << "False detections: " << falseDetectionCount << endl;
+    cout << "Overall found: " << overallFoundPercent / (float)(imgIndex + 1) << " %." << endl;
+    cout << "==============================================" << endl;
+
 }
