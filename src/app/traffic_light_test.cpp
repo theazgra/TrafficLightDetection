@@ -53,7 +53,6 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
 
         int imgIndex = -1;
         float overallFoundPercent = 0.0f;
-        float overallConfidence = 0.0f;
         int falseDetectionCount = 0;
         for (matrix<rgb_pixel>& image : testImages)
         {
@@ -64,12 +63,12 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
             int detectionCount = detections.size();
 
             int groundTruth = number_of_label_boxes(boxes.at(imgIndex));
-            float foundPercent = ((detectionCount > groundTruth) ? (float)groundTruth : (float)detectionCount / (float)groundTruth) * 100.0f;
+            float foundPercent = (detectionCount > groundTruth) ? 100.0f : (((float)detectionCount / (float)groundTruth) * 100.0f);
 
             if (detections.size() > groundTruth)
             {
                 falseDetectionCount += detectionCount - groundTruth;
-                cout << "Image " << imgIndex << " " << detectionCount - groundTruth  << " false detections!";
+                cout << "Image " << imgIndex << " " << detectionCount - groundTruth  << " false detections!" << endl;
             }
 
             overallFoundPercent += foundPercent;
@@ -85,11 +84,9 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
             window.set_image(image);
 
             int labelIndex = -1;
-            float labelsConfidence = 0.0f;
             for (mmod_rect d : detections)
             {
                 ++labelIndex;
-                labelsConfidence += (float)d.detection_confidence;
 
                 cout << "\tBounding box " << labelIndex << " with label: " << d.label << " Detection confidence " << d.detection_confidence << endl;
 
@@ -102,8 +99,6 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
                 else if (d.label == "s")
                     window.add_overlay(d.rect, rgb_pixel(0,255,0), "semaphore" + to_string(labelIndex));
             }
-
-            overallConfidence += (labelsConfidence / (float)(labelIndex + 1));
 
             if (saveImages)
             {
@@ -121,8 +116,8 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
                 cin.get();
             }
         }
+        cout << endl;
         cout << "False detections: " << falseDetectionCount << endl;
         cout << "Overall found: " << overallFoundPercent / (float)(imgIndex + 1) << " %." << endl;
-        cout << "Overall confidence: " << overallConfidence / (float)(imgIndex + 1) << " %." << endl;
     }
 }
