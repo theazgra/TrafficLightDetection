@@ -86,7 +86,7 @@ int main(int argc, char** argv)
                 train(trainFile, testFile);
                 break;
 	    case 3:
-	        train_hog(trainFile);
+                train_myNet_type(trainFile);
                 break;
         }
 

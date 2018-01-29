@@ -38,21 +38,6 @@ int overlapped_boxes_count(std::vector<mmod_rect> boxes, const test_box_overlap&
 
     return num_ignored;
 }
-///testing net from "http://dlib.net/dnn_mmod_train_find_cars_ex.cpp.html"
-
-// //5x5 conv layer that does 2x downsampling
-// template <long num_filters, typename SUBNET> using con5d = con<num_filters, 5, 5, 2, 2, SUBNET>;
-
-// //3x3 conv layer that does not do any downsampling
-// template <long num_filters, typename SUBNET> using con3 = con<num_filters, 3, 3, 1, 1, SUBNET>;
-
-// //downsampler 3x con5d => 8x downsampling; relu and batch normalization in standard way?
-// template <typename SUBNET> using downsampler = relu<bn_con<con5d<32, relu<bn_con<con5d<32, relu<bn_con<con5d<32, SUBNET>>>>>>>>>;
-
-// //3x3 conv layer with batch normalization and relu.
-// template <typename SUBNET> using rcon3 = relu<bn_con<con3<32, SUBNET>>>;
-
-// using net_type = loss_mmod<con<1, 6, 6, 1, 1, rcon3<rcon3<rcon3<downsampler<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>;
 
 
 void train(const std::string trainFile)
@@ -300,32 +285,112 @@ void train(const std::string trainFile, const std::string testFile)
     }
 }
 
-void train_hog(const std::string trainFile)
+void train_myNet_type(const std::string trainFile)
 {
-	try
-	{
+    //"Debug" mode.
+    try
+    {
+        cout << "Choosen training method with my testing net." << endl;
+        std::vector<matrix<rgb_pixel>>      trainingImages;
+        std::vector<std::vector<mmod_rect>> trainingBoxes;
 
-		std::vector<matrix<rgb_pixel>> imgs;
-		std::vector<std::vector<rectangle>> boxes;
-		load_image_dataset(imgs, boxes, trainFile);	
-		
-		typedef scan_fhog_pyramid<pyramid_down<6>> image_scanner_type;
-		image_scanner_type scanner;
-		scanner.set_detection_window_size(20, 20);
-		structural_object_detection_trainer<image_scanner_type> trainer(scanner);
-		trainer.set_num_threads(4);
-		trainer.set_c(1);
-		trainer.be_verbose();
-		trainer.set_epsilon(0.01);
-		object_detector<image_scanner_type> detector = trainer.train(imgs, boxes);
+        load_image_dataset(trainingImages, trainingBoxes, trainFile);
 
-		cout << "training results: " << test_object_detection_function(detector, imgs, boxes) << endl;
-	}
-	catch(std::exception& e)
-	{
-		cout << "Exception" << endl;
-		cout << e.what() << endl;
-	}
+        cout << "Loading and checking bounding boxes." << endl;
+
+        int overlappingBoxesCount = 0;
+        int tooSmallBoxesCount = 0;
+
+        for (std::vector<mmod_rect>& boxes : trainingBoxes)
+        {
+            overlappingBoxesCount += overlapped_boxes_count(boxes, test_box_overlap(OVERLAP_IOU, COVERED_THRESHOLD));
+
+            for (mmod_rect& boundingBox : boxes)
+            {
+                if (boundingBox.rect.width() < MIN_BOUNDING_BOX_SIZE && boundingBox.rect.height() < MIN_BOUNDING_BOX_SIZE)
+                {
+                    boundingBox.ignore = true;
+                    ++tooSmallBoxesCount;
+                }
+            }
+        }
+
+        cout << "Number of boxes ignored because of overlapping: " << overlappingBoxesCount << endl;
+        cout << "Number of boxes ignored because both sides are smaller than " << MIN_BOUNDING_BOX_SIZE << " : " << tooSmallBoxesCount << endl;
+
+
+        cout << "Number of training images: " << trainingImages.size() << endl;
+        //mmod_options options(trainingBoxes, MIN_LONG_SIDE_SIZE, MIN_SMALL_SIDE_SIZE);
+        //mmod_options options(trainingBoxes, MIN_OBJECT_SIZE_L, MIN_OBJECT_SIZE_S);
+        mmod_options options(trainingBoxes, DW_LONG_SIDE, DW_SHORT_SIDE);
+        options.overlaps_ignore = test_box_overlap(OVERLAP_IOU, COVERED_THRESHOLD);
+
+        cout << "Number of detector windows " << options.detector_windows.size() << endl;
+        myNet_type net(options);
+
+        net.subnet().layer_details().set_num_filters(options.detector_windows.size());
+
+
+#ifdef MULTIPLE_GPUS
+        dnn_trainer<myNet_type> trainer(net, sgd(SGD_WEIGHT_DECAY, SGD_MOMENTUM), CUDA_DEVICES);
+#else
+        dnn_trainer<myNet_type> trainer(net, sgd(SGD_WEIGHT_DECAY, SGD_MOMENTUM));
+#endif
+
+        trainer.be_verbose();
+        trainer.set_learning_rate(LEARNING_RATE);
+
+        trainer.set_iterations_without_progress_threshold(TRAIN_ITERATION_WITHOUT_PROGRESS_THRESHOLD);
+
+        trainer.set_synchronization_file("TL_SYNC_FILE", std::chrono::minutes(SYNC_INTERVAL));
+
+        random_cropper cropper;
+
+        //rows then cols
+        cropper.set_chip_dims(CHIP_HEIGHT, CHIP_WIDTH);
+        cropper.set_min_object_size(MIN_OBJECT_SIZE_L, MIN_OBJECT_SIZE_S);
+        cropper.set_max_object_size(MAX_OBJECT_SIZE);
+
+        cropper.set_background_crops_fraction(BACKGROUND_CROP_FRACTION);
+
+        //defaulted to false
+        cropper.set_randomly_flip(RANDOM_FLIP);
+        cropper.set_max_rotation_degrees(RANDOM_ROTATION_ANGLE);
+        cropper.set_translate_amount(0);
+
+        dlib::rand rnd;
+
+        cout << trainer << cropper << endl;
+
+        std::vector<matrix<rgb_pixel>>      miniBatchImages;
+        std::vector<std::vector<mmod_rect>> miniBatchLabels;
+
+
+        while (trainer.get_learning_rate() >= MINIMAL_LEARNING_RATE)
+        {
+            cropper(BATCH_SIZE, trainingImages, trainingBoxes, miniBatchImages, miniBatchLabels);
+
+            for (matrix<rgb_pixel> &img : miniBatchImages)
+                disturb_colors(img, rnd);
+
+
+            trainer.train_one_step(miniBatchImages, miniBatchLabels);
+        }
+
+        trainer.get_net();
+        net.clean();
+        serialize("TL_net.dat") << net;
+
+        cout << "Training is completed." << endl;
+        cout << "Training results: " << test_object_detection_function(net, trainingImages, trainingBoxes, test_box_overlap(), 0, options.overlaps_ignore) << endl;
+
+    }
+    catch (std::exception& e)
+    {
+        cout << "*****EXCEPTION*****" << endl;
+        cout << e.what() << endl;
+        cout << "*******************" << endl;
+    }
 }
 
 
