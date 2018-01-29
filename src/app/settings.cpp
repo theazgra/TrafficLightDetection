@@ -64,6 +64,14 @@ bool load_settings(const char* xmlSettingsFile)
     MAX_OBJECT_SIZE = cropper.child("max_object_size").text().as_float(0.5f);
     BACKGROUND_CROP_FRACTION = cropper.child("background_crop_fraction").text().as_float(0.25f);
 
+    std::cout << "Loaded cropper settings: " << std::endl;
+    std::cout << "=============================" << std::endl;
+    std::cout << "Batch size: " << BATCH_SIZE << std::endl;
+    std::cout << "Chip dimensions: " << CHIP_WIDTH << " x " << CHIP_HEIGHT << std::endl;
+    std::cout << "Minimal object size: Small size: " << MIN_OBJECT_SIZE_S << " ,larger size: " << MIN_OBJECT_SIZE_L << std::endl;
+    std::cout << "Random rotation angle: " << RANDOM_ROTATION_ANGLE << ", max object size: " <<  MAX_OBJECT_SIZE << std::endl;
+    std::cout << "Backgroud crop fraction: " << BACKGROUND_CROP_FRACTION << std::endl;
+    std::cout << "=============================" << std::endl;
     //mmod settings
     xml_node mmod = root.child("mmod_settings");
 

@@ -300,7 +300,33 @@ void train(const std::string trainFile, const std::string testFile)
     }
 }
 
+void train_hog(const std::string trainFile)
+{
+	try
+	{
 
+		std::vector<matrix<rgb_pixel>> imgs;
+		std::vector<std::vector<rectangle>> boxes;
+		load_image_dataset(imgs, boxes, trainFile);	
+		
+		typedef scan_fhog_pyramid<pyramid_down<6>> image_scanner_type;
+		image_scanner_type scanner;
+		scanner.set_detection_window_size(20, 20);
+		structural_object_detection_trainer<image_scanner_type> trainer(scanner);
+		trainer.set_num_threads(4);
+		trainer.set_c(1);
+		trainer.be_verbose();
+		trainer.set_epsilon(0.01);
+		object_detector<image_scanner_type> detector = trainer.train(imgs, boxes);
+
+		cout << "training results: " << test_object_detection_function(detector, imgs, boxes) << endl;
+	}
+	catch(std::exception& e)
+	{
+		cout << "Exception" << endl;
+		cout << e.what() << endl;
+	}
+}
 
 
 

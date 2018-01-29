@@ -15,7 +15,7 @@
         <min_object_size_smaller_side>13</min_object_size_smaller_side>
         <min_object_size_larger_side>25</min_object_size_larger_side>
         <max_object_size>0.8</max_object_size>
-	<background_crop_fraction>0.2</background_crop_fraction> 
+	<background_crop_fraction>0.4</background_crop_fraction> 
     </cropper>
     <mmod_settings>
         <min_bounding_box_size>20</min_bounding_box_size>
@@ -36,7 +36,7 @@
         <minimal_learning_rate>0.0001</minimal_learning_rate>
         <training>
             <!--Avaible methods are 1 or 2, 2 for testing while training-->
-            <method>1</method>
+            <method>3</method>
             <!--TRAIN_ITERATION_WITHOUT_PROGRESS_THRESHOLD-->
             <tr_iter_wo_prog_threshold>2000</tr_iter_wo_prog_threshold>
             <!--TEST_ITERATION_WITHOUT_PROGRESS_THRESHOLD used for second method-->

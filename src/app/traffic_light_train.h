@@ -5,6 +5,7 @@
 
 void train(const std::string trainFile);
 void train(const std::string trainFile, const std::string testFile);
+void train_hog(const std::string trainFile);
 int overlapped_boxes_count(std::vector<dlib::mmod_rect> boxes, const dlib::test_box_overlap& overlaps);
 
 #endif //BACHELOR_TRAFFIC_LIGHT_TRAIN_H
