@@ -2,6 +2,7 @@
 #include "traffic_light_train.h"
 #include "traffic_light_test.h"
 #include "utils.h"
+#include "OpenCvUtils.h"
 
 // ----------------------------------------------------------------------------------------
 using namespace std;
@@ -17,6 +18,9 @@ namespace file
 
 int main(int argc, char** argv)
 {
+    //cv::Mat m;
+    get_traffic_light_state();
+    return  0;
 
     const uint ARGCOUNT = 8;
     string arguments[ARGCOUNT];
