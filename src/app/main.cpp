@@ -18,9 +18,6 @@ namespace file
 
 int main(int argc, char** argv)
 {
-    //cv::Mat m;
-    get_traffic_light_state();
-    return  0;
 
     const uint ARGCOUNT = 8;
     string arguments[ARGCOUNT];
@@ -35,11 +32,13 @@ int main(int argc, char** argv)
     }
 
 
-
-    if (!load_settings("../app_settings.xml"))
-        return 1;
-    else
-        cout  << endl << "Loaded settings from xml." << endl;
+    if (arguments[1] != "--state")
+    {
+        if (!load_settings("../app_settings.xml"))
+            return 1;
+        else
+            cout << endl << "Loaded settings from xml." << endl;
+    }
 
     if (arguments[1] == "--c" || arguments[1] == "--cropper")
     {
@@ -127,6 +126,17 @@ int main(int argc, char** argv)
         bool save = arguments[5] == "--save";
 
         test(netFile, testFile, testType, save);
+    }
+
+    if (arguments[1] == "--state")
+    {
+        if (!file::file_exists(arguments[2]))
+        {
+            cout << "Image file does not exist!" << endl;
+            return 1;
+        }
+        cv::Mat m = cv::imread(arguments[2]);
+        cout << "Detected state: " << translate_TL_state(get_traffic_light_state(m)) << endl;
     }
 
     return 0;

@@ -1,44 +1,51 @@
+#ifndef DISPLAYIMAGE_OPENCVUTILS_H
+#define DISPLAYIMAGE_OPENCVUTILS_H
+
+
+#define int64 opencv_broken_int
+#define uint64 opencv_broken_uint
 #include <opencv2/opencv.hpp>
+#undef int64
+#undef uint64
+
 #include <dlib/threads.h>
 #include <exception>
 #include <chrono>
 
-#ifndef DISPLAYIMAGE_OPENCVUTILS_H
-#define DISPLAYIMAGE_OPENCVUTILS_H
 
-struct TrafficLightPartInfo{
+
+struct TrafficLightPartInfo {
     cv::Mat trafficLightPart;
-    cv::Scalar lowerHSVBound;
-    cv::Scalar upperHSBBound;
+    std::vector<std::pair<cv::Scalar, cv::Scalar>> hsvRanges;
     cv::Mat1b resultMask;
+    cv::Mat circleMask;
     float maskCoverage;
-};
+    int nonZeroPixelCount;
 
-struct Color{
-    int red;
-    int green;
-    int blue;
-
-    int combined()
+    TrafficLightPartInfo(cv::Mat & imgPart, std::vector<std::pair<cv::Scalar, cv::Scalar>> &hsvRanges)
     {
-        return red + green + blue;
+        this->trafficLightPart = imgPart;
+        this->hsvRanges = hsvRanges;
+        this->maskCoverage = 0.0f;
     }
 
 };
+
 
 enum TLState{
     Red,
     Orange,
     Green,
-    Inactive
+    RedOrange,
+    Inactive,
+    Error
 };
 
+std::string translate_TL_state(TLState state);
+float get_mask_coverage(cv::Mat1b & mask);
 
-//Color get_average_color(cv::Mat & img);
-//float get_brightness_value(cv::Mat1b & maskedImg);
+TLState get_traffic_light_state(cv::Mat & img);
 
-//TLState get_traffic_light_state(cv::Mat & img);
-TLState get_traffic_light_state();
 
 
 

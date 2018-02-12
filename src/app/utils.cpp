@@ -55,5 +55,7 @@ void display_help()
     cout << "  Use --display-error to show only images without detection." << endl;
     cout << "  Use --save to save displayed images (only used with display)." << endl;
     cout << "  eg. --test TL_net.dat ../test/test.xml" << endl << endl;
+
+    cout << "--state and image, to test traffic light state detection." << endl << endl;
 }
 
