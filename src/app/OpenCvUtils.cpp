@@ -372,6 +372,7 @@ void save_found_crop(cv::Mat & mat, dlib::mmod_rect rectangle, int index)
     std::cout << roi << std::endl;
 
     cv::Mat cropped = mat(roi);
+    cvtColor(cropped, cropped, CV_BGR2RGB);
     std::cout << "Saving: crop_" << std::to_string(index) << ".png" << std::endl;
     cv::imwrite("crops/crop_" + std::to_string(index) + ".png" , cropped);
 }
