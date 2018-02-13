@@ -19,6 +19,7 @@ template <typename SUBNET> using rcon3  = relu<bn_con<con3<55,SUBNET>>>; //why 5
 //template <typename SUBNET> using rcon3  = relu<bn_con<con3<32,SUBNET>>>;
 
 using net_type = loss_mmod<con<1,9,9,1,1,rcon5<rcon5<rcon5<downsampler8x<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>;
+//using net_type = loss_mmod<con<1,9,9,1,1,rcon5<rcon5<rcon5<downsampler8x<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>;
 
 
 template <typename SUBNET> using downsampler4x  = relu<bn_con<con5d<32, relu<bn_con<con5d<16, SUBNET>>>>>>;
