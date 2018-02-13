@@ -59,7 +59,7 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
 
     image_window window;
 
-    if (testType == NoDisplay)
+    if (testType == NoDisplay || testType == SaveCrops)
         window.close_window();
 
 
@@ -98,9 +98,12 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
         {
             openCvImg = toMat(image);
         }
+	else
+	{
 
-        window.clear_overlay();
-        window.set_image(image);
+        	window.clear_overlay();
+        	window.set_image(image);
+	}
 
         int labelIndex = -1;
         for (mmod_rect d : detections)
@@ -111,6 +114,7 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
             if (testType == SaveCrops)
             {
                 save_found_crop(openCvImg, d, labelIndex + imgIndex);
+		continue;
             }
 
             cout << "\tBounding box " << labelIndex << " with label: " << d.label << " Detection confidence " << d.detection_confidence << endl;
@@ -136,7 +140,7 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
                 save_png(image, "detected_" + to_string(imgIndex) + ".png");
             }
         }
-        else
+        else if (testType != SaveCrops)
         {
             cout << "Press enter for next image." << endl;
             cin.get();

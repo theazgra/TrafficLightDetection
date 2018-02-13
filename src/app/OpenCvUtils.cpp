@@ -52,6 +52,8 @@ std::string translate_TL_state(TLState state)
             return "Inactive";
         case Error:
             return "Error";
+	default:
+	    return "Error";
     }
 }
 
@@ -367,9 +369,11 @@ void save_found_crop(cv::Mat & mat, dlib::mmod_rect rectangle, int index)
 {
     cv::Rect roi(rectangle.rect.left(), rectangle.rect.top(), rectangle.rect.width(), rectangle.rect.height());
 
-    mat = mat(roi);
+    std::cout << roi << std::endl;
 
-    cv::imwrite("extracted/crop_" + std::to_string(index), mat);
+    cv::Mat cropped = mat(roi);
+    std::cout << "Saving: crop_" << std::to_string(index) << ".png" << std::endl;
+    cv::imwrite("crops/crop_" + std::to_string(index) + ".png" , cropped);
 }
 
 
