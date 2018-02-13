@@ -11,7 +11,8 @@ enum TestType
     FullTest,
     DisplayOnly,
     NoDisplay,
-    OnlyErrorDisplay
+    OnlyErrorDisplay,
+    SaveCrops
 };
 
 

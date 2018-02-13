@@ -51,10 +51,12 @@ void display_help()
     cout << "  eg. --traing ../test/train.xml {../test/test.xml}" << endl << endl;
 
     cout << "--test with next argument specifiing net dat file and XML file annotating test data" << endl;
-    cout << "  Use --display-only to go straigt to visual testing." << endl;
-    cout << "  Use --display-error to show only images without detection." << endl;
-    cout << "  Use --save to save displayed images (only used with display)." << endl;
-    cout << "  eg. --test TL_net.dat ../test/test.xml" << endl << endl;
+    cout << "  Next you can use: " << endl;
+    cout << "    --display-only to go straigt to visual testing." << endl;
+    cout << "    --display-error to show only images without detection or with false alarms." << endl;
+    cout << "    --save to save displayed images (only used with display)." << endl;
+    cout << "    --save-crops to just save detected traffic lights without displaying them." << endl;
+
 
     cout << "--state and image, to test traffic light state detection." << endl << endl;
 }

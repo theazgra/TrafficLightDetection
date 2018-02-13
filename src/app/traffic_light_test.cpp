@@ -1,4 +1,12 @@
 #include "traffic_light_test.h"
+#define int64 opencv_broken_int
+#define uint64 opencv_broken_uint
+
+#include <dlib/opencv.h>
+#include "OpenCvUtils.h"
+
+#undef int64
+#undef uint64
 
 using namespace std;
 using namespace dlib;
@@ -81,9 +89,15 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
              << " bounding boxes. Found: " << detectionCount << " bounding boxes.  " << foundPercent  << " %" << endl;
 
 
-        //if (testType == OnlyErrorDisplay && !detections.empty())
+
         if ((testType == OnlyErrorDisplay && (detectionCount == groundTruth)) || testType == NoDisplay)
             continue;
+
+        cv::Mat openCvImg;
+        if (testType == SaveCrops)
+        {
+            openCvImg = toMat(image);
+        }
 
         window.clear_overlay();
         window.set_image(image);
@@ -91,7 +105,13 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
         int labelIndex = -1;
         for (mmod_rect d : detections)
         {
+
             ++labelIndex;
+
+            if (testType == SaveCrops)
+            {
+                save_found_crop(openCvImg, d, labelIndex + imgIndex);
+            }
 
             cout << "\tBounding box " << labelIndex << " with label: " << d.label << " Detection confidence " << d.detection_confidence << endl;
 
@@ -107,6 +127,7 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
 
         if (saveImages)
         {
+
             cout << "Press s to save image, otherwise press enter for next image." << endl;
             std::string input;
             cin >> input;

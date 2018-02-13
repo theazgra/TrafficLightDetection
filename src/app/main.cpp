@@ -116,12 +116,17 @@ int main(int argc, char** argv)
         }
         TestType testType = NoDisplay;
 
+
         if (displayArg == "--display")
             testType = FullTest;
         else if (displayArg == "--display-only")
             testType = DisplayOnly;
         else if (displayArg == "--display-error")
             testType = OnlyErrorDisplay;
+        else if (displayArg == "--save-crops")
+        {
+            testType = SaveCrops;
+        }
 
         bool save = arguments[5] == "--save";
 
@@ -130,6 +135,8 @@ int main(int argc, char** argv)
 
     if (arguments[1] == "--state")
     {
+        //train_state_detection("DUMMY");
+
         if (!file::file_exists(arguments[2]))
         {
             cout << "Image file does not exist!" << endl;
@@ -137,6 +144,7 @@ int main(int argc, char** argv)
         }
         cv::Mat m = cv::imread(arguments[2]);
         cout << "Detected state: " << translate_TL_state(get_traffic_light_state(m)) << endl;
+
     }
 
     return 0;

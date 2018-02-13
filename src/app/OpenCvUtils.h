@@ -9,9 +9,15 @@
 #undef uint64
 
 #include <dlib/threads.h>
+#include <dlib/dnn.h>
 #include <exception>
 #include <chrono>
 
+struct ThreadParam2
+{
+    cv::Mat imgPart;
+    float result;
+};
 
 
 struct TrafficLightPartInfo {
@@ -33,18 +39,20 @@ struct TrafficLightPartInfo {
 
 
 enum TLState{
-    Red,
-    Orange,
-    Green,
-    RedOrange,
-    Inactive,
-    Error
+    Red = 0,
+    Orange = 1,
+    Green = 2,
+    RedOrange = 3,
+    Inactive = 4,
+    Error = 5
 };
 
 std::string translate_TL_state(TLState state);
 float get_mask_coverage(cv::Mat1b & mask);
-
+void train_state_detection(const std::string file);
 TLState get_traffic_light_state(cv::Mat & img);
+
+void save_found_crop(cv::Mat & mat, dlib::mmod_rect rectangle, int index);
 
 
 
