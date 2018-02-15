@@ -342,7 +342,7 @@ TLState get_traffic_light_state(cv::Mat & img)
     //std::chrono::duration<double> timeElapsed = finish - start;
     //std::cout << "State found after: " << timeElapsed.count() << " ms." << std::endl;
 
-    if (all_below({hsvTop.maskCoverage, hsvMiddle.maskCoverage, hsvBottom.maskCoverage}, 0.1f))
+    if (all_zero({hsvTop.maskCoverage, hsvMiddle.maskCoverage, hsvBottom.maskCoverage}))
     {
         return Inactive;
     }
