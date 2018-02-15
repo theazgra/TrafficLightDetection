@@ -36,6 +36,38 @@ int thread_count = 6;
 dlib::mutex count_mutex;
 dlib::signaler count_signaler(count_mutex);
 
+bool all_zero(std::vector<float> values)
+{
+    bool predicate = true;
+
+    for (float val : values)
+    {
+        if (val != 0)
+        {
+            predicate = false;
+            break;
+        }
+    }
+
+    return predicate;
+}
+
+bool all_below(std::vector<float> values, float threshold)
+{
+    bool predicate = true;
+
+    for (float val : values)
+    {
+        if (val > threshold)
+        {
+            predicate = false;
+            break;
+        }
+    }
+
+    return predicate;
+}
+
 std::string translate_TL_state(TLState state)
 {
     switch (state)
@@ -114,7 +146,7 @@ float get_average_brightness(cv::Mat & img)
 
 }
 
-float get_mask_coverage(TrafficLightPartInfo * partInfo)
+float get_mask_coverage(HsvTestParam * partInfo)
 {
     long totalPixelCount = partInfo->resultMask.rows * partInfo->resultMask.cols;
 
@@ -140,9 +172,7 @@ float get_mask_coverage(TrafficLightPartInfo * partInfo)
 
     });
 
-    int nonZero = partInfo->nonZeroPixelCount;
-
-    float coveragePerc = ((float)(whitePixelCount)) / ((float)(nonZero));
+    float coveragePerc = ((float)(whitePixelCount)) / ((float)(totalPixelCount));
 
     return coveragePerc;
 }
@@ -155,30 +185,15 @@ float get_mask_coverage(TrafficLightPartInfo * partInfo)
 void thread(void * param)
 {
     using namespace cv;
-    TrafficLightPartInfo * partInfo = (TrafficLightPartInfo*)param;
+    HsvTestParam * partInfo = (HsvTestParam*)param;
 
-
-    Mat1b circleMask = Mat::zeros(partInfo->trafficLightPart.rows, partInfo->trafficLightPart.cols, CV_8UC1);
-    circle(circleMask,
-            Point(partInfo->trafficLightPart.cols / 2,partInfo->trafficLightPart.rows / 2),
-            (int)((partInfo->trafficLightPart.cols / 4) ),
-            Scalar::all(255),
-            -1,
-            8,
-            0);
-
-    partInfo->trafficLightPart.copyTo(partInfo->circleMask, circleMask);
     Mat1b mask, resultMask;
 
-    partInfo->nonZeroPixelCount = get_non_zero_count(circleMask);
-
-
-
-    resultMask = Mat1b(circleMask.rows, circleMask.cols);
+    resultMask = Mat1b(partInfo->trafficLightPart.rows, partInfo->trafficLightPart.cols);
 
     for (std::pair<Scalar, Scalar> bounds  : partInfo->hsvRanges)
     {
-        inRange(partInfo->circleMask, bounds.first, bounds.second, mask);
+        inRange(partInfo->trafficLightPart, bounds.first, bounds.second, mask);
         resultMask = resultMask | mask;
 
     }
@@ -194,7 +209,7 @@ void thread(void * param)
 
 void thread2(void * param)
 {
-    ThreadParam2 * info = (ThreadParam2*)param;
+    GrayScaleTestParam * info = (GrayScaleTestParam*)param;
 
     info->result = get_average_brightness(info->imgPart);
 
@@ -204,12 +219,19 @@ void thread2(void * param)
 
 }
 
+void show(cv::Mat & img)
+{
+    cv::namedWindow("Window", 0);
+    cv::imshow("Window", img);
+    cv::waitKey(0);
+}
+
 
 TLState get_traffic_light_state(cv::Mat & img)
 {
     using namespace cv;
 
-    auto start = std::chrono::high_resolution_clock::now();
+    //auto start = std::chrono::high_resolution_clock::now();
 
     int xOffset = (int)(img.cols * 0.3);
     int yOffset = (int)(img.rows * 0.15);
@@ -220,34 +242,45 @@ TLState get_traffic_light_state(cv::Mat & img)
 
     Mat gray, hsv;
 
+
+
     cvtColor(img, gray, CV_BGR2GRAY);
     cvtColor(img, hsv, CV_BGR2HSV);
+
+    //Mat normalized1, normalized2;
+    //show(gray);
+    normalize(gray, gray, 0, 100, NORM_MINMAX); // 150
+    //normalize(gray, normalized2, 0, 150, NORM_MINMAX);
+
+    //show(normalized1);
+    //show(normalized2);
 
 
     Mat topPartGray, middlePartGray, bottomPartGray, topPartHsv, middlePartHsv, bottomPartHsv;
 
     int partHeight = img.rows / 3;
 
-    topPartGray =       Mat(img, Rect(0,0,img.cols, partHeight));
-    middlePartGray =    Mat(img, Rect(0,partHeight,img.cols, partHeight));
-    bottomPartGray =    Mat(img, Rect(0,2 * partHeight,img.cols, partHeight));
+    topPartGray =       Mat(gray, Rect(0,0,img.cols, partHeight));
+    middlePartGray =    Mat(gray, Rect(0,partHeight,img.cols, partHeight));
+    bottomPartGray =    Mat(gray, Rect(0,2 * partHeight,img.cols, partHeight));
 
-    topPartHsv =       Mat(img, Rect(0,0,img.cols, partHeight));
-    middlePartHsv =    Mat(img, Rect(0,partHeight,img.cols, partHeight));
-    bottomPartHsv =    Mat(img, Rect(0,2 * partHeight,img.cols, partHeight));
+    topPartHsv =       Mat(hsv, Rect(0,0,img.cols, partHeight));
+    middlePartHsv =    Mat(hsv, Rect(0,partHeight,img.cols, partHeight));
+    bottomPartHsv =    Mat(hsv, Rect(0,2 * partHeight,img.cols, partHeight));
 
 
-    TrafficLightPartInfo topPartInfo(topPartHsv, redBounds);
-    TrafficLightPartInfo middlePartInfo(middlePartHsv , orangeBounds);
-    TrafficLightPartInfo bottomPartInfo(bottomPartHsv, greenBounds);
+    HsvTestParam hsvTop(topPartHsv, redBounds);
+    HsvTestParam hsvMiddle(middlePartHsv , orangeBounds);
+    HsvTestParam hsvBottom(bottomPartHsv, greenBounds);
 
-    ThreadParam2 tp; tp.imgPart = topPartGray;
-    ThreadParam2 mp; mp.imgPart = middlePartGray;
-    ThreadParam2 bp; bp.imgPart = bottomPartGray;
+    GrayScaleTestParam tp; tp.imgPart = topPartGray;
+    GrayScaleTestParam mp; mp.imgPart = middlePartGray;
+    GrayScaleTestParam bp; bp.imgPart = bottomPartGray;
 
-    dlib::create_new_thread(thread, &topPartInfo);
-    dlib::create_new_thread(thread, &middlePartInfo);
-    dlib::create_new_thread(thread, &bottomPartInfo);
+
+    dlib::create_new_thread(thread, &hsvTop);
+    dlib::create_new_thread(thread, &hsvMiddle);
+    dlib::create_new_thread(thread, &hsvBottom);
 
     dlib::create_new_thread(thread2, &tp);
     dlib::create_new_thread(thread2, &mp);
@@ -263,119 +296,76 @@ TLState get_traffic_light_state(cv::Mat & img)
     float middleBrig = mp.result;
     float bottomBrig = bp.result;
 
-    std::cout << "Top brigthness: " << topBrig << std::endl;
-    std::cout << "Middle brigthness: " << middleBrig << std::endl;
-    std::cout << "Bottom brigthness: " << bottomBrig << std::endl;
-
-
-    TLState s = get_most_possible_state(
+    TLState grayScaleTest = get_most_possible_state(
             {
                     std::make_pair(Red, topBrig),
                     std::make_pair(Orange, middleBrig),
                     std::make_pair(Green, bottomBrig)
             });
 
-    std::cout << "red coverage: " << topPartInfo.maskCoverage << std::endl;
-    std::cout << "orange coverage: " << middlePartInfo.maskCoverage << std::endl;
-    std::cout << "green coverage: " << bottomPartInfo.maskCoverage << std::endl;
+    TLState hsvTest = get_most_possible_state(
+            {
+                    std::make_pair(Red, hsvTop.maskCoverage),
+                    std::make_pair(Orange, hsvMiddle.maskCoverage),
+                    std::make_pair(Green, hsvBottom.maskCoverage)
+            });
 
-    auto finish = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> timeElapsed = finish - start;
-    std::cout << "State found after: " << timeElapsed.count() << " ms." << std::endl;
+    std::cout << "==============================================" << std::endl;
+    std::cout << "Top brigthness: " << topBrig << std::endl;
+    std::cout << "Middle brigthness: " << middleBrig << std::endl;
+    std::cout << "Bottom brigthness: " << bottomBrig << std::endl;
+
+    std::cout << "red coverage: " << hsvTop.maskCoverage << std::endl;
+    std::cout << "orange coverage: " << hsvMiddle.maskCoverage << std::endl;
+    std::cout << "green coverage: " << hsvBottom.maskCoverage << std::endl;
+
+    std::cout << "GrayScale test result:    " << translate_TL_state(grayScaleTest) << std::endl;
+    std::cout << "HSV test result:          " << translate_TL_state(hsvTest) << std::endl;
+    if (grayScaleTest != hsvTest)
+        std::cout << "*****NOT EQUAL RESULTS*****" << std::endl;
+    std::cout << "==============================================" << std::endl;
 
 
 
-    return s;
-/*
-    float coverageThreshold = 0.2f;
 
-    bool redState = topPartInfo.maskCoverage >= coverageThreshold;
-    bool orangeState = middlePartInfo.maskCoverage >= coverageThreshold;
-    bool greenState = bottomPartInfo.maskCoverage >= coverageThreshold;
+    //auto finish = std::chrono::high_resolution_clock::now();
+    //std::chrono::duration<double> timeElapsed = finish - start;
+    //std::cout << "State found after: " << timeElapsed.count() << " ms." << std::endl;
 
-    if (redState && !orangeState && !greenState)
-        return Red;
-    if (redState && orangeState && !greenState)
-        return RedOrange;
-    if (orangeState && !redState && !greenState)
-        return Orange;
-    if (greenState && !redState && !orangeState)
-        return Green;
-    if (!redState && !orangeState & !greenState)
+    if (all_below({hsvTop.maskCoverage, hsvMiddle.maskCoverage, hsvBottom.maskCoverage}, 0.1f))
+    {
         return Inactive;
-
-
-    return TLState::Error;
-*/
-
+    }
+    else if (grayScaleTest == hsvTest)
+    {
+        return grayScaleTest;
+    }
+    else
+    {
+        return hsvTest;
+    }
 }
 
 
-void train_state_detection(const std::string file = "")
-{
-    using namespace dlib;
 
-    using net_type = loss_multiclass_log<
-    fc<2,
-            relu<fc<84,
-            relu<fc<120,
-            max_pool<2,2,2,2,relu<con<16,5,5,1,1,
-            max_pool<2,2,2,2,relu<con<6,5,5,1,1,
-            input<matrix<rgb_pixel>>
-    >>>>>>>>>>>>;
-
-    std::vector<matrix<rgb_pixel>> images;
-    std::vector<unsigned long> labels;
-
-    matrix<rgb_pixel> img;
-    load_image(img, "red69.png");
-
-    images.push_back(img);
-    load_image(img, "green69.png");
-
-    images.push_back(img);
-
-    image_window win;
-    win.set_image(images[0]);
-    std::cin.get();
-
-    win.set_image(images[1]);
-    std::cin.get();
-
-
-    labels.push_back(0);
-    labels.push_back(1);
-
-    net_type stateNet;
-    dnn_trainer<net_type> stateTrainer(stateNet);
-
-    stateTrainer.set_min_learning_rate(0.001);
-    stateTrainer.set_learning_rate(0.1);
-    stateTrainer.be_verbose();
-
-    stateTrainer.set_synchronization_file("state_net_sync", std::chrono::seconds(30));
-
-    stateTrainer.train(images, labels);
-
-    stateNet.clean();
-    serialize("state_net.dat") << stateNet;
-
-
-
-
-}
 
 void save_found_crop(cv::Mat & mat, dlib::mmod_rect rectangle, int index)
 {
-    cv::Rect roi(rectangle.rect.left(), rectangle.rect.top(), rectangle.rect.width(), rectangle.rect.height());
+    cv::Mat cropped = crop_image(mat, rectangle);
 
-    std::cout << roi << std::endl;
-
-    cv::Mat cropped = mat(roi);
     cvtColor(cropped, cropped, CV_BGR2RGB);
     std::cout << "Saving: crop_" << std::to_string(index) << ".png" << std::endl;
     cv::imwrite("crops/crop_" + std::to_string(index) + ".png" , cropped);
 }
+
+cv::Mat crop_image(cv::Mat & mat, dlib::mmod_rect cropRectangle)
+{
+    cv::Rect roi(cropRectangle.rect.left(), cropRectangle.rect.top(), cropRectangle.rect.width(), cropRectangle.rect.height());
+    cv::Mat cropped = mat(roi);
+
+    return cropped;
+}
+
 
 
 

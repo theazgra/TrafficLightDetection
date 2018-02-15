@@ -9,26 +9,23 @@
 #undef uint64
 
 #include <dlib/threads.h>
-#include <dlib/dnn.h>
 #include <exception>
 #include <chrono>
 
-struct ThreadParam2
+struct GrayScaleTestParam
 {
     cv::Mat imgPart;
     float result;
 };
 
 
-struct TrafficLightPartInfo {
+struct HsvTestParam {
     cv::Mat trafficLightPart;
-    std::vector<std::pair<cv::Scalar, cv::Scalar>> hsvRanges;
     cv::Mat1b resultMask;
-    cv::Mat circleMask;
+    std::vector<std::pair<cv::Scalar, cv::Scalar>> hsvRanges;
     float maskCoverage;
-    int nonZeroPixelCount;
 
-    TrafficLightPartInfo(cv::Mat & imgPart, std::vector<std::pair<cv::Scalar, cv::Scalar>> &hsvRanges)
+    HsvTestParam(cv::Mat & imgPart, std::vector<std::pair<cv::Scalar, cv::Scalar>> &hsvRanges)
     {
         this->trafficLightPart = imgPart;
         this->hsvRanges = hsvRanges;
@@ -49,10 +46,10 @@ enum TLState{
 
 std::string translate_TL_state(TLState state);
 float get_mask_coverage(cv::Mat1b & mask);
-void train_state_detection(const std::string file);
 TLState get_traffic_light_state(cv::Mat & img);
 
 void save_found_crop(cv::Mat & mat, dlib::mmod_rect rectangle, int index);
+cv::Mat crop_image(cv::Mat & mat, dlib::mmod_rect cropRectangle);
 
 
 

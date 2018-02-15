@@ -94,16 +94,12 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
             continue;
 
         cv::Mat openCvImg;
-        if (testType == SaveCrops)
+        openCvImg = toMat(image);
+        if (testType != SaveCrops)
         {
-            openCvImg = toMat(image);
+            window.clear_overlay();
+            window.set_image(image);
         }
-	else
-	{
-
-        	window.clear_overlay();
-        	window.set_image(image);
-	}
 
         int labelIndex = -1;
         for (mmod_rect d : detections)
@@ -114,8 +110,9 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
             if (testType == SaveCrops)
             {
                 save_found_crop(openCvImg, d, labelIndex + imgIndex);
-		continue;
+		        continue;
             }
+            TLState s = Red;
 
             cout << "\tBounding box " << labelIndex << " with label: " << d.label << " Detection confidence " << d.detection_confidence << endl;
 
@@ -126,7 +123,11 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
             else if (d.label == "g")
                 window.add_overlay(d.rect, rgb_pixel(0, 255, 0), "green" + to_string(labelIndex));
             else if (d.label == "s")
-                window.add_overlay(d.rect, rgb_pixel(0,255,0), "semaphore" + to_string(labelIndex));
+            {
+                cv::Mat croppedImage = crop_image(openCvImg, d);
+                window.add_overlay(d.rect, rgb_pixel(0,255,0), translate_TL_state(get_traffic_light_state(croppedImage)));
+            }
+
         }
 
         if (saveImages)
