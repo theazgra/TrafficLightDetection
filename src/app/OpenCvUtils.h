@@ -1,6 +1,7 @@
 #ifndef DISPLAYIMAGE_OPENCVUTILS_H
 #define DISPLAYIMAGE_OPENCVUTILS_H
 
+//#define THREADING
 
 #define int64 opencv_broken_int
 #define uint64 opencv_broken_uint

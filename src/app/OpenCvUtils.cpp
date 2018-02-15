@@ -277,6 +277,7 @@ TLState get_traffic_light_state(cv::Mat & img)
     GrayScaleTestParam mp; mp.imgPart = middlePartGray;
     GrayScaleTestParam bp; bp.imgPart = bottomPartGray;
 
+#ifdef THREADING
 
     dlib::create_new_thread(thread, &hsvTop);
     dlib::create_new_thread(thread, &hsvMiddle);
@@ -291,6 +292,15 @@ TLState get_traffic_light_state(cv::Mat & img)
     {
         count_signaler.wait();
     }
+#else
+    thread(&hsvTop);
+    thread(&hsvMiddle);
+    thread(&hsvBottom);
+
+    thread2(&tp);
+    thread2(&mp);
+    thread2(&bp);
+#endif
 
     float topBrig = tp.result;
     float middleBrig = mp.result;
