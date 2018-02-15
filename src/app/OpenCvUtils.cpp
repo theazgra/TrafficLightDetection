@@ -346,13 +346,9 @@ TLState get_traffic_light_state(cv::Mat & img)
     {
         return Inactive;
     }
-    else if (grayScaleTest == hsvTest)
-    {
-        return grayScaleTest;
-    }
     else
     {
-        return hsvTest;
+        return grayScaleTest;
     }
 }
 
