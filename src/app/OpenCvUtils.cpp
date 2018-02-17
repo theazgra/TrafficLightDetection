@@ -236,21 +236,48 @@ TLState get_traffic_light_state(cv::Mat & img)
     int xOffset = (int)(img.cols * 0.3);
     int yOffset = (int)(img.rows * 0.15);
 
+    //THRESHOLDING
+    /*
+    Mat kernel = (Mat_<float>(3,3) <<   1.0f,  1.0f, 1.0f,
+                                        1.0f, -9.0f, 1.0f,
+                                        1.0f,  1.0f, 1.0f);
+
+
+    Mat imgLaplacian;
+    Mat sharp = img; // copy source image to another temporary one
+    filter2D(sharp, imgLaplacian, CV_32F, kernel);
+    img.convertTo(sharp, CV_32F);
+    Mat imgResult = sharp - imgLaplacian;
+    // convert back to 8bits gray scale
+    imgResult.convertTo(imgResult, CV_8UC3);
+    imgLaplacian.convertTo(imgLaplacian, CV_8UC3);
+    show(imgLaplacian);
+    show(imgResult);
+*/
+
+    Mat thresholded;
+    threshold(img, thresholded, 100, 100, CV_THRESH_TOZERO);
+    show(img);
+    show(thresholded);
+
+
     //Crop image to our ROI
     Rect r(xOffset, yOffset, img.cols - 2*xOffset, img.rows - 2*yOffset);
+
+    //show(img);
+
     img = img(r);
 
+    //show(img);
+
+
     Mat gray, hsv;
-
-
 
     cvtColor(img, gray, CV_BGR2GRAY);
     cvtColor(img, hsv, CV_BGR2HSV);
 
-    //Mat normalized1, normalized2;
-    //show(gray);
     normalize(gray, gray, 0, 100, NORM_MINMAX); // 150
-    //normalize(gray, normalized2, 0, 150, NORM_MINMAX);
+
 
     //show(normalized1);
     //show(normalized2);
