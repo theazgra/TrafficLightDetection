@@ -52,22 +52,6 @@ bool all_zero(std::vector<float> values)
     return predicate;
 }
 
-bool all_below(std::vector<float> values, float threshold)
-{
-    bool predicate = true;
-
-    for (float val : values)
-    {
-        if (val > threshold)
-        {
-            predicate = false;
-            break;
-        }
-    }
-
-    return predicate;
-}
-
 std::string translate_TL_state(TLState state)
 {
     switch (state)
@@ -89,10 +73,34 @@ std::string translate_TL_state(TLState state)
     }
 }
 
+long best_contour(std::vector<std::vector<cv::Point>> &contours, std::vector<cv::Vec4i>& hierarchy)
+{
+    long bestSize = 0;
+    long best_id = 0;
+    int id = -1;
+    for (long i = 0; i < contours.size() ; ++i)
+    {
+        std::vector<cv::Point> & c = contours.at(i);
+        ++id;
+        long size = c.size();
+        if (hierarchy.at(i)[2] < 0 && size > bestSize)
+        {
+            best_id = id;
+            bestSize = size;
+        }
+
+        if (hierarchy.at(i)[2] > 0)
+            std::cout << "Has child" << std::endl;
+    }
+
+    //std::cout << "Best: " << bestSize << std::endl;
+    return best_id;
+}
+
 TLState get_most_possible_state(std::vector<std::pair<TLState, float>> states)
 {
     TLState mostPossibleState = Inactive;
-    float highestBrightness = -1.0f;
+    float highestBrightness = 0.0f;
 
     for (std::pair<TLState, float> state : states)
     {
@@ -131,14 +139,13 @@ int get_non_zero_count(cv::Mat & img)
 float get_average_brightness(cv::Mat & img)
 {
     float brightness = 0.0f;
-    uchar pixel;
 
     for (int row = 0; row < img.rows; ++row) {
         for (int col = 0; col < img.cols; ++col) {
-            pixel = img.at<uchar>(col, row);
-            brightness += pixel;
+            brightness += img.at<uchar>(col, row);
         }
     }
+
 
     brightness = brightness / (float)(img.rows * img.cols);
 
@@ -168,19 +175,12 @@ float get_mask_coverage(HsvTestParam * partInfo)
             dlib::auto_mutex lock(mutexLock);
             ++whitePixelCount;
         }
-
-
     });
 
     float coveragePerc = ((float)(whitePixelCount)) / ((float)(totalPixelCount));
 
     return coveragePerc;
 }
-
-
-
-
-
 
 void thread(void * param)
 {
@@ -226,62 +226,61 @@ void show(cv::Mat & img)
     cv::waitKey(0);
 }
 
+void remove_background(cv::Mat & grayImg, cv::Mat & hsvImg)
+{
+    using namespace cv;
+    using namespace std;
 
-TLState get_traffic_light_state(cv::Mat & img)
+    Mat1b contour, maskedImage;
+    Mat hsvMasked, thresholdOut;
+
+    threshold(grayImg, thresholdOut, 130, 255, CV_THRESH_BINARY_INV);
+
+    vector<vector<Point> > contours;
+    vector<Vec4i> hierarchy;
+
+    contour = Mat::zeros(grayImg.size(), CV_8UC1 );
+    maskedImage = Mat::zeros(grayImg.size(), CV_8UC1);
+    hsvMasked = Mat::zeros(hsvImg.size(), CV_8UC3);
+
+    findContours(thresholdOut, contours, hierarchy, RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE , Point(0, 0));
+
+    long contId = best_contour(contours, hierarchy);
+    drawContours(contour, contours, contId, Scalar::all(255), CV_FILLED);
+
+
+    grayImg.copyTo(maskedImage, contour);
+    hsvImg.copyTo(hsvMasked, contour);
+
+    grayImg = maskedImage;
+    hsvImg = hsvMasked;
+}
+
+TLState get_traffic_light_state(cv::Mat & img, bool silence)
 {
     using namespace cv;
 
     //auto start = std::chrono::high_resolution_clock::now();
 
+    /*
     int xOffset = (int)(img.cols * 0.3);
     int yOffset = (int)(img.rows * 0.15);
-
-    //THRESHOLDING
-    /*
-    Mat kernel = (Mat_<float>(3,3) <<   1.0f,  1.0f, 1.0f,
-                                        1.0f, -9.0f, 1.0f,
-                                        1.0f,  1.0f, 1.0f);
-
-
-    Mat imgLaplacian;
-    Mat sharp = img; // copy source image to another temporary one
-    filter2D(sharp, imgLaplacian, CV_32F, kernel);
-    img.convertTo(sharp, CV_32F);
-    Mat imgResult = sharp - imgLaplacian;
-    // convert back to 8bits gray scale
-    imgResult.convertTo(imgResult, CV_8UC3);
-    imgLaplacian.convertTo(imgLaplacian, CV_8UC3);
-    show(imgLaplacian);
-    show(imgResult);
-*/
-
-    Mat thresholded;
-    threshold(img, thresholded, 100, 100, CV_THRESH_TOZERO);
-    show(img);
-    show(thresholded);
-
-
-    //Crop image to our ROI
     Rect r(xOffset, yOffset, img.cols - 2*xOffset, img.rows - 2*yOffset);
-
-    //show(img);
-
     img = img(r);
-
-    //show(img);
-
+    */
 
     Mat gray, hsv;
-
     cvtColor(img, gray, CV_BGR2GRAY);
     cvtColor(img, hsv, CV_BGR2HSV);
 
-    normalize(gray, gray, 0, 100, NORM_MINMAX); // 150
+    show(img);
+    remove_background(gray, hsv);
+    show(gray);
+    show(hsv);
 
+    normalize(gray, gray, 0, 90, NORM_MINMAX); // 150
 
-    //show(normalized1);
-    //show(normalized2);
-
+    show(gray);
 
     Mat topPartGray, middlePartGray, bottomPartGray, topPartHsv, middlePartHsv, bottomPartHsv;
 
@@ -347,21 +346,28 @@ TLState get_traffic_light_state(cv::Mat & img)
                     std::make_pair(Green, hsvBottom.maskCoverage)
             });
 
-    std::cout << "==============================================" << std::endl;
-    std::cout << "Top brigthness: " << topBrig << std::endl;
-    std::cout << "Middle brigthness: " << middleBrig << std::endl;
-    std::cout << "Bottom brigthness: " << bottomBrig << std::endl;
 
-    std::cout << "red coverage: " << hsvTop.maskCoverage << std::endl;
-    std::cout << "orange coverage: " << hsvMiddle.maskCoverage << std::endl;
-    std::cout << "green coverage: " << hsvBottom.maskCoverage << std::endl;
+    append_to_file("top_dlib.txt", std::to_string(topBrig));
 
-    std::cout << "GrayScale test result:    " << translate_TL_state(grayScaleTest) << std::endl;
-    std::cout << "HSV test result:          " << translate_TL_state(hsvTest) << std::endl;
-    if (grayScaleTest != hsvTest)
-        std::cout << "*****NOT EQUAL RESULTS*****" << std::endl;
-    std::cout << "==============================================" << std::endl;
+    if (!silence)
+    {
+        std::cout << "==============================================" << std::endl;
+        std::cout << "Top brigthness: " << topBrig << std::endl;
+        std::cout << "Middle brigthness: " << middleBrig << std::endl;
+        std::cout << "Bottom brigthness: " << bottomBrig << std::endl;
 
+
+
+        std::cout << "red coverage: " << hsvTop.maskCoverage << std::endl;
+        std::cout << "orange coverage: " << hsvMiddle.maskCoverage << std::endl;
+        std::cout << "green coverage: " << hsvBottom.maskCoverage << std::endl;
+
+        std::cout << "GrayScale test result:    " << translate_TL_state(grayScaleTest) << std::endl;
+        std::cout << "HSV test result:          " << translate_TL_state(hsvTest) << std::endl;
+        if (grayScaleTest != hsvTest)
+            std::cout << "*****NOT EQUAL RESULTS*****" << std::endl;
+        std::cout << "==============================================" << std::endl;
+    }
 
 
 
@@ -397,6 +403,20 @@ cv::Mat crop_image(cv::Mat & mat, dlib::mmod_rect cropRectangle)
     cv::Mat cropped = mat(roi);
 
     return cropped;
+}
+
+void append_to_file(std::string fileName, std::string message)
+{
+    using namespace std;
+
+    ofstream file;
+    file.open(fileName, ios::out | ios::app);
+
+    file << message << endl;
+
+    file.close();
+
+
 }
 
 
