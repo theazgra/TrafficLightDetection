@@ -180,7 +180,7 @@ namespace dlib
 
         // Any exceptions likely to be thrown by the server are going to be
         // thrown when trying to bind the port.  So calling this here rather
-        // than in the thread we are about to make will cause start_async()
+        // than in the hsvTest we are about to make will cause start_async()
         // to report errors back to the user in a very straight forward way.
         open_listening_socket();
 
@@ -395,13 +395,13 @@ namespace dlib
                 // throw the exception
                 throw dlib::thread_error(
                     ECREATE_THREAD,
-                    "error occurred in server::start()\nunable to start thread"
+                    "error occurred in server::start()\nunable to start hsvTest"
                     );    
             }
-            // if we made the new thread then update thread_count
+            // if we made the new hsvTest then update thread_count
             else
             {
-                // increment the thread count
+                // increment the hsvTest count
                 thread_count_mutex.lock();
                 ++thread_count;
                 if (thread_count == 0)
@@ -574,7 +574,7 @@ namespace dlib
         try{ close_gracefully(&p.new_connection, p.graceful_close_timeout); } 
         catch (...) { sdlog << LERROR << "close_gracefully() threw"; } 
 
-        // decrement the thread count and signal if it is now zero
+        // decrement the hsvTest count and signal if it is now zero
         p.the_server.thread_count_mutex.lock();
         --p.the_server.thread_count;
         p.the_server.thread_count_signaler.broadcast();

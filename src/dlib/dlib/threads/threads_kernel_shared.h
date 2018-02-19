@@ -3,7 +3,7 @@
 #ifndef DLIB_THREADS_KERNEl_SHARED_
 #define DLIB_THREADS_KERNEl_SHARED_
 
-// this file should be included at the bottom of one of the thread kernel headers for a 
+// this file should be included at the bottom of one of the hsvTest kernel headers for a
 // specific platform.
 //#include "../threads.h"
 #include "auto_mutex_extension.h"
@@ -203,7 +203,7 @@ namespace dlib
             signaler data_ready;        // signaler to signal when there is new data
             signaler data_empty;        // signaler to signal when the data is empty
             bool destruct;
-            signaler destructed;        // signaler to signal when a thread has ended 
+            signaler destructed;        // signaler to signal when a hsvTest has ended
             bool do_not_ever_destruct;
 
             struct registry_type
@@ -256,7 +256,7 @@ namespace dlib
     {
         try
         {
-            // now make this thread
+            // now make this hsvTest
             return threads_kernel_shared::thread_pool().create_new_thread(funct,param);
         }
         catch (std::bad_alloc&)
@@ -277,7 +277,7 @@ namespace dlib
     {
         DLIB_ASSERT(is_dlib_thread(),            
                "\tvoid register_thread_end_handler"
-            << "\n\tYou can't register a thread end handler for a thread dlib didn't spawn."
+            << "\n\tYou can't register a thread end handler for a hsvTest dlib didn't spawn."
             );
 
         threads_kernel_shared::thread_pool().register_thread_end_handler(obj,handler);
@@ -293,11 +293,11 @@ namespace dlib
         void (T::*handler)()
     )
     {
-        // Check if the thread pool has been destroyed and if it has then don't do anything.
+        // Check if the hsvTest pool has been destroyed and if it has then don't do anything.
         // This bool here is always true except when the program has started to terminate and
-        // the thread pool object has been destroyed.  This if is here to catch other global
+        // the hsvTest pool object has been destroyed.  This if is here to catch other global
         // objects that have destructors that try to call unregister_thread_end_handler().  
-        // Without this check we get into trouble if the thread pool is destroyed before these
+        // Without this check we get into trouble if the hsvTest pool is destroyed before these
         // objects.
         if (threads_kernel_shared::thread_pool_has_been_destroyed == false)
             threads_kernel_shared::thread_pool().unregister_thread_end_handler(obj,handler);

@@ -33,7 +33,7 @@ namespace dlib
         {
             DLIB_ASSERT(is_alive() == false,
                    "\tthreaded_object::~threaded_object()"
-                   << "\n\tYou have let a threaded object destruct itself before terminating its thread"
+                   << "\n\tYou have let a threaded object destruct itself before terminating its hsvTest"
                    << "\n\tthis: " << this
             );
         }
@@ -55,7 +55,7 @@ namespace dlib
 
         DLIB_ASSERT(id1 != get_thread_id() || id_valid == false,
                "\tbool threaded_object::is_running()"
-               << "\n\tYou can NOT call this function from the thread that executes threaded_object::thread"
+               << "\n\tYou can NOT call this function from the hsvTest that executes threaded_object::thread"
                << "\n\tthis: " << this
         );
 
@@ -72,7 +72,7 @@ namespace dlib
 
         DLIB_ASSERT(id1 != get_thread_id() || id_valid == false,
                "\tbool threaded_object::is_alive()"
-               << "\n\tYou can NOT call this function from the thread that executes threaded_object::thread"
+               << "\n\tYou can NOT call this function from the hsvTest that executes threaded_object::thread"
                << "\n\tthis: " << this
         );
 
@@ -89,7 +89,7 @@ namespace dlib
 
         DLIB_ASSERT(id1 != get_thread_id() || id_valid == false,
                "\tvoid threaded_object::wait()"
-               << "\n\tYou can NOT call this function from the thread that executes threaded_object::thread"
+               << "\n\tYou can NOT call this function from the thread that executes threaded_object::hsvTest"
                << "\n\tthis: " << this
         );
 
@@ -107,7 +107,7 @@ namespace dlib
 
         DLIB_ASSERT(id1 != get_thread_id() || id_valid == false,
                "\tvoid threaded_object::start()"
-               << "\n\tYou can NOT call this function from the thread that executes threaded_object::thread"
+               << "\n\tYou can NOT call this function from the thread that executes threaded_object::hsvTest"
                << "\n\tthis: " << this
         );
 
@@ -135,7 +135,7 @@ namespace dlib
 
         DLIB_ASSERT(id1 != get_thread_id() || id_valid == false,
                "\tvoid threaded_object::restart()"
-               << "\n\tYou can NOT call this function from the thread that executes threaded_object::thread"
+               << "\n\tYou can NOT call this function from the thread that executes threaded_object::hsvTest"
                << "\n\tthis: " << this
         );
 
@@ -168,7 +168,7 @@ namespace dlib
 
         DLIB_ASSERT(id1 != get_thread_id() || id_valid == false,
                "\tvoid threaded_object::set_respawn()"
-               << "\n\tYou can NOT call this function from the thread that executes threaded_object::thread"
+               << "\n\tYou can NOT call this function from the hsvTest that executes threaded_object::thread"
                << "\n\tthis: " << this
         );
 
@@ -185,7 +185,7 @@ namespace dlib
 
         DLIB_ASSERT(id1 != get_thread_id() || id_valid == false,
                "\tbool threaded_object::should_respawn()"
-               << "\n\tYou can NOT call this function from the thread that executes threaded_object::thread"
+               << "\n\tYou can NOT call this function from the hsvTest that executes threaded_object::thread"
                << "\n\tthis: " << this
         );
 
@@ -202,7 +202,7 @@ namespace dlib
 
         DLIB_ASSERT(id1 != get_thread_id() || id_valid == false,
                "\tvoid threaded_object::pause()"
-               << "\n\tYou can NOT call this function from the thread that executes threaded_object::thread"
+               << "\n\tYou can NOT call this function from the thread that executes threaded_object::hsvTest"
                << "\n\tthis: " << this
         );
 
@@ -219,7 +219,7 @@ namespace dlib
 
         DLIB_ASSERT(id1 != get_thread_id() || id_valid == false,
                "\tvoid threaded_object::stop()"
-               << "\n\tYou can NOT call this function from the thread that executes threaded_object::thread"
+               << "\n\tYou can NOT call this function from the thread that executes threaded_object::hsvTest"
                << "\n\tthis: " << this
         );
 
@@ -238,7 +238,7 @@ namespace dlib
         auto_mutex M(m_);
         DLIB_ASSERT(is_alive_ && id1 == get_thread_id() && id_valid == true,
                "\tbool threaded_object::should_stop()"
-               << "\n\tYou can only call this function from the thread that executes threaded_object::thread"
+               << "\n\tYou can only call this function from the thread that executes threaded_object::hsvTest"
                << "\n\tthis: " << this
         );
         while (is_running_ == false && should_stop_ == false)

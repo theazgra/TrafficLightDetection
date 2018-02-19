@@ -124,7 +124,7 @@ namespace dlib
             for (unsigned long i = 0; i < tasks.size(); ++i)
             {
                 // If task bucket i has a task that is currently supposed to be processed
-                // and it originated from the calling thread
+                // and it originated from the calling hsvTest
                 if (tasks[i].is_empty() == false && tasks[i].thread_id == thread_id)
                 {
                     found_task = true;
@@ -169,7 +169,7 @@ namespace dlib
     )
     {
         {
-            // save the id of this worker thread into worker_thread_ids
+            // save the id of this worker hsvTest into worker_thread_ids
             auto_mutex M(m);
             thread_id_type id = get_thread_id();
             worker_thread_ids.push_back(id);
@@ -294,11 +294,11 @@ namespace dlib
         auto_mutex M(m);
         const thread_id_type my_thread_id = get_thread_id();
 
-        // find a thread that isn't doing anything
+        // find a hsvTest that isn't doing anything
         long idx = find_empty_task_slot();
         if (idx == -1 && is_worker_thread(my_thread_id))
         {
-            // this function is being called from within a worker thread and there
+            // this function is being called from within a worker hsvTest and there
             // aren't any other worker threads free so just perform the task right
             // here
 
@@ -311,7 +311,7 @@ namespace dlib
             return 1;
         }
 
-        // wait until there is a thread that isn't doing anything
+        // wait until there is a hsvTest that isn't doing anything
         while (idx == -1)
         {
             task_done_signaler.wait();

@@ -2,6 +2,7 @@
 #include <dlib/gui_widgets.h>
 #include "OpenCvUtils.h"
 
+
 cv::Scalar lowerWhite(0,0,225);
 cv::Scalar upperWhite(255,255,255);
 
@@ -146,7 +147,6 @@ float get_average_brightness(cv::Mat & img)
         }
     }
 
-
     brightness = brightness / (float)(img.rows * img.cols);
 
     return brightness;
@@ -155,34 +155,25 @@ float get_average_brightness(cv::Mat & img)
 
 float get_mask_coverage(HsvTestParam * partInfo)
 {
-    long totalPixelCount = partInfo->resultMask.rows * partInfo->resultMask.cols;
-
     long whitePixelCount = 0;
 
-    dlib::mutex mutexLock;
+    for (int row = 0; row < partInfo->resultMask.rows; ++row) {
+        for (int col = 0; col < partInfo->resultMask.cols; ++col) {
+            if (partInfo->resultMask.at<uchar>(row, col) == 255)
+            {
+                ++whitePixelCount;
+            }
 
-    if (!partInfo->resultMask.isContinuous())
-    {
-        partInfo->resultMask = partInfo->resultMask.clone();
+        }
     }
 
-    uchar pixel;
-    dlib::parallel_for(0, totalPixelCount, [&](long i){
-        pixel = partInfo->resultMask.data[i];
-
-        if (pixel == 255)
-        {
-            dlib::auto_mutex lock(mutexLock);
-            ++whitePixelCount;
-        }
-    });
-
+    long totalPixelCount = partInfo->resultMask.rows * partInfo->resultMask.cols;
     float coveragePerc = ((float)(whitePixelCount)) / ((float)(totalPixelCount));
 
     return coveragePerc;
 }
 
-void thread(void * param)
+void hsvTest(void *param)
 {
     using namespace cv;
     HsvTestParam * partInfo = (HsvTestParam*)param;
@@ -198,24 +189,25 @@ void thread(void * param)
 
     }
     partInfo->resultMask = resultMask;
-
-
     partInfo->maskCoverage = get_mask_coverage(partInfo);
 
+#ifdef THREADING
     dlib::auto_mutex countLock(count_mutex);
     --thread_count;
     count_signaler.signal();
+#endif
 }
 
-void thread2(void * param)
+void grayScaleTest(void * param)
 {
     GrayScaleTestParam * info = (GrayScaleTestParam*)param;
-
     info->result = get_average_brightness(info->imgPart);
 
+#ifdef THREADING
     dlib::auto_mutex countLock(count_mutex);
     --thread_count;
     count_signaler.signal();
+#endif
 
 }
 
@@ -259,6 +251,7 @@ void remove_background(cv::Mat & grayImg, cv::Mat & hsvImg)
 TLState get_traffic_light_state(cv::Mat & img, bool silence)
 {
     using namespace cv;
+    Logger log("StateLogger.txt");
 
     //auto start = std::chrono::high_resolution_clock::now();
 
@@ -273,14 +266,14 @@ TLState get_traffic_light_state(cv::Mat & img, bool silence)
     cvtColor(img, gray, CV_BGR2GRAY);
     cvtColor(img, hsv, CV_BGR2HSV);
 
-    show(img);
+    //show(img);
     remove_background(gray, hsv);
-    show(gray);
-    show(hsv);
+    //show(gray);
+    //show(hsv);
 
-    normalize(gray, gray, 0, 90, NORM_MINMAX); // 150
+    normalize(gray, gray, 0, 100, NORM_MINMAX); // 150
 
-    show(gray);
+    //show(gray);
 
     Mat topPartGray, middlePartGray, bottomPartGray, topPartHsv, middlePartHsv, bottomPartHsv;
 
@@ -319,13 +312,13 @@ TLState get_traffic_light_state(cv::Mat & img, bool silence)
         count_signaler.wait();
     }
 #else
-    thread(&hsvTop);
-    thread(&hsvMiddle);
-    thread(&hsvBottom);
+    hsvTest(&hsvTop);
+    hsvTest(&hsvMiddle);
+    hsvTest(&hsvBottom);
 
-    thread2(&tp);
-    thread2(&mp);
-    thread2(&bp);
+    grayScaleTest(&tp);
+    grayScaleTest(&mp);
+    grayScaleTest(&bp);
 #endif
 
     float topBrig = tp.result;
@@ -347,7 +340,9 @@ TLState get_traffic_light_state(cv::Mat & img, bool silence)
             });
 
 
-    append_to_file("top_dlib.txt", std::to_string(topBrig));
+    log.write_line(std::to_string(topBrig));
+
+
 
     if (!silence)
     {

@@ -58,6 +58,8 @@ void display_help()
     cout << "    --save-crops to just save detected traffic lights without displaying them." << endl;
 
 
-    cout << "--state and image, to test traffic light state detection." << endl << endl;
+    cout << "--state and image, to test traffic light state detection." << endl;
+    cout << "  --verbose to print more info." << endl << endl;
+
 }
 

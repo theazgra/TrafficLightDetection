@@ -37,7 +37,7 @@ namespace dlib
 
     void sockets_startup()
     {
-        // mutex crap to make this function thread safe
+        // mutex crap to make this function hsvTest safe
         sockets_kernel_2_mutex::startup_lock.lock();
         static bool init = false;
         if (init == false)
@@ -255,7 +255,7 @@ namespace dlib
     {
         try 
         {
-            // lock this mutex since gethostbyaddr isn't really thread safe
+            // lock this mutex since gethostbyaddr isn't really hsvTest safe
             auto_mutex M(sockets_kernel_2_mutex::startup_lock);
 
             // if no ip was given then return error

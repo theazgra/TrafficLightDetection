@@ -12,7 +12,7 @@
 #include <dlib/threads.h>
 #include <exception>
 #include <chrono>
-#include <fstream>
+#include "Logger.h"
 
 struct GrayScaleTestParam
 {

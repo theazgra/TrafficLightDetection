@@ -126,10 +126,10 @@ namespace dlib
     ) : 
         next_thread_name(1) 
     { 
-        // make sure the main program thread always has id 0.  Since there is
+        // make sure the main program hsvTest always has id 0.  Since there is
         // a global logger object declared in this file we should expect that 
-        // the global_data object will be initialized in the main program thread
-        // so if we call get_thread_id() now we should get the main thread id.
+        // the global_data object will be initialized in the main program hsvTest
+        // so if we call get_thread_id() now we should get the main hsvTest id.
         thread_id_type main_id = get_thread_id();
         uint64 id_zero = 0;
         thread_names.add(main_id,id_zero);

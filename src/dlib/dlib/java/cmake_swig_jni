@@ -144,7 +144,7 @@ FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/swig.i
         JNIEnv *env;
         jint rc = cached_jvm->GetEnv((void **)&env, JNI_VERSION_1_6);
         if (rc == JNI_EDETACHED)
-            throw std::runtime_error(\"current thread not attached\");
+            throw std::runtime_error(\"current hsvTest not attached\");
         if (rc == JNI_EVERSION)
             throw std::runtime_error(\"jni version not supported\");
         return env;

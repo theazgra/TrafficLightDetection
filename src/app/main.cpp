@@ -96,6 +96,7 @@ int main(int argc, char** argv)
         auto finish = chrono::high_resolution_clock::now();
         chrono::duration<double> timeElapsed = finish - start;
         cout << "Training finished after: "; display_time(timeElapsed.count());
+        return 0;
     }
 
     if (arguments[1] == "--test")
@@ -131,10 +132,13 @@ int main(int argc, char** argv)
         bool save = arguments[5] == "--save";
 
         test(netFile, testFile, testType, save);
+
+        return 0;
     }
 
     if (arguments[1] == "--state")
     {
+        bool verbose = arguments[3] == "--verbose";
         //train_state_detection("DUMMY");
 
         if (!file::file_exists(arguments[2]))
@@ -143,9 +147,13 @@ int main(int argc, char** argv)
             return 1;
         }
         cv::Mat m = cv::imread(arguments[2]);
-        cout << "Detected state: " << translate_TL_state(get_traffic_light_state(m)) << endl;
+        cout << "Detected state: " << translate_TL_state(get_traffic_light_state(m, !verbose)) << endl;
+
+        return 0;
 
     }
+
+    display_help();
 
     return 0;
 }
