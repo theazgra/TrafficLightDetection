@@ -23,7 +23,7 @@
         <covered_threshold>0.9</covered_threshold>
         <detector_window>
             <long_side>25</long_side>
-            <short_side>13</short_side>
+            <short_side>13</short_side> <!--original is 13-->
         </detector_window>
     </mmod_settings>
     <sync_settings>
