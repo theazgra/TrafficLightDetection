@@ -33,9 +33,23 @@ std::vector<std::pair<cv::Scalar, cv::Scalar>> greenBounds = {
         std::pair<cv::Scalar, cv::Scalar>(lowerWhite, upperWhite)
 };
 
+std::vector<std::pair<cv::Scalar, cv::Scalar>> whiteBounds = {
+        std::pair<cv::Scalar, cv::Scalar>(lowerWhite, upperWhite)
+};
+
 int thread_count = 6;
 dlib::mutex count_mutex;
 dlib::signaler count_signaler(count_mutex);
+
+void show(cv::Mat & img, std::string winName = "")
+{
+    if (winName == "")
+        winName = "Window";
+
+    cv::namedWindow(winName, 0);
+    cv::imshow(winName, img);
+    cv::waitKey(0);
+}
 
 bool all_zero(std::vector<float> values)
 {
@@ -211,82 +225,174 @@ void grayScaleTest(void * param)
 
 }
 
-void show(cv::Mat & img)
+std::pair<int, int> find_vertical_boundaries(cv::Mat1b & img)
 {
-    cv::namedWindow("Window", 0);
-    cv::imshow("Window", img);
-    cv::waitKey(0);
+    int top = -1;
+    int bottom = -1;
+    int pxInRow = 0;
+    float pxInRowThreshold = 0.65f;
+    for (int r = 0; r < img.rows / 2; ++r) {
+
+        for (int c = 0; c < img.cols; ++c) {
+            if (img.at<uchar>(r,c) == 255)
+            {
+                ++pxInRow;
+            }
+        }
+        if (((float)pxInRow / (float)img.cols) > pxInRowThreshold)
+        {
+            top = r;
+            break;
+        }
+    }
+
+    pxInRow = 0;
+    for (int r = img.rows - 1 ; r > img.rows / 2; --r) {
+        for (int c = 0; c < img.cols; ++c) {
+            if (img.at<uchar>(r,c) == 255)
+            {
+                ++pxInRow;
+            }
+        }
+        if (((float)pxInRow / (float)img.cols) > pxInRowThreshold)
+        {
+            bottom = r;
+            break;
+        }
+    }
+
+    top = top == -1 ? 0 : top;
+    bottom = bottom == -1 ? img.rows : bottom;
+
+    return std::make_pair(top, bottom);
+};
+
+float get_brigthness_in_range(cv::Mat & img, int lowRow, int highRow, int lowCol, int highCol)
+{
+    float brightness = 0.0f;
+    int pixelCount = 0;
+
+    for (int row = lowRow; row < highRow; ++row)
+    {
+        for (int col = lowCol; col < highCol; ++col) {
+            brightness += img.at<uchar>(row, col);
+            ++pixelCount;
+        }
+    }
+
+    return (brightness / (float)(pixelCount));
 }
 
-void remove_background(cv::Mat & grayImg, cv::Mat & hsvImg)
+bool should_mask_contour(cv::Mat & grayImg)
+{
+    float bordersBrigthness  = 0.0f;
+
+    int rowCount = (int)ceil(grayImg.rows * 0.06f);
+    int columnCount = (int)ceil(grayImg.cols * 0.15f);
+
+    float leftBorderBrightness = get_brigthness_in_range(grayImg, rowCount, grayImg.rows - rowCount, 0, columnCount);
+    float rightBorderBrightness = get_brigthness_in_range(grayImg, rowCount, grayImg.rows - rowCount, grayImg.cols - columnCount, grayImg.cols);
+    float topBorderBrigthness = get_brigthness_in_range(grayImg, 0, rowCount, 0, columnCount);
+    float bottomBorderBrightness = get_brigthness_in_range(grayImg, grayImg.rows - rowCount, grayImg.rows, 0, columnCount);
+
+    bordersBrigthness = (leftBorderBrightness + rightBorderBrightness + topBorderBrigthness + bottomBorderBrightness) / 4.0f;
+
+    float centerBrightness = get_brigthness_in_range(grayImg, rowCount, grayImg.rows - rowCount, columnCount, grayImg.cols - columnCount);
+
+    return (bordersBrigthness > centerBrightness);
+}
+
+
+void remove_background(cv::Mat & grayImg, cv::Mat & hsvImg, std::pair<int, int> & verticalBoundaries, bool verbose)
 {
     using namespace cv;
     using namespace std;
 
-    Mat1b contour, maskedImage;
-    Mat hsvMasked, thresholdOut;
+    if (should_mask_contour(grayImg))
+    {
+        cout << "Doing contour masking" << endl;
 
-    threshold(grayImg, thresholdOut, 130, 255, CV_THRESH_BINARY_INV);
+        Mat1b contour, maskedImage;
+        Mat hsvMasked, thresholdOut;
 
-    vector<vector<Point> > contours;
-    vector<Vec4i> hierarchy;
+        threshold(grayImg, thresholdOut, 126, 255, CV_THRESH_BINARY_INV); //130
 
-    contour = Mat::zeros(grayImg.size(), CV_8UC1 );
-    maskedImage = Mat::zeros(grayImg.size(), CV_8UC1);
-    hsvMasked = Mat::zeros(hsvImg.size(), CV_8UC3);
+        vector<vector<Point> > contours;
+        vector<Vec4i> hierarchy;
 
-    findContours(thresholdOut, contours, hierarchy, RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE , Point(0, 0));
+        contour = Mat::zeros(grayImg.size(), CV_8UC1 );
+        maskedImage = Mat::zeros(grayImg.size(), CV_8UC1);
+        hsvMasked = Mat::zeros(hsvImg.size(), CV_8UC3);
 
-    long contId = best_contour(contours, hierarchy);
-    drawContours(contour, contours, contId, Scalar::all(255), CV_FILLED);
+        findContours(thresholdOut, contours, hierarchy, RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE , Point(0, 0));
 
 
-    grayImg.copyTo(maskedImage, contour);
-    hsvImg.copyTo(hsvMasked, contour);
+        long contId = best_contour(contours, hierarchy);
+        drawContours(contour, contours, contId, Scalar::all(255), CV_FILLED);
 
-    grayImg = maskedImage;
-    hsvImg = hsvMasked;
+        std::pair<int, int> tmp = find_vertical_boundaries(contour);
+        verticalBoundaries.first = tmp.first;
+        verticalBoundaries.second = tmp.second;
+
+        grayImg.copyTo(maskedImage, contour);
+        hsvImg.copyTo(hsvMasked, contour);
+
+        grayImg = maskedImage;
+        hsvImg = hsvMasked;
+
+        if (verbose)
+        {
+            show(contour, "Contour");
+            show(maskedImage, "Masked image");
+        }
+
+
+    }
+
+    verticalBoundaries.first = 0;
+    verticalBoundaries.second = grayImg.rows;
 }
 
-TLState get_traffic_light_state(cv::Mat & img, bool silence)
+bool clear_hsv_test(float top, float middle, float bottom)
+{
+    float threshold = 0.1f;
+    if (top < threshold && middle < threshold && bottom > 0)
+        return true;
+    if (top < threshold && middle > 0 && bottom < threshold)
+        return true;
+    if (top > 0 && middle < threshold && bottom < threshold)
+        return true;
+
+    return false;
+}
+
+TLState get_traffic_light_state(cv::Mat & img, bool verbose)
 {
     using namespace cv;
     Logger log("StateLogger.txt");
 
-    //auto start = std::chrono::high_resolution_clock::now();
-
-    /*
-    int xOffset = (int)(img.cols * 0.3);
-    int yOffset = (int)(img.rows * 0.15);
-    Rect r(xOffset, yOffset, img.cols - 2*xOffset, img.rows - 2*yOffset);
-    img = img(r);
-    */
+    Stopwatch s;
+    s.start();
 
     Mat gray, hsv;
     cvtColor(img, gray, CV_BGR2GRAY);
     cvtColor(img, hsv, CV_BGR2HSV);
 
-    //show(img);
-    remove_background(gray, hsv);
-    //show(gray);
-    //show(hsv);
+    std::pair<int, int> verticalBoundaries;
+    remove_background(gray, hsv, verticalBoundaries, verbose);
 
-    normalize(gray, gray, 0, 100, NORM_MINMAX); // 150
-
-    //show(gray);
+    normalize(gray, gray, 0, 95, NORM_MINMAX); // 150
 
     Mat topPartGray, middlePartGray, bottomPartGray, topPartHsv, middlePartHsv, bottomPartHsv;
+    int partHeight = (verticalBoundaries.second - verticalBoundaries.first) / 3;
 
-    int partHeight = img.rows / 3;
+    topPartGray =       Mat(gray, Rect(0, verticalBoundaries.first, img.cols, partHeight));
+    middlePartGray =    Mat(gray, Rect(0, verticalBoundaries.first + partHeight, img.cols, partHeight));
+    bottomPartGray =    Mat(gray, Rect(0, verticalBoundaries.first + 2 * partHeight, img.cols, partHeight));
 
-    topPartGray =       Mat(gray, Rect(0,0,img.cols, partHeight));
-    middlePartGray =    Mat(gray, Rect(0,partHeight,img.cols, partHeight));
-    bottomPartGray =    Mat(gray, Rect(0,2 * partHeight,img.cols, partHeight));
-
-    topPartHsv =       Mat(hsv, Rect(0,0,img.cols, partHeight));
-    middlePartHsv =    Mat(hsv, Rect(0,partHeight,img.cols, partHeight));
-    bottomPartHsv =    Mat(hsv, Rect(0,2 * partHeight,img.cols, partHeight));
-
+    topPartHsv =       Mat(hsv, Rect(0, verticalBoundaries.first, img.cols, partHeight));
+    middlePartHsv =    Mat(hsv, Rect(0, verticalBoundaries.first + partHeight, img.cols, partHeight));
+    bottomPartHsv =    Mat(hsv, Rect(0, verticalBoundaries.first + 2 * partHeight, img.cols, partHeight));
 
     HsvTestParam hsvTop(topPartHsv, redBounds);
     HsvTestParam hsvMiddle(middlePartHsv , orangeBounds);
@@ -341,11 +447,12 @@ TLState get_traffic_light_state(cv::Mat & img, bool silence)
 
 
     log.write_line(std::to_string(topBrig));
-
-
-
-    if (!silence)
+    
+    if (verbose)
     {
+        s.stop();
+        std::cout << "Time: " << s.elapsed() << " ms" << std::endl;
+
         std::cout << "==============================================" << std::endl;
         std::cout << "Top brigthness: " << topBrig << std::endl;
         std::cout << "Middle brigthness: " << middleBrig << std::endl;
@@ -365,19 +472,23 @@ TLState get_traffic_light_state(cv::Mat & img, bool silence)
     }
 
 
-
-    //auto finish = std::chrono::high_resolution_clock::now();
-    //std::chrono::duration<double> timeElapsed = finish - start;
-    //std::cout << "State found after: " << timeElapsed.count() << " ms." << std::endl;
-
     if (all_zero({hsvTop.maskCoverage, hsvMiddle.maskCoverage, hsvBottom.maskCoverage}))
     {
         return Inactive;
     }
-    else
+
+    if (hsvTest == grayScaleTest)
     {
         return grayScaleTest;
     }
+
+    if (clear_hsv_test(hsvTop.maskCoverage, hsvMiddle.maskCoverage, hsvBottom.maskCoverage))
+    {
+        return hsvTest;
+    }
+
+    return grayScaleTest;
+
 }
 
 

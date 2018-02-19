@@ -147,7 +147,7 @@ int main(int argc, char** argv)
             return 1;
         }
         cv::Mat m = cv::imread(arguments[2]);
-        cout << "Detected state: " << translate_TL_state(get_traffic_light_state(m, !verbose)) << endl;
+        cout << "Detected state: " << translate_TL_state(get_traffic_light_state(m, verbose)) << endl;
 
         return 0;
 

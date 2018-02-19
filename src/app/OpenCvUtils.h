@@ -11,8 +11,9 @@
 
 #include <dlib/threads.h>
 #include <exception>
-#include <chrono>
+#include "Stopwatch.h"
 #include "Logger.h"
+#include <cmath>
 
 struct GrayScaleTestParam
 {
@@ -48,7 +49,7 @@ enum TLState{
 
 std::string translate_TL_state(TLState state);
 float get_mask_coverage(cv::Mat1b & mask);
-TLState get_traffic_light_state(cv::Mat & img, bool silence = true);
+TLState get_traffic_light_state(cv::Mat & img, bool verbose = true);
 
 void save_found_crop(cv::Mat & mat, dlib::mmod_rect rectangle, int index);
 cv::Mat crop_image(cv::Mat & mat, dlib::mmod_rect cropRectangle);
