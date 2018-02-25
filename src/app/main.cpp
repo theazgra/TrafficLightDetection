@@ -146,8 +146,14 @@ int main(int argc, char** argv)
             cout << "Image file does not exist!" << endl;
             return 1;
         }
-        cv::Mat m = cv::imread(arguments[2]);
-        cout << "Detected state: " << translate_TL_state(get_traffic_light_state(m, verbose)) << endl;
+
+        dlib::matrix<dlib::rgb_pixel> dlibImg;
+        dlib::load_image(dlibImg, arguments[2]);
+
+        //cv::Mat m = cv::imread(arguments[2]);
+
+        //cout << "Detected state: " << translate_TL_state(get_traffic_light_state(m, verbose)) << endl;
+        cout << "Detected state: " << translate_TL_state(get_traffic_light_state2(dlibImg, verbose)) << endl;
 
         return 0;
 

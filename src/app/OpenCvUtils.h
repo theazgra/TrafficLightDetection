@@ -10,6 +10,9 @@
 #undef uint64
 
 #include <dlib/threads.h>
+#include <dlib/data_io/load_image_dataset.h>
+#include <dlib/gui_widgets.h>
+#include <dlib/opencv.h>
 #include <exception>
 #include "Stopwatch.h"
 #include "Logger.h"
@@ -50,6 +53,7 @@ enum TLState{
 std::string translate_TL_state(TLState state);
 float get_mask_coverage(cv::Mat1b & mask);
 TLState get_traffic_light_state(cv::Mat & img, bool verbose = false);
+TLState get_traffic_light_state2(dlib::matrix<dlib::rgb_pixel> dlibImg, bool verbose = false);
 
 void save_found_crop(cv::Mat & mat, dlib::mmod_rect rectangle, int index);
 cv::Mat crop_image(cv::Mat & mat, dlib::mmod_rect cropRectangle);

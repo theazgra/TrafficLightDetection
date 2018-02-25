@@ -1,5 +1,3 @@
-#include <dlib/data_io/load_image_dataset.h>
-#include <dlib/gui_widgets.h>
 #include "OpenCvUtils.h"
 
 
@@ -267,10 +265,10 @@ std::pair<int, int> find_vertical_boundaries(cv::Mat1b & img)
     return std::make_pair(top, bottom);
 };
 
-float get_brigthness_in_range(cv::Mat & img, int lowRow, int highRow, int lowCol, int highCol)
+float get_sum_in_range(cv::Mat &img, int lowRow, int highRow, int lowCol, int highCol, int &pixelCount)
 {
     float brightness = 0.0f;
-    int pixelCount = 0;
+    pixelCount = 0;
 
     for (int row = lowRow; row < highRow; ++row)
     {
@@ -280,7 +278,7 @@ float get_brigthness_in_range(cv::Mat & img, int lowRow, int highRow, int lowCol
         }
     }
 
-    return (brightness / (float)(pixelCount));
+    return brightness;
 }
 
 bool should_mask_contour(cv::Mat & grayImg)
@@ -289,15 +287,18 @@ bool should_mask_contour(cv::Mat & grayImg)
 
     int rowCount = (int)ceil(grayImg.rows * 0.06f);
     int columnCount = (int)ceil(grayImg.cols * 0.15f);
+    int leftPxs, rightPxs, topPxs, bottomPxs, centerPxs;
 
-    float leftBorderBrightness = get_brigthness_in_range(grayImg, rowCount, grayImg.rows - rowCount, 0, columnCount);
-    float rightBorderBrightness = get_brigthness_in_range(grayImg, rowCount, grayImg.rows - rowCount, grayImg.cols - columnCount, grayImg.cols);
-    float topBorderBrigthness = get_brigthness_in_range(grayImg, 0, rowCount, 0, columnCount);
-    float bottomBorderBrightness = get_brigthness_in_range(grayImg, grayImg.rows - rowCount, grayImg.rows, 0, columnCount);
+    float leftBorderBrightness = get_sum_in_range(grayImg, rowCount, grayImg.rows - rowCount, 0, columnCount, leftPxs);
+    float rightBorderBrightness = get_sum_in_range(grayImg, rowCount, grayImg.rows - rowCount, grayImg.cols - columnCount, grayImg.cols, rightPxs);
+    float topBorderBrigthness = get_sum_in_range(grayImg, 0, rowCount, 0, columnCount, topPxs);
+    float bottomBorderBrightness = get_sum_in_range(grayImg, grayImg.rows - rowCount, grayImg.rows, 0, columnCount, bottomPxs);
 
-    bordersBrigthness = (leftBorderBrightness + rightBorderBrightness + topBorderBrigthness + bottomBorderBrightness) / 4.0f;
+    bordersBrigthness = (leftBorderBrightness + rightBorderBrightness + topBorderBrigthness + bottomBorderBrightness) /
+                        ((float)(leftPxs + rightPxs + topPxs + bottomPxs));
 
-    float centerBrightness = get_brigthness_in_range(grayImg, rowCount, grayImg.rows - rowCount, columnCount, grayImg.cols - columnCount);
+    float centerBrightness = get_sum_in_range(grayImg, rowCount, grayImg.rows - rowCount, columnCount, grayImg.cols - columnCount, centerPxs);
+    centerBrightness = centerBrightness / (float)centerPxs;
 
     return (bordersBrigthness > centerBrightness);
 }
@@ -310,12 +311,14 @@ void remove_background(cv::Mat & grayImg, cv::Mat & hsvImg, std::pair<int, int> 
 
     if (should_mask_contour(grayImg))
     {
-        cout << "Doing contour masking" << endl;
+        if (verbose)
+            cout << "Doing contour masking" << endl;
 
         Mat1b contour, maskedImage;
         Mat hsvMasked, thresholdOut;
 
-        threshold(grayImg, thresholdOut, 126, 255, CV_THRESH_BINARY_INV); //130
+        //OTSU thresholding, so threshold value does not make any difference.
+        threshold(grayImg, thresholdOut, 126, 255, CV_THRESH_BINARY_INV + CV_THRESH_OTSU); //130
 
         vector<vector<Point> > contours;
         vector<Vec4i> hierarchy;
@@ -325,7 +328,6 @@ void remove_background(cv::Mat & grayImg, cv::Mat & hsvImg, std::pair<int, int> 
         hsvMasked = Mat::zeros(hsvImg.size(), CV_8UC3);
 
         findContours(thresholdOut, contours, hierarchy, RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE , Point(0, 0));
-
 
         long contId = best_contour(contours, hierarchy);
         drawContours(contour, contours, contId, Scalar::all(255), CV_FILLED);
@@ -340,30 +342,40 @@ void remove_background(cv::Mat & grayImg, cv::Mat & hsvImg, std::pair<int, int> 
         grayImg = maskedImage;
         hsvImg = hsvMasked;
 
+/*
         if (verbose)
         {
             show(contour, "Contour");
             show(maskedImage, "Masked image");
         }
-
+*/
 
     }
-
-    verticalBoundaries.first = 0;
-    verticalBoundaries.second = grayImg.rows;
+    else
+    {
+        verticalBoundaries.first = 0;
+        verticalBoundaries.second = grayImg.rows;
+    }
 }
 
 bool clear_hsv_test(float top, float middle, float bottom)
 {
     float threshold = 0.1f;
-    if (top < threshold && middle < threshold && bottom > 0)
+    if (top < threshold && middle < threshold && bottom > threshold)
         return true;
-    if (top < threshold && middle > 0 && bottom < threshold)
+    if (top < threshold && middle > threshold && bottom < threshold)
         return true;
-    if (top > 0 && middle < threshold && bottom < threshold)
+    if (top > threshold && middle < threshold && bottom < threshold)
         return true;
 
     return false;
+}
+
+TLState get_traffic_light_state2(dlib::matrix<dlib::rgb_pixel> dlibImg, bool verbose)
+{
+    cv::Mat dlibMatImg = dlib::toMat(dlibImg);
+    cv::cvtColor(dlibMatImg, dlibMatImg, CV_RGB2BGR);
+    return get_traffic_light_state(dlibMatImg, verbose);
 }
 
 TLState get_traffic_light_state(cv::Mat & img, bool verbose)
@@ -447,7 +459,7 @@ TLState get_traffic_light_state(cv::Mat & img, bool verbose)
 
 
     log.write_line(std::to_string(topBrig));
-    
+
     if (verbose)
     {
         s.stop();
