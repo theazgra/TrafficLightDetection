@@ -7,38 +7,38 @@
         <device>3</device>
     </cuda_devices>
     <cropper>
-	<batch_size>20</batch_size>
+	<batch_size>30</batch_size>
 	<!--200x600 is default chip size for now -->
         <chip_width>200</chip_width>
         <chip_height>600</chip_height>
         <random_rotation_angle>0</random_rotation_angle>
         <min_object_size_smaller_side>13</min_object_size_smaller_side>
-        <min_object_size_larger_side>25</min_object_size_larger_side>
+        <min_object_size_larger_side>20</min_object_size_larger_side>
         <max_object_size>0.8</max_object_size>
 	<background_crop_fraction>0.2</background_crop_fraction> 
     </cropper>
     <mmod_settings>
-        <min_bounding_box_size>20</min_bounding_box_size>
+        <min_bounding_box_size>13</min_bounding_box_size>
         <overlap_iou>0.5</overlap_iou>
         <covered_threshold>0.9</covered_threshold>
         <detector_window>
-            <long_side>25</long_side>
-            <short_side>13</short_side> <!--original is 13-->
+            <long_side>20</long_side>
+            <short_side>13</short_side> <!--original is 13x25-->
         </detector_window>
     </mmod_settings>
     <sync_settings>
-        <sync_interval>5</sync_interval>
+        <sync_interval>10</sync_interval>
     </sync_settings>
     <net_settings>
-        <sgd_weight_decay>0.0005</sgd_weight_decay>
+        <sgd_weight_decay>0.0003</sgd_weight_decay>
         <sgd_momentum>0.9</sgd_momentum>
-        <learning_rate>0.1</learning_rate>
+        <learning_rate>0.05</learning_rate>
         <minimal_learning_rate>0.0001</minimal_learning_rate>
         <training>
             <!--Avaible methods are 1 or 2, 2 for testing while training-->
             <method>1</method>
             <!--TRAIN_ITERATION_WITHOUT_PROGRESS_THRESHOLD-->
-            <tr_iter_wo_prog_threshold>1500</tr_iter_wo_prog_threshold>
+            <tr_iter_wo_prog_threshold>2500</tr_iter_wo_prog_threshold>
             <!--TEST_ITERATION_WITHOUT_PROGRESS_THRESHOLD used for second method-->
             <test_iter_wo_prog_threshold>1000</test_iter_wo_prog_threshold>
             <!--TRAIN_ITERATION_WITHOUT_PROGRESS_THRESHOLD used for second method-->
