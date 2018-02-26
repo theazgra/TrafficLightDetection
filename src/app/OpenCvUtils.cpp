@@ -373,8 +373,9 @@ bool clear_hsv_test(float top, float middle, float bottom)
 
 TLState get_traffic_light_state2(dlib::matrix<dlib::rgb_pixel> dlibImg, bool verbose)
 {
+    //DLIB IMAGE IS IN RGB!
+    //dlib::rgb_pixel px = dlibImg(1,1);
     cv::Mat dlibMatImg = dlib::toMat(dlibImg);
-    cv::cvtColor(dlibMatImg, dlibMatImg, CV_RGB2BGR);
     return get_traffic_light_state(dlibMatImg, verbose);
 }
 
@@ -387,8 +388,9 @@ TLState get_traffic_light_state(cv::Mat & img, bool verbose)
     s.start();
 
     Mat gray, hsv;
-    cvtColor(img, gray, CV_BGR2GRAY);
-    cvtColor(img, hsv, CV_BGR2HSV);
+    //image from dlib is rgb not bgr.
+    cvtColor(img, gray, CV_RGB2GRAY);
+    cvtColor(img, hsv, CV_RGB2HSV);
 
     std::pair<int, int> verticalBoundaries;
     remove_background(gray, hsv, verticalBoundaries, verbose);
