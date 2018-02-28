@@ -374,7 +374,7 @@ bool clear_hsv_test(float top, float middle, float bottom)
 TLState get_traffic_light_state2(dlib::matrix<dlib::rgb_pixel> dlibImg, bool verbose)
 {
     //DLIB IMAGE IS IN RGB!
-    //dlib::rgb_pixel px = dlibImg(1,1);
+
     cv::Mat dlibMatImg = dlib::toMat(dlibImg);
     return get_traffic_light_state(dlibMatImg, verbose);
 }

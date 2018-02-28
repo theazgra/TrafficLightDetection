@@ -55,7 +55,10 @@ void display_help()
     cout << "    --display-only to go straigt to visual testing." << endl;
     cout << "    --display-error to show only images without detection or with false alarms." << endl;
     cout << "    --save to save displayed images (only used with display)." << endl;
-    cout << "    --save-crops to just save detected traffic lights without displaying them." << endl;
+    cout << "    --save-crops to just save detected traffic lights without displaying them." << endl << endl;
+
+    cout << "--video to save frames with detected rectangles. Pass net file, video file and folder where to save frames." << endl;
+    cout << "  e.g. --video TL_net.dat result_folder" << endl << endl;
 
 
     cout << "--state and image, to test traffic light state detection." << endl;

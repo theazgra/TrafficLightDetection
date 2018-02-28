@@ -8,9 +8,6 @@
 #undef int64
 #undef uint64
 
-using namespace std;
-using namespace dlib;
-
 /**
  * Get the number of not ignored label boxes.
  * @param boxes Vector of mmod_rectangles.
@@ -31,6 +28,9 @@ int number_of_label_boxes(std::vector<dlib::mmod_rect> boxes)
 
 void test(std::string netFile, std::string testFile, TestType testType, bool saveImages)
 {
+    using namespace std;
+    using namespace dlib;
+
     net_type net;
     deserialize(netFile) >> net;
 
@@ -154,3 +154,107 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
     cout << "==============================================" << endl;
 
 }
+
+dlib::rgb_pixel get_color_for_label(std::string label)
+{
+    if (label == "r")
+        return rgb_pixel(255, 0, 0);
+    if (label == "g")
+        return rgb_pixel(0, 255, 0);
+    if (label == "y" || label == "o")
+        return rgb_pixel(255, 127, 80);
+
+    return rgb_pixel(200, 200, 200);
+}
+
+void save_video(std::string netFile, std::string videoFile, std::string resultFolder)
+{
+    using namespace dlib;
+    Logger log(videoFile + "_log.txt");
+
+    try
+    {
+        net_type net;
+        deserialize(netFile) >> net;
+
+        cv::VideoCapture videoCapture(videoFile);
+        cv::Mat videoFrame;
+
+        int frameNum = -1;
+        for (;;)
+        {
+            ++frameNum;
+            videoCapture >> videoFrame;
+            if (videoFrame.empty())
+            {
+                break;
+            }
+
+            //Convert color to rgb space
+            cv::cvtColor(videoFrame, videoFrame, CV_BGR2RGB);
+
+            //Wrap mat with dlib wrapper.
+            cv_image<rgb_pixel> dlibImg(videoFrame);
+
+            //Assign dlib image to matrix data, because net requires matrix, or derive abstraction layer. M
+            matrix<rgb_pixel> imgData;
+            assign_image(imgData, dlibImg);
+
+            std::vector<mmod_rect> detections = net(imgData);
+
+            for (mmod_rect detection : detections)
+            {
+                draw_rectangle(imgData, detection.rect, get_color_for_label(detection.label));
+            }
+
+            log.write_line("Saving frame " + std::to_string(frameNum));
+            save_png(imgData, resultFolder + std::to_string(frameNum) + ".png");
+        }
+        log.write_line("Succesfully saved all frames.");
+    }
+    catch (std::exception& e)
+    {
+        log.write_line("Error occured while saving image");
+        log.write_line(e.what());
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

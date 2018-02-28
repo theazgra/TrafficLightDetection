@@ -159,6 +159,17 @@ int main(int argc, char** argv)
 
     }
 
+    if (arguments[1] == "--video")
+    {
+        string netFile = arguments[2];
+        string videoFile  = arguments[3];
+        string resultFolder = arguments[4];
+
+        save_video(netFile, videoFile, resultFolder);
+
+        return 0;
+    }
+
     display_help();
 
     return 0;

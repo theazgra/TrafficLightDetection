@@ -18,10 +18,12 @@ Logger::~Logger() {
 
 void Logger::write_line(std::string message) {
     this->fileStream << message << std::endl;
+    cout << message << std::endl;
 }
 
 void Logger::write(std::string message) {
     this->fileStream << message;
+    cout << message;
 }
 
 void Logger::write_lines(std::vector<std::string> messages) {
