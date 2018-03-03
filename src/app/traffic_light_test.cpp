@@ -209,7 +209,7 @@ void save_video(std::string netFile, std::string videoFile, std::string resultFo
             }
 
             logger.write_line("Saving frame " + std::to_string(frameNum));
-            save_png(imgData, resultFolder + std::to_string(frameNum) + ".png");
+            save_png(imgData, resultFolder +"/"+ std::to_string(frameNum) + ".png");
         }
         logger.write_line("Succesfully saved all frames.");
     }
@@ -253,7 +253,7 @@ void save_video_frames(std::string netFile, std::string xmlFile, std::string res
 
         std::string fileName = resultFolder + "/" + std::to_string(frameNum) + ".png";
         logger.write_line("Saving frame " + fileName);
-        save_png(frame, resultFolder + fileName);
+        save_png(frame, fileName);
     }
 
     logger.write_line("Succesfully saved all frames.");
