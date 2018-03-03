@@ -397,6 +397,13 @@ void train_myNet_type(const std::string trainFile)
 void train_shape_predictor(const std::string trainFile, const std::string serializeFile)
 {
     Logger logger("shape_predictor.txt");
+    std::cout << "Loaded shape predictor settings: " << std::endl;
+    std::cout << "=============================" << std::endl;
+    std::cout << "Oversampling: " << OVERSAMPLING_AMOUNT << std::endl;
+    std::cout << "NU: " << NU << std::endl;
+    std::cout << "Tree depth: " << TREE_DEPTH  << std::endl;
+    std::cout << "Thread count: " << THREAD_COUNT  << std::endl;
+    std::cout << "=============================" << std::endl;
     try
     {
         std::vector<matrix<rgb_pixel>> trainImages;
@@ -406,11 +413,11 @@ void train_shape_predictor(const std::string trainFile, const std::string serial
 
         shape_predictor_trainer trainer;
 
-        trainer.set_oversampling_amount(5); //how many times increase number of training data
-        trainer.set_nu(0.05);
-        trainer.set_tree_depth(2);
+        trainer.set_oversampling_amount(OVERSAMPLING_AMOUNT); //how many times increase number of training data
+        trainer.set_nu(NU);
+        trainer.set_tree_depth(TREE_DEPTH);
 
-        trainer.set_num_threads(10);
+        trainer.set_num_threads(THREAD_COUNT);
 
         trainer.be_verbose();
 

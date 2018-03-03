@@ -45,4 +45,10 @@
             <iter_wo_prog_threshold>50000</iter_wo_prog_threshold>
         </training>
     </net_settings>
+    <shape_predictor_trainer>
+        <oversampling_amount>100</oversampling_amount>
+        <nu_value>0.05</nu_value>
+        <tree_depth>2</tree_depth>
+        <thread_count>5</thread_count>
+    </shape_predictor_trainer>
 </app_settings>

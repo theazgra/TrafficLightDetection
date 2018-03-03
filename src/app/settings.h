@@ -109,6 +109,32 @@ extern int TEST_ITERATION_WITHOUT_PROGRESS_THRESHOLD;
 
 ///*******</NET SETTINGS>*******
 
+///*******<SHAPE PREDICTOR TRAINER SETTIGNS>*******
 
+/**
+ * How many times increase number of training data
+ */
+extern unsigned long OVERSAMPLING_AMOUNT;
+
+/**
+ * Larger values better fitting but may cause overfitting.
+ */
+extern double NU;
+/**
+ * Depth of the trees used in the cascade.
+ */
+extern unsigned long TREE_DEPTH;
+/**
+ * Thread count.
+ */
+extern unsigned long THREAD_COUNT;
+/*
+ *
+        trainer.set_oversampling_amount(5); //
+        trainer.set_nu(0.05);
+        trainer.set_tree_depth(2);
+
+        trainer.set_num_threads(10);
+ */
 
 #endif //SETTINGS_H

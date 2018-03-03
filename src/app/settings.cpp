@@ -26,6 +26,10 @@ uint TRAINING_METHOD = 1;
 int TRAIN_ITERATION_WITHOUT_PROGRESS_THRESHOLD = 500;
 int ITERATION_WITHOUT_PROGRESS_THRESHOLD = 50000;
 int TEST_ITERATION_WITHOUT_PROGRESS_THRESHOLD = 1000;
+unsigned long OVERSAMPLING_AMOUNT = 5;
+double NU = 0.05;
+unsigned long TREE_DEPTH = 2;
+unsigned long THREAD_COUNT = 10;
 
 using namespace pugi;
 
@@ -105,6 +109,12 @@ bool load_settings(const char* xmlSettingsFile)
     TEST_ITERATION_WITHOUT_PROGRESS_THRESHOLD =
             training.child("test_iter_wo_prog_threshold").text().as_int(1000);
 
+    xml_node spTrainer = root.child("shape_predictor_trainer");
+
+    OVERSAMPLING_AMOUNT = spTrainer.child("oversampling_amount").text().as_ullong(5);
+    NU = spTrainer.child("nu_value").text().as_double(0.05);
+    TREE_DEPTH = spTrainer.child("tree_depth").text().as_ullong(2);
+    THREAD_COUNT = spTrainer.child("thread_count").text().as_ullong(10);
 
     return true;
 }
