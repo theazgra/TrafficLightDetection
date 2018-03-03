@@ -246,9 +246,55 @@ void save_video_frames(std::string netFile, std::string xmlFile, std::string res
 
         std::vector<mmod_rect> detections = net(frame);
 
-        for (mmod_rect detection : detections)
+        for (mmod_rect& detection : detections)
         {
             draw_rectangle(frame, detection.rect, get_color_for_label(detection.label));
+        }
+
+        std::string fileName = resultFolder + "/" + std::to_string(frameNum) + ".png";
+        logger.write_line("Saving frame " + fileName);
+        save_png(frame, resultFolder + fileName);
+    }
+
+    logger.write_line("Succesfully saved all frames.");
+}
+
+void save_video_frames_with_sp(std::string netFile, std::string xmlFile, std::string resultFolder)
+{
+    using namespace std;
+    using namespace dlib;
+
+    Logger logger(xmlFile + "_log.txt");
+
+    test_net_type net;
+    shape_predictor sp;
+    deserialize(netFile) >> net >> sp;
+
+    std::vector<matrix<rgb_pixel>> videoFrames;
+    std::vector<std::vector<mmod_rect>> boxes;
+
+    load_image_dataset(videoFrames, boxes, xmlFile);
+    boxes.clear();
+
+    int frameNum = -1;
+
+    for (matrix<rgb_pixel>& frame : videoFrames)
+    {
+        ++frameNum;
+
+        logger.write_line("Processing frame " + std::to_string(frameNum));
+
+        std::vector<mmod_rect> detections = net(frame);
+
+        for (mmod_rect& detection : detections)
+        {
+            full_object_detection fullObjectDetection = sp(frame, detection);
+
+            rectangle spImprovedRect;
+            for(unsigned long i = 0; i < fullObjectDetection.num_parts(); ++i)
+                spImprovedRect += fullObjectDetection.part(i);
+
+            draw_rectangle(frame, spImprovedRect, get_color_for_label(detection.label));
         }
 
         std::string fileName = resultFolder + "/" + std::to_string(frameNum) + ".png";
