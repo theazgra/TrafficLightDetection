@@ -4,6 +4,7 @@
 #include "settings.h"
 
 void train(const std::string trainFile);
+void train_shape_predictor(const std::string trainFile, const std::string serializeFile);
 void train(const std::string trainFile, const std::string testFile);
 void train_myNet_type(const std::string trainFile);
 

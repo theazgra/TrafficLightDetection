@@ -48,7 +48,13 @@ void display_help()
 
     cout << "--train with next argument specifiing XML file containing data annotations" << endl;
     cout << "  if you want to train with train-test method specify xml file for testing data and change method in xml settings to 2" << endl;
-    cout << "  eg. --traing ../test/train.xml {../test/test.xml}" << endl << endl;
+    cout << "  eg. --train ../test/train.xml {../test/test.xml}" << endl << endl;
+
+    cout << "--train-sp to train shape predictor. Pass Xml file and serialization file." << endl;
+    cout << "  if you want to train with train-test method specify xml file for testing data and change method in xml settings to 2" << endl;
+    cout << "  eg. --train-sp ../test/train.xml TL_net.dat" << endl << endl;
+
+
 
     cout << "--test with next argument specifiing net dat file and XML file annotating test data" << endl;
     cout << "  Next you can use: " << endl;
@@ -57,12 +63,29 @@ void display_help()
     cout << "    --save to save displayed images (only used with display)." << endl;
     cout << "    --save-crops to just save detected traffic lights without displaying them." << endl << endl;
 
-    cout << "--video to save frames with detected rectangles. Pass net file, video file and folder where to save frames." << endl;
-    cout << "  e.g. --video TL_net.dat result_folder" << endl << endl;
+    cout << "--video to save frames from video file with detected rectangles. Pass net file, video file and folder where to save frames." << endl;
+    cout << "--video-frames to save frames from xml file with detected rectangles. Pass net file, xml file and folder where to save frames." << endl << endl;
 
 
     cout << "--state and image, to test traffic light state detection." << endl;
     cout << "  --verbose to print more info." << endl << endl;
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

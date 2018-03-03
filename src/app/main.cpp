@@ -99,6 +99,17 @@ int main(int argc, char** argv)
         return 0;
     }
 
+    if (arguments[1] == "--train-sp")
+    {
+        cout << "Chosen shape predictor training..." << endl;
+        string xmlFile = arguments[2];
+        string serializationFile  = arguments[3];
+
+        train_shape_predictor(xmlFile, serializationFile);
+
+        return 0;
+    }
+
     if (arguments[1] == "--test")
     {
         string netFile = arguments[2];
@@ -166,6 +177,17 @@ int main(int argc, char** argv)
         string resultFolder = arguments[4];
 
         save_video(netFile, videoFile, resultFolder);
+
+        return 0;
+    }
+
+    if (arguments[1] == "--video-frames")
+    {
+        string netFile = arguments[2];
+        string xmlFile  = arguments[3];
+        string resultFolder = arguments[4];
+
+        save_video_frames(netFile, xmlFile, resultFolder);
 
         return 0;
     }

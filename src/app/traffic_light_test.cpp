@@ -170,7 +170,7 @@ dlib::rgb_pixel get_color_for_label(std::string label)
 void save_video(std::string netFile, std::string videoFile, std::string resultFolder)
 {
     using namespace dlib;
-    Logger log(videoFile + "_log.txt");
+    Logger logger(videoFile + "_log.txt");
 
     try
     {
@@ -185,6 +185,7 @@ void save_video(std::string netFile, std::string videoFile, std::string resultFo
         {
             ++frameNum;
             videoCapture >> videoFrame;
+            
             if (videoFrame.empty())
             {
                 break;
@@ -207,18 +208,56 @@ void save_video(std::string netFile, std::string videoFile, std::string resultFo
                 draw_rectangle(imgData, detection.rect, get_color_for_label(detection.label));
             }
 
-            log.write_line("Saving frame " + std::to_string(frameNum));
+            logger.write_line("Saving frame " + std::to_string(frameNum));
             save_png(imgData, resultFolder + std::to_string(frameNum) + ".png");
         }
-        log.write_line("Succesfully saved all frames.");
+        logger.write_line("Succesfully saved all frames.");
     }
     catch (std::exception& e)
     {
-        log.write_line("Error occured while saving image");
-        log.write_line(e.what());
+        logger.write_line("Error occured while saving image");
+        logger.write_line(e.what());
     }
 }
 
+void save_video_frames(std::string netFile, std::string xmlFile, std::string resultFolder)
+{
+    using namespace std;
+    using namespace dlib;
+
+    Logger logger(xmlFile + "_log.txt");
+
+    test_net_type net;
+    deserialize(netFile) >> net;
+
+    std::vector<matrix<rgb_pixel>> videoFrames;
+    std::vector<std::vector<mmod_rect>> boxes;
+
+    load_image_dataset(videoFrames, boxes, xmlFile);
+    boxes.clear();
+
+    int frameNum = -1;
+
+    for (matrix<rgb_pixel>& frame : videoFrames)
+    {
+        ++frameNum;
+
+        logger.write_line("Processing frame " + std::to_string(frameNum));
+
+        std::vector<mmod_rect> detections = net(frame);
+
+        for (mmod_rect detection : detections)
+        {
+            draw_rectangle(frame, detection.rect, get_color_for_label(detection.label));
+        }
+
+        std::string fileName = resultFolder + "/" + std::to_string(frameNum) + ".png";
+        logger.write_line("Saving frame " + fileName);
+        save_png(frame, resultFolder + fileName);
+    }
+
+    logger.write_line("Succesfully saved all frames.");
+}
 
 
 

@@ -1,4 +1,5 @@
 #include "traffic_light_train.h"
+#include "Logger.h"
 
 using namespace std;
 using namespace dlib;
@@ -207,7 +208,7 @@ void train(const std::string trainFile, const std::string testFile)
 
 
 #ifdef MULTIPLE_GPUS
-        dnn_trainer<net_type> trainer(net, sgd(SGD_WEIGHT_DECAY, SGD_MOMENTUM), {0, 1});
+        dnn_trainer<net_type> trainer(net, sgd(SGD_WEIGHT_DECAY, SGD_MOMENTUM), CUDA_DEVICES);
 #else
         dnn_trainer<net_type> trainer(net, sgd(SGD_WEIGHT_DECAY, SGD_MOMENTUM));
 #endif
@@ -390,6 +391,39 @@ void train_myNet_type(const std::string trainFile)
         cout << "*****EXCEPTION*****" << endl;
         cout << e.what() << endl;
         cout << "*******************" << endl;
+    }
+}
+
+void train_shape_predictor(const std::string trainFile, const std::string serializeFile)
+{
+    Logger logger("shape_predictor.txt");
+    try
+    {
+        std::vector<matrix<rgb_pixel>> trainImages;
+        std::vector<std::vector<full_object_detection>> trainDetections;
+
+        load_image_dataset(trainImages, trainDetections, trainFile);
+
+        shape_predictor_trainer trainer;
+
+        trainer.set_oversampling_amount(5); //how many times increase number of training data
+        trainer.set_nu(0.05);
+        trainer.set_tree_depth(2);
+
+        trainer.set_num_threads(10);
+
+        trainer.be_verbose();
+
+        shape_predictor sp = trainer.train(trainImages, trainDetections);
+
+        cout << "Mean training error: " << test_shape_predictor(sp, trainImages, trainDetections) << endl;
+
+        serialize(serializeFile) << sp;
+
+    }
+    catch (std::exception& e)
+    {
+        logger.write_line(e.what());
     }
 }
 
