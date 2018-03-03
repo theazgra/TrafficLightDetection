@@ -31,7 +31,7 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
     using namespace std;
     using namespace dlib;
 
-    net_type net;
+    test_net_type net;
     deserialize(netFile) >> net;
 
     std::vector<matrix<rgb_pixel>> testImages;
@@ -174,7 +174,7 @@ void save_video(std::string netFile, std::string videoFile, std::string resultFo
 
     try
     {
-        net_type net;
+        test_net_type net;
         deserialize(netFile) >> net;
 
         cv::VideoCapture videoCapture(videoFile);
