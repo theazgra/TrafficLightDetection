@@ -15,7 +15,6 @@ enum TestType
     SaveCrops
 };
 
-
 void test(std::string netFile, std::string testFile, TestType testType, bool saveImages);
 
 void save_video(std::string netFile, std::string videoFile, std::string resultFolder);

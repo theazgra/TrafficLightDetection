@@ -8,6 +8,9 @@
 #undef int64
 #undef uint64
 
+//width used for drawing rectangle
+unsigned int RECT_WIDTH = 2;
+
 /**
  * Get the number of not ignored label boxes.
  * @param boxes Vector of mmod_rectangles.
@@ -157,14 +160,15 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
 
 dlib::rgb_pixel get_color_for_label(std::string label)
 {
-    if (label == "r")
+	std::cout << "Detected label: " << label << std::endl;
+    if (label == "r" || label == "Red")
         return rgb_pixel(255, 0, 0);
-    if (label == "g")
+    if (label == "g" || label == "Green")
         return rgb_pixel(0, 255, 0);
-    if (label == "y" || label == "o")
+    if (label == "y" || label == "o" || label == "Orange" || label == "RedOrange")
         return rgb_pixel(255, 127, 80);
 
-    return rgb_pixel(200, 200, 200);
+    return rgb_pixel(10, 10, 10);
 }
 
 void save_video(std::string netFile, std::string videoFile, std::string resultFolder)
@@ -205,7 +209,7 @@ void save_video(std::string netFile, std::string videoFile, std::string resultFo
 
             for (mmod_rect detection : detections)
             {
-                draw_rectangle(imgData, detection.rect, get_color_for_label(detection.label));
+                draw_rectangle(imgData, detection.rect, get_color_for_label(detection.label), 3);
             }
 
             logger.write_line("Saving frame " + std::to_string(frameNum));
@@ -237,18 +241,25 @@ void save_video_frames(std::string netFile, std::string xmlFile, std::string res
     boxes.clear();
 
     int frameNum = -1;
-
+    cv::Mat openCvImg, croppedImage;
     for (matrix<rgb_pixel>& frame : videoFrames)
     {
         ++frameNum;
+
+        openCvImg = toMat(frame);
 
         logger.write_line("Processing frame " + std::to_string(frameNum));
 
         std::vector<mmod_rect> detections = net(frame);
 
+	
         for (mmod_rect& detection : detections)
         {
-            draw_rectangle(frame, detection.rect, get_color_for_label(detection.label));
+	    croppedImage = crop_image(openCvImg, detection);
+            draw_rectangle(	frame, 
+				detection.rect, 
+				get_color_for_label(translate_TL_state(get_traffic_light_state(croppedImage))), 
+				RECT_WIDTH);
         }
 
         std::string fileName = resultFolder + "/" + std::to_string(frameNum) + ".png";
