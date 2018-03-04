@@ -105,7 +105,7 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
         }
 
         int labelIndex = -1;
-        for (mmod_rect d : detections)
+        for (mmod_rect& d : detections)
         {
 
             ++labelIndex;
@@ -182,7 +182,7 @@ void save_video(std::string netFile, std::string videoFile, std::string resultFo
         deserialize(netFile) >> net;
 
         cv::VideoCapture videoCapture(videoFile);
-        cv::Mat videoFrame;
+        cv::Mat videoFrame, croppedImage;
 
         int frameNum = -1;
         for (;;)
@@ -207,9 +207,14 @@ void save_video(std::string netFile, std::string videoFile, std::string resultFo
 
             std::vector<mmod_rect> detections = net(imgData);
 
-            for (mmod_rect detection : detections)
+            for (mmod_rect& detection : detections)
             {
-                draw_rectangle(imgData, detection.rect, get_color_for_label(detection.label), 3);
+                croppedImage = crop_image(videoFrame, detection);
+
+                draw_rectangle(imgData,
+                               detection.rect,
+                               get_color_for_label(translate_TL_state(get_traffic_light_state(croppedImage))),
+                               RECT_WIDTH);
             }
 
             logger.write_line("Saving frame " + std::to_string(frameNum));
@@ -255,11 +260,11 @@ void save_video_frames(std::string netFile, std::string xmlFile, std::string res
 	
         for (mmod_rect& detection : detections)
         {
-	    croppedImage = crop_image(openCvImg, detection);
-            draw_rectangle(	frame, 
-				detection.rect, 
-				get_color_for_label(translate_TL_state(get_traffic_light_state(croppedImage))), 
-				RECT_WIDTH);
+	        croppedImage = crop_image(openCvImg, detection);
+            draw_rectangle(frame,
+                           detection.rect,
+                           get_color_for_label(translate_TL_state(get_traffic_light_state(croppedImage))),
+                           RECT_WIDTH);
         }
 
         std::string fileName = resultFolder + "/" + std::to_string(frameNum) + ".png";
@@ -289,9 +294,12 @@ void save_video_frames_with_sp(std::string netFile, std::string xmlFile, std::st
 
     int frameNum = -1;
 
+    cv::Mat openCvImg, croppedImage;
+
     for (matrix<rgb_pixel>& frame : videoFrames)
     {
         ++frameNum;
+        openCvImg = toMat(frame);
 
         logger.write_line("Processing frame " + std::to_string(frameNum));
 
@@ -305,7 +313,11 @@ void save_video_frames_with_sp(std::string netFile, std::string xmlFile, std::st
             for(unsigned long i = 0; i < fullObjectDetection.num_parts(); ++i)
                 spImprovedRect += fullObjectDetection.part(i);
 
-            draw_rectangle(frame, spImprovedRect, get_color_for_label(detection.label));
+            croppedImage = crop_image(openCvImg, spImprovedRect);
+            draw_rectangle(frame,
+                           spImprovedRect,
+                           get_color_for_label(translate_TL_state(get_traffic_light_state(croppedImage))),
+                           RECT_WIDTH);
         }
 
         std::string fileName = resultFolder + "/" + std::to_string(frameNum) + ".png";
