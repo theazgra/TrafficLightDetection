@@ -66,7 +66,7 @@ namespace dlib
                 return false;
             }
 
-            // throw away the hsvTest handle
+            // throw away the thread handle
             CloseHandle(thandle); 
             return true;
         }

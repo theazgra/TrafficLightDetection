@@ -8,17 +8,6 @@
 #include "../platform.h"
 #include <iostream>
 
-// The point of this block of code is to cause a link time error that will prevent a user
-// from compiling part of their application with DLIB_ASSERT enabled and part with them
-// disabled since doing that would be a violation of C++'s one definition rule. 
-extern "C"
-{
-#ifdef ENABLE_ASSERTS
-    int USER_ERROR__missing_dlib_all_source_cpp_file__OR__inconsistent_use_of_DEBUG_or_ENABLE_ASSERTS_preprocessor_directives;
-#else
-    int USER_ERROR__missing_dlib_all_source_cpp_file__OR__inconsistent_use_of_DEBUG_or_ENABLE_ASSERTS_preprocessor_directives_;
-#endif
-}
 
 #ifndef DLIB_THREAD_POOL_TIMEOUT
 // default to 30000 milliseconds
@@ -43,7 +32,7 @@ namespace dlib
 
         struct threader_destruct_helper
         {
-            // cause the hsvTest pool to begin its destruction process when
+            // cause the thread pool to begin its destruction process when 
             // global objects start to be destroyed
             ~threader_destruct_helper()
             {
@@ -92,7 +81,7 @@ namespace dlib
             // the python interpreter you will get the interpreter to hang.  Or if we are
             // part of a MATLAB mex file and the file is being unloaded there can also be
             // similar weird issues.  So when we are using dlib on windows we just disable
-            // the destruction of the global hsvTest pool since it doesn't matter anyway.
+            // the destruction of the global thread pool since it doesn't matter anyway.
             // It's resources will just get freed by the OS.  This is even the recommended
             // thing to do by Microsoft (http://blogs.msdn.com/b/oldnewthing/archive/2012/01/05/10253268.aspx).
             // 
@@ -163,7 +152,7 @@ namespace dlib
             thread_id_type id_copy;
             member_function_pointer<> mfp;
 
-            // Remove all the member function pointers for this hsvTest from the tree
+            // Remove all the member function pointers for this thread from the tree 
             // and call them.
             while (reg.reg[id] != 0)
             {
@@ -205,11 +194,11 @@ namespace dlib
             }
 
 
-            // get a hsvTest for this new data
-            // if a new hsvTest must be created
+            // get a thread for this new data
+            // if a new thread must be created
             if (pool_count == 0)
             {
-                // make hsvTest and add it to the pool
+                // make thread and add it to the pool
                 if ( threads_kernel_shared_helpers::spawn_thread(thread_starter, this) == false )
                 {
                     function_pointer = 0;
@@ -219,7 +208,7 @@ namespace dlib
                 }
                 ++total_count;
             }
-            // wake up a hsvTest from the pool
+            // wake up a thread from the pool
             else
             {
                 data_ready.signal();
@@ -241,20 +230,20 @@ namespace dlib
             {
             auto_mutex M(self.data_mutex);
 
-            // add this hsvTest id
+            // add this thread id
             thread_id_type thread_id = get_thread_id();
             self.thread_ids.add(thread_id);
 
-            // indicate that this thread is now in the hsvTest pool
+            // indicate that this thread is now in the thread pool
             ++self.pool_count;
 
             while (self.destruct == false)
             {
-                // if data is ready then process it and launch the hsvTest
+                // if data is ready then process it and launch the thread
                 // if its not ready then go back into the pool
                 while (self.function_pointer != 0)
                 {                
-                    // indicate that this thread is now out of the hsvTest pool
+                    // indicate that this thread is now out of the thread pool
                     --self.pool_count;
 
                     // get the data for the function call
@@ -267,14 +256,14 @@ namespace dlib
 
                     self.data_mutex.unlock();
                     // Call funct with its intended parameter.  If this function throws then
-                    // we intentionally let the exception escape the hsvTest and result in whatever
+                    // we intentionally let the exception escape the thread and result in whatever
                     // happens when it gets caught by the OS (generally the program is terminated).
                     funct(param);
                     self.call_end_handlers();
 
                     self.data_mutex.lock();
 
-                    // indicate that this thread is now back in the hsvTest pool
+                    // indicate that this thread is now back in the thread pool
                     ++self.pool_count;
                 }
 
@@ -282,18 +271,18 @@ namespace dlib
                     break;
 
                 // if we timed out and there isn't any work to do then
-                // this hsvTest will quit this loop and end.
+                // this thread will quit this loop and end.
                 if (self.data_ready.wait_or_timeout(DLIB_THREAD_POOL_TIMEOUT) == false && 
                     self.function_pointer == 0)
                     break;
 
             }
 
-            // remove this hsvTest id from thread_ids
+            // remove this thread id from thread_ids
             thread_id = get_thread_id();
             self.thread_ids.destroy(thread_id);
 
-            // indicate that this thread is now out of the hsvTest pool
+            // indicate that this thread is now out of the thread pool
             --self.pool_count;
             --self.total_count;
 

@@ -3,38 +3,77 @@
 #ifndef DLIB_PYTHON_NuMPY_Hh_
 #define DLIB_PYTHON_NuMPY_Hh_
 
-#include <boost/python.hpp>
+#include <pybind11/pybind11.h>
 #include <dlib/error.h>
 #include <dlib/algs.h>
 #include <dlib/string.h>
 #include <dlib/array.h>
 #include <dlib/pixel.h>
 
+namespace py = pybind11;
+
 // ----------------------------------------------------------------------------------------
 
-template <typename T>
+template <typename TT>
 void validate_numpy_array_type (
-    const boost::python::object& obj
+    const py::object& obj
 )
 {
-    using namespace boost::python;
-    const char ch = boost::python::extract<char>(obj.attr("dtype").attr("char"));
+    const char ch = obj.attr("dtype").attr("char").cast<char>();
 
-    if (dlib::is_same_type<T,double>::value && ch != 'd')
-        throw dlib::error("Expected numpy.ndarray of float64");
-    if (dlib::is_same_type<T,float>::value && ch != 'f')
-        throw dlib::error("Expected numpy.ndarray of float32");
-    if (dlib::is_same_type<T,dlib::int32>::value && ch != 'i')
-        throw dlib::error("Expected numpy.ndarray of int32");
-    if (dlib::is_same_type<T,unsigned char>::value && ch != 'B')
-        throw dlib::error("Expected numpy.ndarray of uint8");
+    using T = typename dlib::pixel_traits<TT>::basic_pixel_type;
+
+    if (dlib::is_same_type<T,double>::value)
+    {
+        if (ch != 'd')
+            throw dlib::error("Expected numpy.ndarray of float64");
+    }
+    else if (dlib::is_same_type<T,float>::value)
+    {
+        if (ch != 'f')
+            throw dlib::error("Expected numpy.ndarray of float32");
+    }
+    else if (dlib::is_same_type<T,dlib::int16>::value)
+    {
+        if (ch != 'h')
+            throw dlib::error("Expected numpy.ndarray of int16");
+    }
+    else if (dlib::is_same_type<T,dlib::uint16>::value)
+    {
+        if (ch != 'H')
+            throw dlib::error("Expected numpy.ndarray of uint16");
+    }
+    else if (dlib::is_same_type<T,dlib::int32>::value)
+    {
+        if (ch != 'i')
+            throw dlib::error("Expected numpy.ndarray of int32");
+    }
+    else if (dlib::is_same_type<T,dlib::uint32>::value)
+    {
+        if (ch != 'I')
+            throw dlib::error("Expected numpy.ndarray of uint32");
+    }
+    else if (dlib::is_same_type<T,unsigned char>::value)
+    {
+        if (ch != 'B')
+            throw dlib::error("Expected numpy.ndarray of uint8");
+    }
+    else if (dlib::is_same_type<T,signed char>::value)
+    {
+        if (ch != 'b')
+            throw dlib::error("Expected numpy.ndarray of int8");
+    }
+    else
+    {
+        throw dlib::error("validate_numpy_array_type() called with unsupported type.");
+    }
 }
 
 // ----------------------------------------------------------------------------------------
 
 template <int dims>
 void get_numpy_ndarray_shape (
-    const boost::python::object& obj,
+    const py::object& obj,
     long (&shape)[dims]
 )
 /*!
@@ -73,7 +112,7 @@ void get_numpy_ndarray_shape (
 
 template <typename T, int dims>
 void get_numpy_ndarray_parts (
-    boost::python::object& obj,
+    py::object& obj,
     T*& data,
     dlib::array<T>& contig_buf,
     long (&shape)[dims]
@@ -123,7 +162,7 @@ void get_numpy_ndarray_parts (
 
 template <typename T, int dims>
 void get_numpy_ndarray_parts (
-    const boost::python::object& obj,
+    const py::object& obj,
     const T*& data,
     dlib::array<T>& contig_buf,
     long (&shape)[dims]

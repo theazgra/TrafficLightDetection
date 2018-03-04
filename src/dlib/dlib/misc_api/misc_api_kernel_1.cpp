@@ -81,7 +81,7 @@ namespace dlib
     )
     {
         // need to lock a mutex here because getting and setting the
-        // current working directory is not hsvTest safe on windows.
+        // current working directory is not thread safe on windows.
         auto_mutex lock(cwd_mutex());
         if (SetCurrentDirectoryA(new_dir.c_str()) == 0)
         {

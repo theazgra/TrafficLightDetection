@@ -73,6 +73,7 @@ if (UNIX OR MINGW)
             /opt/intel/mkl/*/lib/em64t
             /opt/intel/mkl/lib/intel64
             /opt/intel/lib/intel64
+            /opt/intel/mkl/lib
             )
 
         find_library(mkl_intel mkl_intel_lp64 ${mkl_search_path})
@@ -325,16 +326,16 @@ if (NOT blas_found)
     if (${BLAS_FOUND})
         set(blas_libraries ${BLAS_LIBRARIES})      
         set(blas_found 1)
+        if (NOT lapack_found)
+            find_package(LAPACK QUIET)
+            if (${LAPACK_FOUND})
+                set(lapack_libraries ${LAPACK_LIBRARIES})
+                set(lapack_found 1)
+            endif()
+        endif()
     endif()
 endif()
 
-if (NOT lapack_found)
-    find_package(LAPACK QUIET)
-    if (${LAPACK_FOUND})
-        set(lapack_libraries ${LAPACK_LIBRARIES})
-        set(lapack_found 1)
-    endif()
-endif()
 
 # If using lapack, determine whether to mangle functions
 if (lapack_found)

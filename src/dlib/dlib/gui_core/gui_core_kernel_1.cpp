@@ -199,7 +199,7 @@ namespace dlib
 
         private:
 
-            void hsvTest (
+            void thread (
             )
             {
                 event_thread_id = get_thread_id();

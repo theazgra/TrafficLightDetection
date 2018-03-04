@@ -128,7 +128,7 @@ namespace dlib
         service_connection_error = false;
         service_connection_error_mutex.unlock();
 
-        // if we fail to make the hsvTest
+        // if we fail to make the thread
         if (!create_new_thread(service_connection,this))
         {
             a.shutdown();
@@ -151,7 +151,7 @@ namespace dlib
 
             throw dlib::thread_error (
                 ECREATE_THREAD,
-                "failed to make new hsvTest in linker::link()"
+                "failed to make new thread in linker::link()"
                 );
         }
 
@@ -206,7 +206,7 @@ namespace dlib
 
 
 
-        // wait for the other hsvTest to end
+        // wait for the other thread to end
         service_connection_running_mutex.lock();
         while(service_connection_running)
         {

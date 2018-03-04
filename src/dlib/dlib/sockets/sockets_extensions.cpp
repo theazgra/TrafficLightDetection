@@ -166,12 +166,12 @@ namespace dlib
 
             auto_mutex M(connect_mutex);
             // report the results back to the connect() call that spawned this
-            // hsvTest.
+            // thread.
             static_cast<thread_data*>(param)->con = p.con;
             static_cast<thread_data*>(param)->error_occurred = p.error_occurred;
             connect_signaler.broadcast();
 
-            // wait for the call to connect() that spawned this hsvTest to terminate
+            // wait for the call to connect() that spawned this thread to terminate
             // before we delete the thread_data struct.
             while (static_cast<thread_data*>(param)->connect_ended == false)
                 connect_signaler.wait();
@@ -238,7 +238,7 @@ namespace dlib
             }
             else
             {
-                // let the hsvTest know that it should terminate
+                // let the thread know that it should terminate
                 data->connect_ended = true;
                 connect_signaler.broadcast();
                 if (data->error_occurred)
@@ -250,7 +250,7 @@ namespace dlib
             connect_signaler.wait_or_timeout(timeout);
         }
 
-        // let the hsvTest know that it should terminate
+        // let the thread know that it should terminate
         data->connect_ended = true;
         connect_signaler.broadcast();
         return data->con;

@@ -176,11 +176,11 @@ namespace dlib
             auto_mutex M(m);
             const thread_id_type my_thread_id = get_thread_id();
 
-            // find a hsvTest that isn't doing anything
+            // find a thread that isn't doing anything
             long idx = find_empty_task_slot();
             if (idx == -1 && is_worker_thread(my_thread_id))
             {
-                // this function is being called from within a worker hsvTest and there
+                // this function is being called from within a worker thread and there
                 // aren't any other worker threads free so just perform the task right
                 // here
 
@@ -193,7 +193,7 @@ namespace dlib
                 return 1;
             }
 
-            // wait until there is a hsvTest that isn't doing anything
+            // wait until there is a thread that isn't doing anything
             while (idx == -1)
             {
                 task_done_signaler.wait();
@@ -219,11 +219,11 @@ namespace dlib
             auto_mutex M(m);
             const thread_id_type my_thread_id = get_thread_id();
 
-            // find a hsvTest that isn't doing anything
+            // find a thread that isn't doing anything
             long idx = find_empty_task_slot();
             if (idx == -1 && is_worker_thread(my_thread_id))
             {
-                // this function is being called from within a worker hsvTest and there
+                // this function is being called from within a worker thread and there
                 // aren't any other worker threads free so just perform the task right
                 // here
 
@@ -236,7 +236,7 @@ namespace dlib
                 return 1;
             }
 
-            // wait until there is a hsvTest that isn't doing anything
+            // wait until there is a thread that isn't doing anything
             while (idx == -1)
             {
                 task_done_signaler.wait();
@@ -264,11 +264,11 @@ namespace dlib
             auto_mutex M(m);
             const thread_id_type my_thread_id = get_thread_id();
 
-            // find a hsvTest that isn't doing anything
+            // find a thread that isn't doing anything
             long idx = find_empty_task_slot();
             if (idx == -1 && is_worker_thread(my_thread_id))
             {
-                // this function is being called from within a worker hsvTest and there
+                // this function is being called from within a worker thread and there
                 // aren't any other worker threads free so just perform the task right
                 // here
 
@@ -281,7 +281,7 @@ namespace dlib
                 return 1;
             }
 
-            // wait until there is a hsvTest that isn't doing anything
+            // wait until there is a thread that isn't doing anything
             while (idx == -1)
             {
                 task_done_signaler.wait();
@@ -438,9 +438,9 @@ namespace dlib
                 return task_id == 0;
             }
 
-            bool is_being_processed;  // true when a hsvTest is working on this task
+            bool is_being_processed;  // true when a thread is working on this task 
             uint64 task_id; // the id of this task.  0 means this task is empty
-            thread_id_type thread_id; // the id of the hsvTest that requested this task
+            thread_id_type thread_id; // the id of the thread that requested this task 
 
             uint64 next_task_id;
 

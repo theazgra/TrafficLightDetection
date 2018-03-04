@@ -20,7 +20,7 @@ include(cmake_utils/use_cpp_11.cmake)
 
 
 set(CPACK_PACKAGE_VERSION_MAJOR "19")
-set(CPACK_PACKAGE_VERSION_MINOR "8")
+set(CPACK_PACKAGE_VERSION_MINOR "9")
 set(CPACK_PACKAGE_VERSION_PATCH "99")
 set(VERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH})
 # Set DLIB_VERSION in the including CMake file so they can use it to do whatever they want. 
@@ -31,6 +31,31 @@ if(has_parent)
       set(DLIB_IN_PROJECT_BUILD true)
    endif()
 endif()
+
+
+if (DLIB_IN_PROJECT_BUILD)
+   # DLIB_IN_PROJECT_BUILD==true means you are using dlib by invoking
+   # add_subdirectory(dlib) in the parent project. In this case, we always want
+   # to build dlib as a static library so the parent project doesn't need to
+   # deal with some random dlib shared library file.  It is much better to
+   # statically compile dlib into the parent project.  So the following bit of
+   # CMake ensures that happens.  However, we have to take care to compile dlib
+   # with position independent code if appropriate (i.e. if the parent project
+   # is a shared library).
+   if (BUILD_SHARED_LIBS)
+      if (CMAKE_COMPILER_IS_GNUCXX)
+         # Just setting CMAKE_POSITION_INDEPENDENT_CODE should be enough to set
+         # -fPIC for GCC but sometimes it still doesn't get set, so make sure it
+         # does.
+         add_definitions("-fPIC")
+      endif()
+      set(CMAKE_POSITION_INDEPENDENT_CODE true)
+   endif()
+
+   # Tell cmake to build dlib as a static library
+   set(BUILD_SHARED_LIBS false)
+endif()
+
 
 if (CMAKE_VERSION VERSION_LESS "3.9.0")
    # Set only because there are old target_link_libraries() statements in the
@@ -188,6 +213,8 @@ if (NOT TARGET dlib)
          data_io/image_dataset_metadata.cpp
          data_io/mnist.cpp
          global_optimization/global_function_search.cpp
+         filtering/kalman_filter.cpp
+         test_for_odr_violations.cpp
    )
 
 
@@ -195,11 +222,7 @@ if (NOT TARGET dlib)
    set(dlib_needed_includes)
 
    if (DLIB_ISO_CPP_ONLY)
-       add_library(dlib STATIC ${source_files} )
-       if (UNIX AND NOT DLIB_IN_PROJECT_BUILD)
-           add_library(dlib_shared SHARED ${source_files} )
-           add_dependencies(dlib_shared dlib)
-       endif()
+       add_library(dlib ${source_files} )
    else()
 
       set(source_files ${source_files}
@@ -283,7 +306,7 @@ if (NOT TARGET dlib)
                message(" *****************************************************************************")
                message(" *** DLIB GUI SUPPORT DISABLED BECAUSE X11 DEVELOPMENT LIBRARIES NOT FOUND ***")
                message(" *** Make sure XQuartz is installed if you want GUI support.               ***")
-               message(" *** You can download XQuartz from: http://xquartz.macosforge.org/landing/ ***")
+               message(" *** You can download XQuartz from: https://www.xquartz.org/               ***")
                message(" *****************************************************************************")
                set(DLIB_NO_GUI_SUPPORT ON CACHE STRING ${DLIB_NO_GUI_SUPPORT_STR} FORCE )
                enable_preprocessor_switch(DLIB_NO_GUI_SUPPORT)
@@ -584,9 +607,15 @@ if (NOT TARGET dlib)
                try_compile(cuda_test_compile_worked ${PROJECT_BINARY_DIR}/cuda_test_build 
                            ${PROJECT_SOURCE_DIR}/cmake_utils/test_for_cuda cuda_test
                            CMAKE_FLAGS ${CUDA_TEST_CMAKE_FLAGS}
+                           OUTPUT_VARIABLE try_compile_output_message
                            )
                if (NOT cuda_test_compile_worked)
-                  message(STATUS "*** CUDA was found but your compiler failed to compile a simple CUDA program so dlib isn't going to use CUDA. ***")
+                  string(REPLACE "\n" "\n   ***   " try_compile_output_message "${try_compile_output_message}")
+                  message(STATUS "*****************************************************************************************************************")
+                  message(STATUS "*** CUDA was found but your compiler failed to compile a simple CUDA program so dlib isn't going to use CUDA. ")
+                  message(STATUS "*** The output of the failed CUDA test compile is shown below: ")
+                  message(STATUS "***   ${try_compile_output_message}")
+                  message(STATUS "*****************************************************************************************************************")
                else()
                   message(STATUS "Checking if you have the right version of cuDNN installed.")
                   try_compile(cudnn_test_compile_worked ${PROJECT_BINARY_DIR}/cudnn_test_build 
@@ -691,18 +720,9 @@ if (NOT TARGET dlib)
          # The old cuda_add_library() command doesn't support CMake's newer dependency
          # stuff, so we have to set the include path manually still, which we do here.
          include_directories(${dlib_needed_includes})
-         cuda_add_library(dlib STATIC ${source_files} )
+         cuda_add_library(dlib ${source_files} )
       else()
-         add_library(dlib STATIC ${source_files} )
-      endif()
-      if (UNIX AND NOT DLIB_IN_PROJECT_BUILD)
-         if (DLIB_USE_CUDA)
-            cuda_add_library(dlib_shared SHARED ${source_files} )
-            add_dependencies(dlib_shared dlib)
-         else()
-            add_library(dlib_shared SHARED ${source_files} )
-            add_dependencies(dlib_shared dlib)
-         endif()
+         add_library(dlib ${source_files} )
       endif()
 
    endif ()  ##### end of if NOT DLIB_ISO_CPP_ONLY ##########################################################
@@ -713,20 +733,25 @@ if (NOT TARGET dlib)
                               INTERFACE $<INSTALL_INTERFACE:include>
                               PUBLIC ${dlib_needed_includes}
                               )
-   target_link_libraries(dlib PRIVATE ${dlib_needed_libraries})
+   target_link_libraries(dlib PUBLIC ${dlib_needed_libraries})
    if (DLIB_IN_PROJECT_BUILD)
       target_compile_options(dlib PUBLIC ${active_preprocessor_switches})
    else()
+      # These are private in this case because they will be controlled by the
+      # contents of dlib/config.h once it's installed. But for in project
+      # builds, there is no real config.h so they are public in the above case.
       target_compile_options(dlib PRIVATE ${active_preprocessor_switches})
-   endif()
-   if (UNIX AND NOT DLIB_IN_PROJECT_BUILD)
-      target_include_directories(dlib_shared
-                                 INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
-                                 INTERFACE $<INSTALL_INTERFACE:include>
-                                 PUBLIC ${dlib_needed_includes}
-                                 )
-      target_link_libraries(dlib_shared PUBLIC ${dlib_needed_libraries})
-      target_compile_options(dlib_shared PRIVATE ${active_preprocessor_switches})
+      # Do this so that dlib/config.h won't set DLIB_NOT_CONFIGURED. This will then allow
+      # the code in dlib/threads_kernel_shared.cpp to emit a linker error for users who
+      # don't use the configured config.h file generated by cmake.
+      target_compile_options(dlib PRIVATE -DDLIB__CMAKE_GENERATED_A_CONFIG_H_FILE)
+
+      # Do this so that dlib/config.h can record the version of dlib it's configured with
+      # and ultimately issue a linker error to people who try to use a binary dlib that is
+      # the wrong version.
+      set(DLIB_CHECK_FOR_VERSION_MISMATCH 
+         DLIB_VERSION_MISMATCH_CHECK__EXPECTED_VERSION_${CPACK_PACKAGE_VERSION_MAJOR}_${CPACK_PACKAGE_VERSION_MINOR}_${CPACK_PACKAGE_VERSION_PATCH})
+      target_compile_options(dlib PRIVATE "-DDLIB_CHECK_FOR_VERSION_MISMATCH=${DLIB_CHECK_FOR_VERSION_MISMATCH}")
    endif()
 
 
@@ -742,29 +767,16 @@ if (NOT TARGET dlib)
       enable_cpp11_for_target(dlib)
       target_compile_options(dlib PUBLIC ${active_compile_opts})
    endif()
-   if (TARGET dlib_shared)
-      enable_cpp11_for_target(dlib_shared)
-      target_compile_options(dlib_shared PUBLIC ${active_compile_opts})
-   endif()
 
    # Install the library
    if (NOT DLIB_IN_PROJECT_BUILD)
-       if(UNIX)
-           set_target_properties(dlib_shared PROPERTIES
-                                        OUTPUT_NAME dlib 
-                                        VERSION ${VERSION})
-           install(TARGETS dlib dlib_shared
-                   EXPORT dlib 
-                   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} # Windows (including cygwin) considers .dll to be runtime artifacts
-                   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-                   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-       else()
-           install(TARGETS dlib
-                   EXPORT dlib 
-                   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} # Windows considers .dll to be runtime artifacts
-                   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-                   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-       endif()
+       set_target_properties(dlib PROPERTIES
+                                 VERSION ${VERSION})
+       install(TARGETS dlib
+               EXPORT dlib 
+               RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} # Windows considers .dll to be runtime artifacts
+               LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+               ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
        install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/dlib
                FILES_MATCHING PATTERN "*.h" PATTERN "*.cmake"
@@ -817,10 +829,10 @@ if (MSVC)
    # what happens since, at the very least, the filenames will indicate what
    # visual studio runtime they go with.
    math(EXPR numbits ${CMAKE_SIZEOF_VOID_P}*8)
-   set_target_properties(dlib PROPERTIES DEBUG_POSTFIX "_debug_${numbits}bit_msvc${MSVC_VERSION}")
-   set_target_properties(dlib PROPERTIES RELEASE_POSTFIX "_release_${numbits}bit_msvc${MSVC_VERSION}")
-   set_target_properties(dlib PROPERTIES MINSIZEREL_POSTFIX "_minsizerel_${numbits}bit_msvc${MSVC_VERSION}")
-   set_target_properties(dlib PROPERTIES RELWITHDEBINFO_POSTFIX "_relwithdebinfo_${numbits}bit_msvc${MSVC_VERSION}")
+   set_target_properties(dlib PROPERTIES DEBUG_POSTFIX "${VERSION}_debug_${numbits}bit_msvc${MSVC_VERSION}")
+   set_target_properties(dlib PROPERTIES RELEASE_POSTFIX "${VERSION}_release_${numbits}bit_msvc${MSVC_VERSION}")
+   set_target_properties(dlib PROPERTIES MINSIZEREL_POSTFIX "${VERSION}_minsizerel_${numbits}bit_msvc${MSVC_VERSION}")
+   set_target_properties(dlib PROPERTIES RELWITHDEBINFO_POSTFIX "${VERSION}_relwithdebinfo_${numbits}bit_msvc${MSVC_VERSION}")
 endif()
 
 add_library(dlib::dlib ALIAS dlib)

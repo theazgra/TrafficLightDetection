@@ -34,7 +34,7 @@ namespace dlib
         //     before destructors of the process image .dll's are called.
         //     Thus, for the windows platform, there is no threads running, so the only thing
         //     to do here is just let the standard memberwise destructors run
-        //   linux: it's ok to just signal shutdown and wait for the running hsvTest, to exit
+        //   linux: it's ok to just signal shutdown and wait for the running thread, to exit
         //   
         // in case of b)
         //   windows:
@@ -67,7 +67,7 @@ namespace dlib
     {
         if (r->in_global_clock == false)
         {
-            // if the hsvTest isn't running then start it up
+            // if the thread isn't running then start it up
             if (!running)
             {
                 start();
@@ -78,7 +78,7 @@ namespace dlib
             tm.reset();
             if (!tm.move_next() || t < tm.element().key())
             {
-                // we need to make the hsvTest adjust its next time to
+                // we need to make the thread adjust its next time to
                 // trigger if this new event occurrs sooner than the
                 // next event in tm
                 s.signal();
@@ -134,7 +134,7 @@ namespace dlib
             tm.reset();
             if (!tm.move_next() || t < tm.element().key())
             {
-                // we need to make the hsvTest adjust its next time to
+                // we need to make the thread adjust its next time to
                 // trigger if this new event occurrs sooner than the
                 // next event in tm
                 s.signal();

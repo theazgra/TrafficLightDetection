@@ -3,7 +3,7 @@
 #ifndef DLIB_THREADS_KERNEl_SHARED_
 #define DLIB_THREADS_KERNEl_SHARED_
 
-// this file should be included at the bottom of one of the hsvTest kernel headers for a
+// this file should be included at the bottom of one of the thread kernel headers for a 
 // specific platform.
 //#include "../threads.h"
 #include "auto_mutex_extension.h"
@@ -12,48 +12,7 @@
 #include "../memory_manager.h"
 #include "../queue.h"
 #include "../set.h"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-extern "C"
-{
-// =========================>>> WHY YOU ARE GETTING AN ERROR HERE <<<=========================
-// The point of this block of code is to cause a link time error that will prevent a user
-// from compiling part of their application with DLIB_ASSERT enabled and part with it
-// disabled since doing that would be a violation of C++'s one definition rule.  So if you
-// are getting an error here then you are either not enabling DLIB_ASSERT consistently
-// (e.g. by compiling part of your program in a debug mode and part in a release mode) or
-// you have simply forgotten to compile dlib/all/source.cpp into your application.
-// =========================>>> WHY YOU ARE GETTING AN ERROR HERE <<<=========================
-#ifdef ENABLE_ASSERTS
-    extern int USER_ERROR__missing_dlib_all_source_cpp_file__OR__inconsistent_use_of_DEBUG_or_ENABLE_ASSERTS_preprocessor_directives;
-    inline int dlib_check_consistent_assert_usage() { USER_ERROR__missing_dlib_all_source_cpp_file__OR__inconsistent_use_of_DEBUG_or_ENABLE_ASSERTS_preprocessor_directives = 0; return 0; }
-#else
-    extern int USER_ERROR__missing_dlib_all_source_cpp_file__OR__inconsistent_use_of_DEBUG_or_ENABLE_ASSERTS_preprocessor_directives_;
-    inline int dlib_check_consistent_assert_usage() { USER_ERROR__missing_dlib_all_source_cpp_file__OR__inconsistent_use_of_DEBUG_or_ENABLE_ASSERTS_preprocessor_directives_ = 0; return 0; }
-#endif
-    const int DLIB_NO_WARN_UNUSED dlib_check_assert_helper_variable = dlib_check_consistent_assert_usage();
-}
-
-
-
-
-
-
-
-
-
+#include "../test_for_odr_violations.h"
 
 
 
@@ -203,7 +162,7 @@ namespace dlib
             signaler data_ready;        // signaler to signal when there is new data
             signaler data_empty;        // signaler to signal when the data is empty
             bool destruct;
-            signaler destructed;        // signaler to signal when a hsvTest has ended
+            signaler destructed;        // signaler to signal when a thread has ended 
             bool do_not_ever_destruct;
 
             struct registry_type
@@ -256,7 +215,7 @@ namespace dlib
     {
         try
         {
-            // now make this hsvTest
+            // now make this thread
             return threads_kernel_shared::thread_pool().create_new_thread(funct,param);
         }
         catch (std::bad_alloc&)
@@ -277,7 +236,7 @@ namespace dlib
     {
         DLIB_ASSERT(is_dlib_thread(),            
                "\tvoid register_thread_end_handler"
-            << "\n\tYou can't register a thread end handler for a hsvTest dlib didn't spawn."
+            << "\n\tYou can't register a thread end handler for a thread dlib didn't spawn."
             );
 
         threads_kernel_shared::thread_pool().register_thread_end_handler(obj,handler);
@@ -293,11 +252,11 @@ namespace dlib
         void (T::*handler)()
     )
     {
-        // Check if the hsvTest pool has been destroyed and if it has then don't do anything.
+        // Check if the thread pool has been destroyed and if it has then don't do anything.
         // This bool here is always true except when the program has started to terminate and
-        // the hsvTest pool object has been destroyed.  This if is here to catch other global
+        // the thread pool object has been destroyed.  This if is here to catch other global
         // objects that have destructors that try to call unregister_thread_end_handler().  
-        // Without this check we get into trouble if the hsvTest pool is destroyed before these
+        // Without this check we get into trouble if the thread pool is destroyed before these
         // objects.
         if (threads_kernel_shared::thread_pool_has_been_destroyed == false)
             threads_kernel_shared::thread_pool().unregister_thread_end_handler(obj,handler);

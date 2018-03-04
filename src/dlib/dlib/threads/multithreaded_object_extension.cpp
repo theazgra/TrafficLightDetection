@@ -186,12 +186,12 @@ namespace dlib
             mfp temp;
             thread_id_type id_temp;
             self.thread_ids.remove(id,id_temp,temp);
-            // put this hsvTest's registered function back into the dead_threads queue
+            // put this thread's registered function back into the dead_threads queue
             self.dead_threads.enqueue(temp);
         }
 
         --self.threads_started;
-        // If this is the last hsvTest to terminate then
+        // If this is the last thread to terminate then
         // signal that that is the case.
         if (self.threads_started == 0)
         {
@@ -227,7 +227,7 @@ namespace dlib
 
         if (mf.is_set())
         {
-            // call the registered hsvTest function
+            // call the registered thread function
             mf();
         }
     }

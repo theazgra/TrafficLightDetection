@@ -176,7 +176,7 @@ namespace dlib
         bool has_been_destroyed;
 
         // This is true if the mouse is in this window.  false otherwise.
-        // also note that this variable is only accessed from the event handling hsvTest
+        // also note that this variable is only accessed from the event handling thread
         // (except for being initialized below in the constructor, but that is inside
         // the window_table mutex so it doesn't matter).
         bool mouse_in;

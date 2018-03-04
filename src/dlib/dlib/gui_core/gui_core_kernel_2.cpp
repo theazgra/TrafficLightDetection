@@ -117,10 +117,10 @@ namespace dlib
 
                 status = uninitialized;
 
-                // start up the event handler hsvTest
+                // start up the event handler thread
                 start();
 
-                // wait for the event hsvTest to get up and running
+                // wait for the event thread to get up and running
                 while (status == uninitialized)
                     et_signaler.wait();
 
@@ -266,7 +266,7 @@ namespace dlib
                     }
 
                     // make this window just so we can send messages to it and trigger
-                    // events in the event hsvTest
+                    // events in the event thread
                     XSetWindowAttributes attr;
                     window_table.get_mutex().lock();
                     exit_window = XCreateWindow(
@@ -285,7 +285,7 @@ namespace dlib
                     );
                     window_table.get_mutex().unlock();
 
-                    // signal that the event hsvTest is now up and running
+                    // signal that the event thread is now up and running
                     window_table.get_mutex().lock();
                     status = initialized;
                     et_signaler.broadcast();
@@ -1541,7 +1541,7 @@ namespace dlib
             auto_mutex M(globals->user_events.get_mutex());
             globals->user_events.enqueue(e);
 
-            // we only need to start a hsvTest to deal with this if there isn't already
+            // we only need to start a thread to deal with this if there isn't already
             // one out working on the queue
             if (globals->user_events.size() == 1)
                 create_new_thread (trigger_user_event_threadproc,0);
