@@ -281,51 +281,57 @@ void save_video_frames_with_sp(std::string netFile, std::string xmlFile, std::st
     using namespace dlib;
 
     Logger logger(xmlFile + "_log.txt");
-
-    test_net_type net;
-    shape_predictor sp;
-    deserialize(netFile) >> net >> sp;
-
-    std::vector<matrix<rgb_pixel>> videoFrames;
-    std::vector<std::vector<mmod_rect>> boxes;
-
-    load_image_dataset(videoFrames, boxes, xmlFile);
-    boxes.clear();
-
-    int frameNum = -1;
-
-    cv::Mat openCvImg, croppedImage;
-
-    for (matrix<rgb_pixel>& frame : videoFrames)
+    try
     {
-        ++frameNum;
-        openCvImg = toMat(frame);
+        test_net_type net;
+        shape_predictor sp;
+        deserialize(netFile) >> net >> sp;
 
-        logger.write_line("Processing frame " + std::to_string(frameNum));
+        std::vector<matrix<rgb_pixel>> videoFrames;
+        std::vector<std::vector<mmod_rect>> boxes;
 
-        std::vector<mmod_rect> detections = net(frame);
+        load_image_dataset(videoFrames, boxes, xmlFile);
+        boxes.clear();
 
-        for (mmod_rect& detection : detections)
+        int frameNum = -1;
+
+        cv::Mat openCvImg, croppedImage;
+
+        for (matrix<rgb_pixel>& frame : videoFrames)
         {
-            full_object_detection fullObjectDetection = sp(frame, detection);
+            ++frameNum;
+            openCvImg = toMat(frame);
 
-            rectangle spImprovedRect;
-            for(unsigned long i = 0; i < fullObjectDetection.num_parts(); ++i)
-                spImprovedRect += fullObjectDetection.part(i);
+            logger.write_line("Processing frame " + std::to_string(frameNum));
 
-            croppedImage = crop_image(openCvImg, spImprovedRect);
-            draw_rectangle(frame,
-                           spImprovedRect,
-                           get_color_for_label(translate_TL_state(get_traffic_light_state(croppedImage))),
-                           RECT_WIDTH);
+            std::vector<mmod_rect> detections = net(frame);
+
+            for (mmod_rect& detection : detections)
+            {
+                full_object_detection fullObjectDetection = sp(frame, detection);
+
+                rectangle spImprovedRect;
+                for(unsigned long i = 0; i < fullObjectDetection.num_parts(); ++i)
+                    spImprovedRect += fullObjectDetection.part(i);
+
+                croppedImage = crop_image(openCvImg, spImprovedRect);
+                draw_rectangle(frame,
+                               spImprovedRect,
+                               get_color_for_label(translate_TL_state(get_traffic_light_state(croppedImage))),
+                               RECT_WIDTH);
+            }
+
+            std::string fileName = resultFolder + "/" + std::to_string(frameNum) + ".png";
+            logger.write_line("Saving frame " + fileName);
+            save_png(frame, resultFolder + fileName);
         }
 
-        std::string fileName = resultFolder + "/" + std::to_string(frameNum) + ".png";
-        logger.write_line("Saving frame " + fileName);
-        save_png(frame, resultFolder + fileName);
+        logger.write_line("Succesfully saved all frames.");
     }
-
-    logger.write_line("Succesfully saved all frames.");
+    catch (std::exception& e)
+    {
+        logger.write_line(e.what());
+    }
 }
 
 

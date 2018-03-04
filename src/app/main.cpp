@@ -192,6 +192,17 @@ int main(int argc, char** argv)
         return 0;
     }
 
+    if (arguments[1] == "--video-frames-sp")
+    {
+        string netFile = arguments[2];
+        string xmlFile  = arguments[3];
+        string resultFolder = arguments[4];
+
+        save_video_frames_with_sp(netFile, xmlFile, resultFolder);
+
+        return 0;
+    }
+
     display_help();
 
     return 0;
