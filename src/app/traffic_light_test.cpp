@@ -69,12 +69,17 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
     int imgIndex = -1;
     float overallFoundPercent = 0.0f;
     int falseDetectionCount = 0;
+    matrix<rgb_pixel> scaledImage;
+    float scaleFactor = 2.0f;
     for (matrix<rgb_pixel>& image : testImages)
     {
         ++imgIndex;
+	scaledImage = matrix<rgb_pixel>(image.nr()*scaleFactor, image.nc()*scaleFactor);
+	resize_image(image, scaledImage);
+	//pyramid_up(image);
+	//resize_image(2.0f, image);	
 
-
-        std::vector<mmod_rect> detections = net(image);
+        std::vector<mmod_rect> detections = net(scaledImage);
         int detectionCount = detections.size();
 
         int groundTruth = number_of_label_boxes(boxes.at(imgIndex));
@@ -97,11 +102,11 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
             continue;
 
         cv::Mat openCvImg;
-        openCvImg = toMat(image);
+        openCvImg = toMat(scaledImage);
         if (testType != SaveCrops)
         {
             window.clear_overlay();
-            window.set_image(image);
+            window.set_image(scaledImage);
         }
 
         int labelIndex = -1;
@@ -247,25 +252,35 @@ void save_video_frames(std::string netFile, std::string xmlFile, std::string res
 
     int frameNum = -1;
     cv::Mat openCvImg, croppedImage;
+    matrix<rgb_pixel> scaledFrame;
     for (matrix<rgb_pixel>& frame : videoFrames)
     {
         ++frameNum;
 
-        openCvImg = toMat(frame);
+	//pyramid_up(frame);
+	//resize_image(2.0f, frame);
+	scaledFrame = matrix<rgb_pixel>(frame.nr()*2.0f, frame.nc()*2.0f);
+
+	//Scale image back to original size.
+	//resize_image(1.2f, frame);
+	resize_image(frame, scaledFrame);
+        openCvImg = toMat(scaledFrame);
 
         logger.write_line("Processing frame " + std::to_string(frameNum));
 
-        std::vector<mmod_rect> detections = net(frame);
+
+        std::vector<mmod_rect> detections = net(scaledFrame);
 
 	
         for (mmod_rect& detection : detections)
         {
 	        croppedImage = crop_image(openCvImg, detection);
-            draw_rectangle(frame,
+            draw_rectangle(scaledFrame,
                            detection.rect,
                            get_color_for_label(translate_TL_state(get_traffic_light_state(croppedImage))),
                            RECT_WIDTH);
         }
+	resize_image(scaledFrame, frame);
 
         std::string fileName = resultFolder + "/" + std::to_string(frameNum) + ".png";
         logger.write_line("Saving frame " + fileName);

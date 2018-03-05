@@ -1,0 +1,33 @@
+<<<<<<< HEAD
+#ignore output directory
+cmake-build-debug/
+build/
+
+#ignore dlib docs
+docs/
+
+#ignote dlib examples
+examples/
+python_examples/
+
+#ide settings
+.idea/
+
+#test data
+test_data/
+test_dataset/
+
+#working data
+work_data/
+
+=======
+**/.idea
+*~
+*.swp
+*.o
+*.so
+build
+dist
+*.egg-info/
+>>>>>>> 881ce1744d662fef165ea24b7da6e2cbbfcf9a34
+
