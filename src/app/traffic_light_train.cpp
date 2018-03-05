@@ -402,7 +402,7 @@ void train_shape_predictor(const std::string netFile, const std::string xmlFile)
     using namespace std;
     using namespace dlib;
 
-    string shapePredictorDatasetFile = "sp_dataset.xml";
+    string shapePredictorDatasetFile = xmlFile + "sp.xml";
 
     cout << "Getting detection rectangles." << endl;
     std::vector<std::vector<mmod_rect>> detections = get_detected_rectanges(netFile, xmlFile);
