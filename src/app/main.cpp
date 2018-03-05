@@ -101,11 +101,10 @@ int main(int argc, char** argv)
 
     if (arguments[1] == "--train-sp")
     {
-        cout << "Chosen shape predictor training..." << endl;
-        string xmlFile = arguments[2];
-        string serializationFile  = arguments[3];
+        string netFile = arguments[2];
+        string xmlFile  = arguments[3];
 
-        train_shape_predictor(xmlFile, serializationFile);
+        train_shape_predictor(netFile, xmlFile);
 
         return 0;
     }

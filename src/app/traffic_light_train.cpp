@@ -1,9 +1,6 @@
 #include "traffic_light_train.h"
 #include "Logger.h"
 
-using namespace std;
-using namespace dlib;
-
 
 /**
  * Taken from http://dlib.net/dnn_mmod_train_find_cars_ex.cpp.html
@@ -43,6 +40,8 @@ int overlapped_boxes_count(std::vector<mmod_rect> boxes, const test_box_overlap&
 
 void train(const std::string trainFile)
 {
+    using namespace std;
+    using namespace dlib;
     //"Debug" mode.
     try
     {
@@ -151,6 +150,8 @@ void train(const std::string trainFile)
 
 void train(const std::string trainFile, const std::string testFile)
 {
+    using namespace std;
+    using namespace dlib;
     //"Debug" mode.
     try
     {
@@ -288,6 +289,8 @@ void train(const std::string trainFile, const std::string testFile)
 
 void train_myNet_type(const std::string trainFile)
 {
+    using namespace std;
+    using namespace dlib;
     //"Debug" mode.
     try
     {
@@ -394,9 +397,27 @@ void train_myNet_type(const std::string trainFile)
     }
 }
 
-void train_shape_predictor(const std::string trainFile, const std::string serializeFile)
+void train_shape_predictor(const std::string netFile, const std::string xmlFile)
 {
-    Logger logger("shape_predictor.txt");
+    using namespace std;
+    using namespace dlib;
+
+    string shapePredictorDatasetFile = "sp_" + xmlFile;
+
+    cout << "Getting detection rectangles." << endl;
+    std::vector<std::vector<mmod_rect>> detections = get_detected_rectanges(netFile, xmlFile);
+
+    image_dataset_metadata::dataset xmlDataset, shapePredictorDataset;
+
+    cout << "Loading xml dataset." << endl;
+    image_dataset_metadata::load_image_dataset_metadata(xmlDataset, xmlFile);
+
+    cout << "Creating shape predictor dataset." << endl;
+    shapePredictorDataset = make_bounding_box_regression_training_data(xmlDataset, detections);
+
+    cout << "Saving shape predictor dataset.." << endl;
+    image_dataset_metadata::save_image_dataset_metadata(shapePredictorDataset, shapePredictorDatasetFile);
+
     std::cout << "Loaded shape predictor settings: " << std::endl;
     std::cout << "=============================" << std::endl;
     std::cout << "Oversampling: " << OVERSAMPLING_AMOUNT << std::endl;
@@ -404,12 +425,14 @@ void train_shape_predictor(const std::string trainFile, const std::string serial
     std::cout << "Tree depth: " << TREE_DEPTH  << std::endl;
     std::cout << "Thread count: " << THREAD_COUNT  << std::endl;
     std::cout << "=============================" << std::endl;
+
+    cout << "Training shape predictor." << endl;
     try
     {
         std::vector<matrix<rgb_pixel>> trainImages;
         std::vector<std::vector<full_object_detection>> trainDetections;
 
-        load_image_dataset(trainImages, trainDetections, trainFile);
+        load_image_dataset(trainImages, trainDetections, shapePredictorDatasetFile);
 
         shape_predictor_trainer trainer;
 
@@ -425,13 +448,20 @@ void train_shape_predictor(const std::string trainFile, const std::string serial
 
         cout << "Mean training error: " << test_shape_predictor(sp, trainImages, trainDetections) << endl;
 
-        serialize(serializeFile) << sp;
+        net_type net;
+        cout << "Deserializing net." << endl;
+        deserialize(netFile) >> net;
+
+        cout << "Serializing net and shape predictor ." << endl;
+        serialize(netFile) << net << sp;
 
     }
     catch (std::exception& e)
     {
-        logger.write_line(e.what());
+        cout << "ERROR" << endl;
+        cout << e.what() << endl;
     }
+
 }
 
 

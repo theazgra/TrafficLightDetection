@@ -10,6 +10,7 @@
 
 //width used for drawing rectangle
 unsigned int RECT_WIDTH = 2;
+const float scale_factor = 2.0f;
 
 /**
  * Get the number of not ignored label boxes.
@@ -27,6 +28,19 @@ int number_of_label_boxes(std::vector<dlib::mmod_rect> boxes)
     }
 
     return count;
+}
+
+dlib::rgb_pixel get_color_for_label(std::string label)
+{
+    std::cout << "Detected label: " << label << std::endl;
+    if (label == "r" || label == "Red")
+        return rgb_pixel(255, 0, 0);
+    if (label == "g" || label == "Green")
+        return rgb_pixel(0, 255, 0);
+    if (label == "y" || label == "o" || label == "Orange" || label == "RedOrange")
+        return rgb_pixel(255, 127, 80);
+
+    return rgb_pixel(10, 10, 10);
 }
 
 void test(std::string netFile, std::string testFile, TestType testType, bool saveImages)
@@ -69,15 +83,16 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
     int imgIndex = -1;
     float overallFoundPercent = 0.0f;
     int falseDetectionCount = 0;
+
     matrix<rgb_pixel> scaledImage;
-    float scaleFactor = 2.0f;
+
     for (matrix<rgb_pixel>& image : testImages)
     {
         ++imgIndex;
-	scaledImage = matrix<rgb_pixel>(image.nr()*scaleFactor, image.nc()*scaleFactor);
-	resize_image(image, scaledImage);
-	//pyramid_up(image);
-	//resize_image(2.0f, image);	
+
+        scaledImage = matrix<rgb_pixel>(image.nr()*scale_factor, image.nc()*scale_factor);
+        resize_image(image, scaledImage);
+
 
         std::vector<mmod_rect> detections = net(scaledImage);
         int detectionCount = detections.size();
@@ -163,19 +178,6 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
 
 }
 
-dlib::rgb_pixel get_color_for_label(std::string label)
-{
-	std::cout << "Detected label: " << label << std::endl;
-    if (label == "r" || label == "Red")
-        return rgb_pixel(255, 0, 0);
-    if (label == "g" || label == "Green")
-        return rgb_pixel(0, 255, 0);
-    if (label == "y" || label == "o" || label == "Orange" || label == "RedOrange")
-        return rgb_pixel(255, 127, 80);
-
-    return rgb_pixel(10, 10, 10);
-}
-
 void save_video(std::string netFile, std::string videoFile, std::string resultFolder)
 {
     using namespace dlib;
@@ -188,6 +190,7 @@ void save_video(std::string netFile, std::string videoFile, std::string resultFo
 
         cv::VideoCapture videoCapture(videoFile);
         cv::Mat videoFrame, croppedImage;
+        matrix<rgb_pixel> scaledImage;
 
         int frameNum = -1;
         for (;;)
@@ -210,17 +213,26 @@ void save_video(std::string netFile, std::string videoFile, std::string resultFo
             matrix<rgb_pixel> imgData;
             assign_image(imgData, dlibImg);
 
-            std::vector<mmod_rect> detections = net(imgData);
+            scaledImage = matrix<rgb_pixel>(imgData.nr() * scale_factor, imgData.nc() * scale_factor);
+            //resize up
+            resize_image(imgData, scaledImage);
+
+            videoFrame = toMat(scaledImage);
+
+            std::vector<mmod_rect> detections = net(scaledImage);
 
             for (mmod_rect& detection : detections)
             {
                 croppedImage = crop_image(videoFrame, detection);
 
-                draw_rectangle(imgData,
+                draw_rectangle(scaledImage,
                                detection.rect,
                                get_color_for_label(translate_TL_state(get_traffic_light_state(croppedImage))),
                                RECT_WIDTH);
             }
+
+            //resize back down.
+            resize_image(scaledImage, imgData);
 
             logger.write_line("Saving frame " + std::to_string(frameNum));
             save_png(imgData, resultFolder +"/"+ std::to_string(frameNum) + ".png");
@@ -257,20 +269,14 @@ void save_video_frames(std::string netFile, std::string xmlFile, std::string res
     {
         ++frameNum;
 
-	//pyramid_up(frame);
-	//resize_image(2.0f, frame);
-	scaledFrame = matrix<rgb_pixel>(frame.nr()*2.0f, frame.nc()*2.0f);
+    	scaledFrame = matrix<rgb_pixel>(frame.nr() * scale_factor, frame.nc() * scale_factor);
 
-	//Scale image back to original size.
-	//resize_image(1.2f, frame);
-	resize_image(frame, scaledFrame);
+	    resize_image(frame, scaledFrame);
         openCvImg = toMat(scaledFrame);
 
         logger.write_line("Processing frame " + std::to_string(frameNum));
 
-
         std::vector<mmod_rect> detections = net(scaledFrame);
-
 	
         for (mmod_rect& detection : detections)
         {
@@ -280,7 +286,9 @@ void save_video_frames(std::string netFile, std::string xmlFile, std::string res
                            get_color_for_label(translate_TL_state(get_traffic_light_state(croppedImage))),
                            RECT_WIDTH);
         }
-	resize_image(scaledFrame, frame);
+
+        //resize image back
+        resize_image(scaledFrame, frame);
 
         std::string fileName = resultFolder + "/" + std::to_string(frameNum) + ".png";
         logger.write_line("Saving frame " + fileName);
@@ -347,6 +355,32 @@ void save_video_frames_with_sp(std::string netFile, std::string xmlFile, std::st
     {
         logger.write_line(e.what());
     }
+}
+
+std::vector<std::vector<dlib::mmod_rect>> get_detected_rectanges(const std::string netFile, const std::string xmlFile)
+{
+    using namespace dlib;
+    using namespace std;
+    std::vector<std::vector<mmod_rect>> detections;
+
+    test_net_type net;
+    deserialize(netFile) >> net;
+
+    std::vector<matrix<rgb_pixel>> testImages;
+    std::vector<std::vector<mmod_rect>> gtBoxes;
+
+    load_image_dataset(testImages, gtBoxes, xmlFile);
+    gtBoxes.clear();
+
+    for (matrix<rgb_pixel>& testImage : testImages)
+    {
+        std::vector<mmod_rect> dets = net(testImage);
+
+
+        detections.push_back(dets);
+    }
+
+    return detections;
 }
 
 
