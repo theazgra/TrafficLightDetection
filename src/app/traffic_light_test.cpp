@@ -303,6 +303,8 @@ void save_video_frames_with_sp(std::string netFile, std::string xmlFile, std::st
     using namespace std;
     using namespace dlib;
 
+    cout << "Saving frames with help of shape predictor." << endl;
+
     Logger logger(xmlFile + "_log.txt");
     try
     {
