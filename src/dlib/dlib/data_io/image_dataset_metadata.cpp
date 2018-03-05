@@ -44,7 +44,7 @@ namespace dlib
             const std::string& filename
         )
         {
-            create_image_metadata_stylesheet_file(filename);
+            //create_image_metadata_stylesheet_file(filename);
 
             const std::vector<image>& images = meta.images;
 
@@ -53,7 +53,7 @@ namespace dlib
                 throw dlib::error("ERROR: Unable to open " + filename + " for writing.");
 
             fout << "<?xml version='1.0' encoding='ISO-8859-1'?>\n";
-            fout << "<?xml-stylesheet type='text/xsl' href='image_metadata_stylesheet.xsl'?>\n";
+            //fout << "<?xml-stylesheet type='text/xsl' href='image_metadata_stylesheet.xsl'?>\n";
             fout << "<dataset>\n";
             fout << "<name>" << meta.name << "</name>\n";
             fout << "<comment>" << meta.comment << "</comment>\n";
