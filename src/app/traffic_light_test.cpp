@@ -348,7 +348,7 @@ void save_video_frames_with_sp(std::string netFile, std::string xmlFile, std::st
 
             std::string fileName = resultFolder + "/" + std::to_string(frameNum) + ".png";
             logger.write_line("Saving frame " + fileName);
-            save_png(frame, resultFolder + fileName);
+            save_png(frame, fileName);
         }
 
         logger.write_line("Succesfully saved all frames.");
