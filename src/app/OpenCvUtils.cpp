@@ -465,7 +465,7 @@ TLState get_traffic_light_state(cv::Mat & img, bool verbose)
     if (verbose)
     {
         s.stop();
-        std::cout << "Time: " << s.elapsed() << " ms" << std::endl;
+        std::cout << "Time: " << s.elapsed_milliseconds() << " ms" << std::endl;
 
         std::cout << "==============================================" << std::endl;
         std::cout << "Top brigthness: " << topBrig << std::endl;

@@ -293,7 +293,7 @@ void save_video_frames(std::string netFile, std::string xmlFile, std::string res
         //resize image back
         resize_image(scaledFrame, frame);
 	    stopwatch.stop();
-	    logger.write_line("Time needed for frame: " + std::to_string(stopwatch.elapsed()) + " ms.");
+	    logger.write_line("Time needed for frame: " + std::to_string(stopwatch.elapsed_milliseconds()) + " ms.");
 
         std::string fileName = resultFolder + "/" + std::to_string(frameNum) + ".png";
         logger.write_line("Saving frame " + fileName);
@@ -328,7 +328,9 @@ void save_video_frames_with_sp(std::string netFile, std::string xmlFile, std::st
 
         cv::Mat openCvImg, croppedImage;
         matrix<rgb_pixel> scaledFrame;
-        Stopwatch stopwatch, netStopwatch;
+        Stopwatch stopwatch;
+        int netStopwatch = stopwatch.get_next_stopwatch_id();
+        int stateStopwatch = stopwatch.get_next_stopwatch_id();
 
         for (matrix<rgb_pixel>& frame : videoFrames)
         {
@@ -342,10 +344,11 @@ void save_video_frames_with_sp(std::string netFile, std::string xmlFile, std::st
 
             logger.write_line("Processing frame " + std::to_string(frameNum));
 
-	    netStopwatch.start();
+	        stopwatch.start(netStopwatch);
             std::vector<mmod_rect> detections = net(scaledFrame);
-	    netStopwatch.stop();
-	    stopwatch.start();
+	        stopwatch.stop(netStopwatch);
+
+            stopwatch.start(stateStopwatch);
 
             for (mmod_rect& detection : detections)
             {
@@ -363,10 +366,10 @@ void save_video_frames_with_sp(std::string netFile, std::string xmlFile, std::st
             }
 
             resize_image(scaledFrame, frame);
+            stopwatch.stop(stateStopwatch);
 
-            stopwatch.stop();
-	    logger.write_line("Time in network: " + std::to_string(netStopwatch.elapsed()));
-            logger.write_line("Time needed for frame: " + std::to_string(stopwatch.elapsed()) + " s.");
+	        logger.write_line("Time for network pass: " + std::to_string(stopwatch.elapsed_milliseconds(netStopwatch)) + " ms");
+            logger.write_line("Time for state detection: " + std::to_string(stopwatch.elapsed_milliseconds(stateStopwatch)) + " ms.");
 
             std::string fileName = resultFolder + "/" + std::to_string(frameNum) + ".png";
             logger.write_line("Saving frame " + fileName);

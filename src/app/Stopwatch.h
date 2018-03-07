@@ -6,20 +6,50 @@
 #define BACHELOR_STOPWATCH_H
 
 #include <chrono>
+#include <map>
 
 class Stopwatch {
 
 private:
-    std::chrono::high_resolution_clock::time_point startPoint;
-    std::chrono::high_resolution_clock::time_point endPoint;
-    std::chrono::duration<double> elapsedTime;
-public:
-    void start();
-    void reset();
-    void stop();
+    class BasicStopwatch{
+    private:
+        double seconds, milliseconds, nanoseconds;
 
-    double elapsed();
-    double elapledAndReset();
+        std::chrono::high_resolution_clock::time_point startPoint;
+        std::chrono::high_resolution_clock::time_point endPoint;
+
+    public:
+        void start();
+        void reset();
+        void stop();
+
+        double elapsedSeconds();
+        double elapsedMilliseconds();
+        double elapsedNanoseconds();
+
+    };
+    int basicStopwatchId = 0;
+    int nextStopwatchId = 1;
+    std::map<int, Stopwatch::BasicStopwatch> stopwatches;
+
+public:
+    Stopwatch();
+
+    void start();
+    void start(int stopwatchId);
+    void stop();
+    void stop(int stopwatchId);
+    void reset();
+    void reset(int stopwatchId);
+
+    double elapsed_seconds();
+    double elapsed_seconds(int stopwatchId);
+    double elapsed_milliseconds();
+    double elapsed_milliseconds(int stopwatchId);
+    double elapsed_nanoseconds();
+    double elapsed_nanoseconds(int stopwatchId);
+
+    int get_next_stopwatch_id();
 
 };
 
