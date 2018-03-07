@@ -65,11 +65,8 @@ template <typename SUBNET> using a_rcon7 = relu<affine<con7<55, SUBNET>>>;
  * Net types using convolution of size 5. Test net type has bn_con layer changed to affine layer.
  */
 //using net_type = loss_mmod<con<1,9,9,1,1,rcon5<rcon5<rcon5<downsampler8x<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>;
-<<<<<<< HEAD
-//using test_net_type = loss_mmod<con<1,9,9,1,1,a_rcon5<a_rcon5<a_rcon5<a_downsampler8x<input_rgb_image_pyramid<pyramid_down<8>>>>>>>>;
-=======
 //using test_net_type = loss_mmod<con<1,9,9,1,1,a_rcon5<a_rcon5<a_rcon5<a_downsampler8x<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>;
->>>>>>> 75166b1b87108486aea1fd6bdc9d700f9155418f
+
 
 /**
  * Net types using convolution of size 3. Test net type has bn_con layer changed to affine layer.

@@ -269,7 +269,7 @@ void save_video_frames(std::string netFile, std::string xmlFile, std::string res
 
     for (matrix<rgb_pixel>& frame : videoFrames)
     {
-	stopwatch.start();
+	    stopwatch.start();
         ++frameNum;
 
     	scaledFrame = matrix<rgb_pixel>(frame.nr() * scale_factor, frame.nc() * scale_factor);
@@ -292,8 +292,8 @@ void save_video_frames(std::string netFile, std::string xmlFile, std::string res
 
         //resize image back
         resize_image(scaledFrame, frame);
-	stopwatch.stop();
-	logger.write_line("Time needed for frame: " + std::to_string(stopwatch.elapsed()) + " ms.");
+	    stopwatch.stop();
+	    logger.write_line("Time needed for frame: " + std::to_string(stopwatch.elapsed()) + " ms.");
 
         std::string fileName = resultFolder + "/" + std::to_string(frameNum) + ".png";
         logger.write_line("Saving frame " + fileName);
@@ -305,6 +305,7 @@ void save_video_frames(std::string netFile, std::string xmlFile, std::string res
 
 void save_video_frames_with_sp(std::string netFile, std::string xmlFile, std::string resultFolder)
 {
+    //TODO: (Moravec) count states to remove flickering.
     using namespace std;
     using namespace dlib;
 
@@ -326,15 +327,22 @@ void save_video_frames_with_sp(std::string netFile, std::string xmlFile, std::st
         int frameNum = -1;
 
         cv::Mat openCvImg, croppedImage;
+        matrix<rgb_pixel> scaledFrame;
+        Stopwatch stopwatch;
 
         for (matrix<rgb_pixel>& frame : videoFrames)
         {
+            stopwatch.start();
             ++frameNum;
-            openCvImg = toMat(frame);
+
+            scaledFrame = matrix<rgb_pixel>(frame.nr() * scale_factor, frame.nc() * scale_factor);
+
+            resize_image(frame, scaledFrame);
+            openCvImg = toMat(scaledFrame);
 
             logger.write_line("Processing frame " + std::to_string(frameNum));
 
-            std::vector<mmod_rect> detections = net(frame);
+            std::vector<mmod_rect> detections = net(scaledFrame);
 
             for (mmod_rect& detection : detections)
             {
@@ -345,11 +353,16 @@ void save_video_frames_with_sp(std::string netFile, std::string xmlFile, std::st
                     spImprovedRect += fullObjectDetection.part(i);
 
                 croppedImage = crop_image(openCvImg, spImprovedRect);
-                draw_rectangle(frame,
+                draw_rectangle(scaledFrame,
                                spImprovedRect,
                                get_color_for_label(translate_TL_state(get_traffic_light_state(croppedImage))),
                                RECT_WIDTH);
             }
+
+            resize_image(scaledFrame, frame);
+
+            stopwatch.stop();
+            logger.write_line("Time needed for frame: " + std::to_string(stopwatch.elapsed()) + " ms.");
 
             std::string fileName = resultFolder + "/" + std::to_string(frameNum) + ".png";
             logger.write_line("Saving frame " + fileName);
