@@ -64,14 +64,14 @@ template <typename SUBNET> using a_rcon7 = relu<affine<con7<55, SUBNET>>>;
 /**
  * Net types using convolution of size 5. Test net type has bn_con layer changed to affine layer.
  */
-using net_type = loss_mmod<con<1,9,9,1,1,rcon5<rcon5<rcon5<downsampler8x<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>;
-using test_net_type = loss_mmod<con<1,9,9,1,1,a_rcon5<a_rcon5<a_rcon5<a_downsampler8x<input_rgb_image_pyramid<pyramid_down<8>>>>>>>>;
+//using net_type = loss_mmod<con<1,9,9,1,1,rcon5<rcon5<rcon5<downsampler8x<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>;
+//using test_net_type = loss_mmod<con<1,9,9,1,1,a_rcon5<a_rcon5<a_rcon5<a_downsampler8x<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>;
 
 /**
  * Net types using convolution of size 3. Test net type has bn_con layer changed to affine layer.
  */
-//using net_type = loss_mmod<con<1,9,9,1,1,rcon3<rcon3<rcon3<con3downsampler8x<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>;
-//using test_net_type = loss_mmod<con<1,9,9,1,1,a_rcon3<a_rcon3<a_rcon3<a_con3downsampler8x<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>;
+using net_type = loss_mmod<con<1,9,9,1,1,rcon7<rcon7<rcon5<downsampler8x<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>;
+using test_net_type = loss_mmod<con<1,9,9,1,1,a_rcon7<a_rcon7<a_rcon5<a_downsampler8x<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>;
 
 
 template <typename SUBNET> using downsampler4x  = relu<bn_con<con5d<32, relu<bn_con<con5d<16, SUBNET>>>>>>;
