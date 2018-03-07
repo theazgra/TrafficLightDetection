@@ -5,6 +5,7 @@
 #include <dlib/image_io.h>
 #include <dlib/image_processing.h>
 #include "settings.h"
+#include "Stopwatch.h"
 
 enum TestType
 {

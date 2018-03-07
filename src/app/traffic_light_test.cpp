@@ -265,8 +265,11 @@ void save_video_frames(std::string netFile, std::string xmlFile, std::string res
     int frameNum = -1;
     cv::Mat openCvImg, croppedImage;
     matrix<rgb_pixel> scaledFrame;
+    Stopwatch stopwatch;
+
     for (matrix<rgb_pixel>& frame : videoFrames)
     {
+	stopwatch.start();
         ++frameNum;
 
     	scaledFrame = matrix<rgb_pixel>(frame.nr() * scale_factor, frame.nc() * scale_factor);
@@ -289,6 +292,8 @@ void save_video_frames(std::string netFile, std::string xmlFile, std::string res
 
         //resize image back
         resize_image(scaledFrame, frame);
+	stopwatch.stop();
+	logger.write_line("Time needed for frame: " + std::to_string(stopwatch.elapsed()) + " ms.");
 
         std::string fileName = resultFolder + "/" + std::to_string(frameNum) + ".png";
         logger.write_line("Saving frame " + fileName);
