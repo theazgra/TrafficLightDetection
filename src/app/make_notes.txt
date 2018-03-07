@@ -1,2 +1,2 @@
 When doing make, use this, to include nvidia cudnn
-cmake -DCMAKE_PREFIX_PATH="/home/fei/mor0146/repos/cuda" ..
+cmake -DCMAKE_PREFIX_PATH="/home/fei/mor0146/repos/cuda" -DUSE_AVX_INSTRUCTIONS=1 ..
