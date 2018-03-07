@@ -328,7 +328,7 @@ void save_video_frames_with_sp(std::string netFile, std::string xmlFile, std::st
 
         cv::Mat openCvImg, croppedImage;
         matrix<rgb_pixel> scaledFrame;
-        Stopwatch stopwatch;
+        Stopwatch stopwatch, netStopwatch;
 
         for (matrix<rgb_pixel>& frame : videoFrames)
         {
@@ -342,7 +342,10 @@ void save_video_frames_with_sp(std::string netFile, std::string xmlFile, std::st
 
             logger.write_line("Processing frame " + std::to_string(frameNum));
 
+	    netStopwatch.start();
             std::vector<mmod_rect> detections = net(scaledFrame);
+	    netStopwatch.stop();
+	    stopwatch.start();
 
             for (mmod_rect& detection : detections)
             {
@@ -362,7 +365,8 @@ void save_video_frames_with_sp(std::string netFile, std::string xmlFile, std::st
             resize_image(scaledFrame, frame);
 
             stopwatch.stop();
-            logger.write_line("Time needed for frame: " + std::to_string(stopwatch.elapsed()) + " ms.");
+	    logger.write_line("Time in network: " + std::to_string(netStopwatch.elapsed()));
+            logger.write_line("Time needed for frame: " + std::to_string(stopwatch.elapsed()) + " s.");
 
             std::string fileName = resultFolder + "/" + std::to_string(frameNum) + ".png";
             logger.write_line("Saving frame " + fileName);

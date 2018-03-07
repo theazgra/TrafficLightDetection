@@ -17,7 +17,7 @@ void Stopwatch::stop()
 
 double Stopwatch::elapsed()
 {
-    this->elapsedTime = this->endPoint - this->startPoint;
+    this->elapsedTime = std::chrono::duration_cast<std::chrono::duration<double>>(this->endPoint - this->startPoint);
     return this->elapsedTime.count();
 }
 

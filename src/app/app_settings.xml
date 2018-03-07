@@ -9,8 +9,8 @@
     <cropper>
 	<batch_size>30</batch_size>
 	<!--200x600 is default chip size for now -->
-        <chip_width>300</chip_width>
-        <chip_height>700</chip_height>
+        <chip_width>200</chip_width>
+        <chip_height>600</chip_height>
         <random_rotation_angle>0</random_rotation_angle>
         <min_object_size_smaller_side>13</min_object_size_smaller_side>
         <min_object_size_larger_side>20</min_object_size_larger_side>
