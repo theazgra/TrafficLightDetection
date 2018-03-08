@@ -5,8 +5,9 @@
 #ifndef BACHELOR_STOPWATCH_H
 #define BACHELOR_STOPWATCH_H
 
-#include <chrono>
 #include <map>
+#include <chrono>
+#include <exception>
 
 class Stopwatch {
 
@@ -19,6 +20,7 @@ private:
         std::chrono::high_resolution_clock::time_point endPoint;
 
     public:
+        BasicStopwatch();
         void start();
         void reset();
         void stop();
@@ -32,11 +34,15 @@ private:
     int nextStopwatchId = 1;
     std::map<int, Stopwatch::BasicStopwatch> stopwatches;
 
+    bool stopwatch_exists(int stopwatchId);
+
 public:
     Stopwatch();
 
     void start();
     void start(int stopwatchId);
+    int start_new_stopwatch();
+    
     void stop();
     void stop(int stopwatchId);
     void reset();

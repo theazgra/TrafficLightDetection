@@ -1,6 +1,12 @@
 #include "Stopwatch.h"
 
-
+#pragma region BasicStopwatch
+Stopwatch::BasicStopwatch::BasicStopwatch()
+{
+    this->seconds = 0;
+    this->milliseconds = 0;
+    this->nanoseconds = 0;
+}
 void Stopwatch::BasicStopwatch::start()
 {
     this->startPoint = std::chrono::high_resolution_clock::now();
@@ -34,6 +40,17 @@ double Stopwatch::BasicStopwatch::elapsedNanoseconds()
 {
     return this->nanoseconds;
 }
+#pragma endregion
+#pragma region Stopwatch
+bool Stopwatch::stopwatch_exists(int stopwatchId)
+{
+    if (!this->stopwatches.count(stopwatchId))
+    {
+        throw std::exception("Stopwatch with given id does not exist");
+        return false;
+    }
+    return true;
+}
 
 Stopwatch::Stopwatch()
 {
@@ -48,9 +65,17 @@ void Stopwatch::start()
 void Stopwatch::start(int stopwatchId)
 {
     if (!this->stopwatches.count(stopwatchId))
-        this->stopwatches[stopwatchId] = BasicStopwatch() ;
+        this->stopwatches[stopwatchId] = BasicStopwatch();
 
     this->stopwatches[stopwatchId].start();
+}
+
+int Stopwatch::start_new_stopwatch()
+{
+    int stopwatchId = this->nextStopwatchId++;
+    this->start(stopwatchId);
+
+    return stopwatchId;
 }
 
 void Stopwatch::stop()
@@ -60,7 +85,8 @@ void Stopwatch::stop()
 
 void Stopwatch::stop(int stopwatchId)
 {
-    this->stopwatches[stopwatchId].stop();
+    if (stopwatch_exists(stopwatchId))
+        this->stopwatches[stopwatchId].stop();
 }
 
 void Stopwatch::reset()
@@ -70,7 +96,8 @@ void Stopwatch::reset()
 
 void Stopwatch::reset(int stopwatchId)
 {
-    this->stopwatches[stopwatchId].reset();
+    if (stopwatch_exists(stopwatchId))
+        this->stopwatches[stopwatchId].reset();
 }
 
 double Stopwatch::elapsed_seconds()
@@ -80,7 +107,8 @@ double Stopwatch::elapsed_seconds()
 
 double Stopwatch::elapsed_seconds(int stopwatchId)
 {
-    return this->stopwatches[stopwatchId].elapsedSeconds();
+    if (stopwatch_exists(stopwatchId))
+        return this->stopwatches[stopwatchId].elapsedSeconds();
 }
 
 double Stopwatch::elapsed_milliseconds()
@@ -90,7 +118,8 @@ double Stopwatch::elapsed_milliseconds()
 
 double Stopwatch::elapsed_milliseconds(int stopwatchId)
 {
-    return this->stopwatches[stopwatchId].elapsedMilliseconds();
+    if (stopwatch_exists(stopwatchId))
+        return this->stopwatches[stopwatchId].elapsedMilliseconds();
 }
 
 double Stopwatch::elapsed_nanoseconds()
@@ -100,10 +129,12 @@ double Stopwatch::elapsed_nanoseconds()
 
 double Stopwatch::elapsed_nanoseconds(int stopwatchId)
 {
-    return this->stopwatches[stopwatchId].elapsedNanoseconds();
+    if (stopwatch_exists(stopwatchId))
+        return this->stopwatches[stopwatchId].elapsedNanoseconds();
 }
 
 int Stopwatch::get_next_stopwatch_id()
 {
     return this->nextStopwatchId++;
 }
+#pragma endregion
