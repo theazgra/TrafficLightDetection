@@ -44,10 +44,10 @@ template <typename SUBNET> using con7downsampler8x  = relu<bn_con<con7d<32, relu
 template <typename SUBNET> using a_con7downsampler8x  = relu<affine<con7d<32, relu<affine<con7d<32, relu<affine<con7d<16,SUBNET>>>>>>>>>;
 
 /**
- * CNN blocks using convolution of size 5
+ * CNN blocks using convolution of size 5, original filter size is 55
  */
-template <typename SUBNET> using rcon5  = relu<bn_con<con5<55,SUBNET>>>;
-template <typename SUBNET> using a_rcon5  = relu<affine<con5<55,SUBNET>>>;
+template <typename SUBNET> using rcon5  = relu<bn_con<con5<16,SUBNET>>>;
+template <typename SUBNET> using a_rcon5  = relu<affine<con5<16,SUBNET>>>;
 
 /**
  * CNN blocks using convolution of size 3

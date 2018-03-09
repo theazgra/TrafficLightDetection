@@ -46,7 +46,7 @@ bool Stopwatch::stopwatch_exists(int stopwatchId)
 {
     if (!this->stopwatches.count(stopwatchId))
     {
-        throw std::exception("Stopwatch with given id does not exist");
+        throw std::runtime_error("Stopwatch with given id does not exist");
         return false;
     }
     return true;
@@ -109,6 +109,8 @@ double Stopwatch::elapsed_seconds(int stopwatchId)
 {
     if (stopwatch_exists(stopwatchId))
         return this->stopwatches[stopwatchId].elapsedSeconds();
+
+	return 0;
 }
 
 double Stopwatch::elapsed_milliseconds()
@@ -120,6 +122,8 @@ double Stopwatch::elapsed_milliseconds(int stopwatchId)
 {
     if (stopwatch_exists(stopwatchId))
         return this->stopwatches[stopwatchId].elapsedMilliseconds();
+
+	return 0;
 }
 
 double Stopwatch::elapsed_nanoseconds()
@@ -131,6 +135,8 @@ double Stopwatch::elapsed_nanoseconds(int stopwatchId)
 {
     if (stopwatch_exists(stopwatchId))
         return this->stopwatches[stopwatchId].elapsedNanoseconds();
+	
+	return 0;
 }
 
 int Stopwatch::get_next_stopwatch_id()
