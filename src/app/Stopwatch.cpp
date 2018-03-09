@@ -1,3 +1,4 @@
+#include <tgmath.h>
 #include "Stopwatch.h"
 
 #pragma region BasicStopwatch
@@ -41,6 +42,7 @@ double Stopwatch::BasicStopwatch::elapsedNanoseconds()
     return this->nanoseconds;
 }
 #pragma endregion
+
 #pragma region Stopwatch
 bool Stopwatch::stopwatch_exists(int stopwatchId)
 {
@@ -143,4 +145,33 @@ int Stopwatch::get_next_stopwatch_id()
 {
     return this->nextStopwatchId++;
 }
+
+std::string Stopwatch::formatted(int stopwatchId)
+{
+    double MS = this->stopwatches[stopwatchId].elapsedMilliseconds();
+
+    double M = 0;
+    double S = 0;
+    double H = 0;
+
+    S = MS / 1000;
+    double fS = std::floor(S);
+    MS = (S - fS) * 1000;   //We have ms.
+
+    M = fS / 60;
+    double fM = std::floor(M);
+    S = (M - fM) * 60; //We have s.
+
+    H = fM / 60;
+    double fH = std::floor(H);
+    M = (H - fH) * 60; //We have m.
+
+    H = fH;
+
+    std::string result = std::to_string(H) + " hours, " + std::to_string(M) + " minutes, " +
+            std::to_string(S) + " seconds, " + std::to_string(MS) + " milliseconds";
+
+    return result;
+}
+
 #pragma endregion

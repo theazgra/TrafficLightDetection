@@ -4,6 +4,7 @@
 #include "utils.h"
 #include "OpenCvUtils.h"
 
+
 // ----------------------------------------------------------------------------------------
 using namespace std;
 
@@ -16,9 +17,9 @@ namespace file
 	}
 }
 
+
 int main(int argc, char** argv)
 {
-
     const uint ARGCOUNT = 8;
     string arguments[ARGCOUNT];
     for (unsigned int i = 0; i < argc && i < ARGCOUNT; ++i)
@@ -88,7 +89,7 @@ int main(int argc, char** argv)
             case 2:
                 train(trainFile, testFile);
                 break;
-	    case 3:
+	        case 3:
                 train_myNet_type(trainFile);
                 break;
         }
@@ -125,8 +126,8 @@ int main(int argc, char** argv)
             cout << "Xml file containing testing data annotations does not exist!" << endl;
             return 1;
         }
-        TestType testType = NoDisplay;
 
+        TestType testType = NoDisplay;
 
         if (displayArg == "--display")
             testType = FullTest;
@@ -135,9 +136,8 @@ int main(int argc, char** argv)
         else if (displayArg == "--display-error")
             testType = OnlyErrorDisplay;
         else if (displayArg == "--save-crops")
-        {
             testType = SaveCrops;
-        }
+
 
         bool save = arguments[5] == "--save";
 
@@ -149,7 +149,6 @@ int main(int argc, char** argv)
     if (arguments[1] == "--state")
     {
         bool verbose = arguments[3] == "--verbose";
-        //train_state_detection("DUMMY");
 
         if (!file::file_exists(arguments[2]))
         {
@@ -160,9 +159,6 @@ int main(int argc, char** argv)
         dlib::matrix<dlib::rgb_pixel> dlibImg;
         dlib::load_image(dlibImg, arguments[2]);
 
-        //cv::Mat m = cv::imread(arguments[2]);
-
-        //cout << "Detected state: " << translate_TL_state(get_traffic_light_state(m, verbose)) << endl;
         cout << "Detected state: " << translate_TL_state(get_traffic_light_state2(dlibImg, verbose)) << endl;
 
         return 0;

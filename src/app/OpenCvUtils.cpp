@@ -382,7 +382,6 @@ TLState get_traffic_light_state2(dlib::matrix<dlib::rgb_pixel> dlibImg, bool ver
 TLState get_traffic_light_state(cv::Mat & img, bool verbose)
 {
     using namespace cv;
-    Logger log("StateLogger.txt");
 
     Stopwatch s;
     s.start();
@@ -459,9 +458,6 @@ TLState get_traffic_light_state(cv::Mat & img, bool verbose)
                     std::make_pair(Green, hsvBottom.maskCoverage)
             });
 
-
-    log.write_line(std::to_string(topBrig));
-
     if (verbose)
     {
         s.stop();
@@ -535,8 +531,6 @@ void append_to_file(std::string fileName, std::string message)
     file << message << endl;
 
     file.close();
-
-
 }
 
 

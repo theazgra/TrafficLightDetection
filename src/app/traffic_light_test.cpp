@@ -34,10 +34,11 @@ bool valid_rectangle(const dlib::rectangle& rect, cv::Mat img)
 {
 	if (rect.left() < 0 || rect.width() < 0 || rect.top() < 0 || rect.height() < 0)
 		return false;
+
 	if (rect.right() > img.cols || rect.width() > img.cols || rect.bottom() > img.rows || rect.height() > img.rows)
 		return false;
 
-	return true;	
+	return true;
 }
 
 dlib::rgb_pixel get_color_for_label(std::string label)
@@ -368,12 +369,16 @@ void save_video_frames_with_sp(std::string netFile, std::string xmlFile, std::st
                 for(unsigned long i = 0; i < fullObjectDetection.num_parts(); ++i)
                     spImprovedRect += fullObjectDetection.part(i);
 
-		if (!valid_rectangle(spImprovedRect, openCvImg))
-		{
-			logger.write_line("Wrong rectangle");
-			std::cout << spImprovedRect << std::endl;
-			continue;
-		}	
+                if (!valid_rectangle(spImprovedRect, openCvImg))
+                {
+                    logger.write_line("Wrong rectangle: L: " +
+                                      std::to_string(spImprovedRect.left()) + ";T: " +
+                                      std::to_string(spImprovedRect.top()) + "; W: " +
+                                      std::to_string(spImprovedRect.width()) + ";H:" +
+                                      std::to_string(spImprovedRect.height())) ;
+
+                    continue;
+                }
 
                 croppedImage = crop_image(openCvImg, spImprovedRect);
                 draw_rectangle(scaledFrame,

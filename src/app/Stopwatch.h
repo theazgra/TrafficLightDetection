@@ -8,6 +8,7 @@
 #include <map>
 #include <chrono>
 #include <exception>
+#include <string>
 
 class Stopwatch {
 
@@ -57,6 +58,7 @@ public:
 
     int get_next_stopwatch_id();
 
+    std::string formatted(int stopwatchId = 0);
 };
 
 
