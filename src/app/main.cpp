@@ -78,8 +78,9 @@ int main(int argc, char** argv)
                 return 1;
             }
         }
-
-        auto start = chrono::high_resolution_clock::now();
+	
+	Stopwatch stopwatch;
+	stopwatch.start();
 
         switch (TRAINING_METHOD)
         {
@@ -94,9 +95,8 @@ int main(int argc, char** argv)
                 break;
         }
 
-        auto finish = chrono::high_resolution_clock::now();
-        chrono::duration<double> timeElapsed = finish - start;
-        cout << "Training finished after: "; display_time(timeElapsed.count());
+	stopwatch.stop();
+        cout << "Training finished after: " << stopwatch.formatted() << endl;
         return 0;
     }
 

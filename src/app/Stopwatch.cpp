@@ -1,4 +1,3 @@
-#include <tgmath.h>
 #include "Stopwatch.h"
 
 #pragma region BasicStopwatch

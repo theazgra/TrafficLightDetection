@@ -9,6 +9,7 @@
 #include <chrono>
 #include <exception>
 #include <string>
+#include <tgmath.h>
 
 class Stopwatch {
 
