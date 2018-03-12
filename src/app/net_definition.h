@@ -28,8 +28,8 @@ template <long num_filters, typename SUBNET> using con7d  = con<num_filters,7,7,
 /**
  * Downsampler 8x using convolution of size 5
  */
-template <typename SUBNET> using downsampler8x  = relu<bn_con<con5d<32, relu<bn_con<con5d<32, relu<bn_con<con5d<16,SUBNET>>>>>>>>>;
-template <typename SUBNET> using a_downsampler8x  = relu<affine<con5d<32, relu<affine<con5d<32, relu<affine<con5d<16,SUBNET>>>>>>>>>;
+template <typename SUBNET> using downsampler8x  = relu<bn_con<con5d<40, relu<bn_con<con5d<32, relu<bn_con<con5d<16,SUBNET>>>>>>>>>;
+template <typename SUBNET> using a_downsampler8x  = relu<affine<con5d<40, relu<affine<con5d<32, relu<affine<con5d<16,SUBNET>>>>>>>>>;
 
 /**
  * Downsampler 8x using convolution of size 3
@@ -49,6 +49,8 @@ template <typename SUBNET> using a_con7downsampler8x  = relu<affine<con7d<32, re
 template <typename SUBNET> using rcon5_55  = relu<bn_con<con5<55,SUBNET>>>;
 template <typename SUBNET> using a_rcon5_55  = relu<affine<con5<55,SUBNET>>>;
 
+template <typename SUBNET> using rcon5_50  = relu<bn_con<con5<50,SUBNET>>>;
+template <typename SUBNET> using a_rcon5_50  = relu<affine<con5<50,SUBNET>>>;
 template <typename SUBNET> using rcon5_40  = relu<bn_con<con5<40,SUBNET>>>;
 template <typename SUBNET> using a_rcon5_40  = relu<affine<con5<40,SUBNET>>>;
 template <typename SUBNET> using rcon5_32  = relu<bn_con<con5<32,SUBNET>>>;
@@ -70,8 +72,8 @@ template <typename SUBNET> using a_rcon7_55 = relu<affine<con7<55, SUBNET>>>;
 /**
  * Net types using convolution of size 5. Test net type has bn_con layer changed to affine layer.
  */
-using net_type = loss_mmod<con<1,9,9,1,1,rcon5_55<rcon5_55<rcon5_55<rcon5_55<rcon5_40<downsampler8x<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>>>;
-using test_net_type = loss_mmod<con<1,9,9,1,1,a_rcon5_55<a_rcon5_55<a_rcon5_55<a_rcon5_55<a_rcon5_40<a_downsampler8x<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>>>;
+using net_type = loss_mmod<con<1,9,9,1,1,rcon5_55<rcon5_55<rcon5_50<downsampler8x<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>;
+using test_net_type = loss_mmod<con<1,9,9,1,1,a_rcon5_55<a_rcon5_55<a_rcon5_50<a_downsampler8x<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>;
 
 
 /**
