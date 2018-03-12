@@ -7,7 +7,6 @@ int overlapped_boxes_count(std::vector<dlib::mmod_rect> boxes, const dlib::test_
 
 void train(const std::string trainFile);
 void train(const std::string trainFile, const std::string testFile);
-void train_myNet_type(const std::string trainFile);
 
 
 void train_shape_predictor(const std::string netFile, const std::string xmlFile);

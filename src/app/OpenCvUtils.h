@@ -58,8 +58,6 @@ TLState get_traffic_light_state2(dlib::matrix<dlib::rgb_pixel> dlibImg, bool ver
 void save_found_crop(cv::Mat & mat, dlib::mmod_rect rectangle, int index);
 cv::Mat crop_image(cv::Mat & mat, dlib::mmod_rect cropRectangle);
 
-void append_to_file(std::string fileName, std::string message);
-
 
 
 #endif //DISPLAYIMAGE_OPENCVUTILS_H

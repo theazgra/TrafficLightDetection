@@ -91,134 +91,153 @@ std::pair<int, int> find_vertical_boundaries(cv::Mat1b & img)
     return std::make_pair(top, bottom);
 };
 
-float get_total_brightness_in_range(cv::Mat &img, int lowRow, int highRow, int lowCol, int highCol, int &partPixelCount, int& max)
+float get_sum_in_range(cv::Mat &img, int lowRow, int highRow, int lowCol, int highCol, int &pixelCount)
 {
     float brightness = 0.0f;
-    partPixelCount = 0;
+    pixelCount = 0;
 
     for (int row = lowRow; row < highRow; ++row)
     {
         for (int col = lowCol; col < highCol; ++col) {
-            uchar px = img.at<uchar>(row, col);
-            brightness += px;
-
-
-            ++partPixelCount;
+            brightness += img.at<uchar>(row, col);
+            ++pixelCount;
         }
     }
 
     return brightness;
 }
 
-
-bool should_mask_contour(cv::Mat & grayImg, int& max_val)
+bool should_mask_contour(cv::Mat & grayImg)
 {
     float bordersBrigthness  = 0.0f;
 
     int rowCount = (int)ceil(grayImg.rows * 0.06f);
     int columnCount = (int)ceil(grayImg.cols * 0.15f);
-    int leftPx, rightPx, topPx, bottomPx, centerPx;
-    int leftMax, rightMax, topMax, bottomMax, dummy;
+    int leftPxs, rightPxs, topPxs, bottomPxs, centerPxs;
 
-    float leftBorderBrightness = get_total_brightness_in_range(grayImg, rowCount, grayImg.rows - rowCount, 0,
-                                                               columnCount, leftPx, leftMax);
-    float rightBorderBrightness = get_total_brightness_in_range(grayImg, rowCount, grayImg.rows - rowCount,
-                                                                grayImg.cols - columnCount, grayImg.cols, rightPx, rightMax);
-    float topBorderBrigthness = get_total_brightness_in_range(grayImg, 0, rowCount, 0, columnCount, topPx, topMax);
-    float bottomBorderBrightness = get_total_brightness_in_range(grayImg, grayImg.rows - rowCount, grayImg.rows, 0,
-                                                                 columnCount, bottomPx, bottomMax);
+    float leftBorderBrightness = get_sum_in_range(grayImg, rowCount, grayImg.rows - rowCount, 0, columnCount, leftPxs);
+    float rightBorderBrightness = get_sum_in_range(grayImg, rowCount, grayImg.rows - rowCount, grayImg.cols - columnCount, grayImg.cols, rightPxs);
+    float topBorderBrigthness = get_sum_in_range(grayImg, 0, rowCount, 0, columnCount, topPxs);
+    float bottomBorderBrightness = get_sum_in_range(grayImg, grayImg.rows - rowCount, grayImg.rows, 0, columnCount, bottomPxs);
 
-    //max_val = max({leftMax, rightMax, topMax, bottomMax});
-    bordersBrigthness = (
-                                leftBorderBrightness +
-                                rightBorderBrightness +
-                                topBorderBrigthness  +
-                                bottomBorderBrightness
-                        ) / ((float)(leftPx + rightPx + topPx + bottomPx));
+    bordersBrigthness = (leftBorderBrightness + rightBorderBrightness + topBorderBrigthness + bottomBorderBrightness) /
+                        ((float)(leftPxs + rightPxs + topPxs + bottomPxs));
 
-    float centerBrightness = get_total_brightness_in_range(grayImg, rowCount, grayImg.rows - rowCount, columnCount,
-                                                           grayImg.cols - columnCount, centerPx, dummy);
+    float centerBrightness = get_sum_in_range(grayImg, rowCount, grayImg.rows - rowCount, columnCount, grayImg.cols - columnCount, centerPxs);
+    centerBrightness = centerBrightness / (float)centerPxs;
 
-    centerBrightness = centerBrightness / (float)centerPx;
-/*
-    cout << "------------" << endl;
-    cout << "Center value: " << centerBrightness << endl;
-    cout << "Border value: " << bordersBrigthness << endl;
-    cout << "------------" << endl;
-*/
     return (bordersBrigthness > centerBrightness);
 }
 
+void fix_mask(cv::Mat1b &mask)
+{
+    int fromCol = (int)((mask.cols / 2.0f) - (mask.cols * 0.25f));
+    int toCol = (int)((mask.cols / 2.0f) + (mask.cols * 0.25f));
+    int fromRow = (int)(mask.rows * 0.10f);
+    int toRow = (int)(mask.rows * 0.90f);
 
-void remove_background(cv::Mat & grayImg, cv::Mat & hsvImg, std::pair<int, int> & verticalBoundaries, bool maskOut, int threshold_type)
+    bool shouldFix = false;
+    uchar px;
+    for (int r = fromRow; r < toRow; ++r)
+    {
+        for (int c = fromCol; c < toCol; ++c)
+        {
+            px = mask.at<uchar>(r, c);
+            if (px == 0)
+            {
+                shouldFix = true;
+                break;
+            }
+        }
+        if (shouldFix)
+        {
+            break;
+        }
+    }
+
+    if (shouldFix)
+    {
+        cout << "Fix: " << imgFile << endl;
+        Mat1b fixMask = Mat::zeros(mask.size(), CV_8UC1);
+        for (int r = (int)(mask.rows * 0.05f); r < (int)(mask.rows * 0.95f); ++r)
+        {
+            for (int c = (int)((mask.cols / 2.0f) - (mask.cols * 0.35f)); c < (int)((mask.cols / 2.0f) + (mask.cols * 0.35f)); ++c)
+            {
+                fixMask.at<uchar>(r,c) = 255;
+            }
+        }
+
+        mask = mask | fixMask;
+
+    }
+}
+
+
+void remove_background(cv::Mat & grayImg, cv::Mat & hsvImg, std::pair<int, int> & verticalBoundaries, bool verbose)
 {
     using namespace cv;
     using namespace std;
 
-    if (maskOut)
+    if (should_mask_contour(grayImg))
     {
 
+        Mat originalGray = Mat(grayImg);
         Mat1b contour, maskedImage;
         Mat hsvMasked, thresholdOut;
 
-        threshold(grayImg, thresholdOut, threshold_value, 255, threshold_type); //130
+        //OTSU thresholding, so threshold value does not make any difference.
+        threshold(grayImg, thresholdOut, 126, 255, CV_THRESH_BINARY_INV + CV_THRESH_OTSU); //130
 
         vector<vector<Point> > contours;
         vector<Vec4i> hierarchy;
 
         contour = Mat::zeros(grayImg.size(), CV_8UC1 );
-        maskedImage = Mat::zeros(grayImg.size(), CV_8UC1);
-        hsvMasked = Mat::zeros(hsvImg.size(), CV_8UC3);
+
 
         findContours(thresholdOut, contours, hierarchy, RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE , Point(0, 0));
 
         long contId = best_contour(contours, hierarchy);
         drawContours(contour, contours, contId, Scalar::all(255), CV_FILLED);
 
-
-
-        vector<Vec3f> circles;
-        HoughCircles(contour, circles, HOUGH_GRADIENT, 2, contour.rows/8, 200, 15, 0, (float)contour.cols * 0.4f);
-
-        //cout << "Circle count: " << circles.size() << endl;
-
-        if (circles.size() > 0)
-            cout << circles.size() <<  " circles found for image " << imgFile << endl;
-
-        for( size_t i = 0; i < circles.size(); i++ )
-        {
-            Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
-            int radius = cvRound(circles[i][2]);
-            radius *= 1.2f;
-
-            circle(contour, center, radius, Scalar::all(255), CV_FILLED, 8, 0);
-
-        }
-/*
-        namedWindow("contour", 0);
-        imshow("contour", contour);
-*/
-
-
         std::pair<int, int> tmp = find_vertical_boundaries(contour);
         verticalBoundaries.first = tmp.first;
         verticalBoundaries.second = tmp.second;
 
-        grayImg.copyTo(maskedImage, contour);
-        hsvImg.copyTo(hsvMasked, contour);
+        Rect imgRoi(0, verticalBoundaries.first, grayImg.cols, verticalBoundaries.second - verticalBoundaries.first);
 
-        grayImg = maskedImage;
+        Mat1b croppedMask(contour, imgRoi);
+
+        maskedImage = Mat::zeros(croppedMask.size(), CV_8UC1);
+        hsvMasked = Mat::zeros(croppedMask.size(), CV_8UC3);
+
+        //maskedImage = Mat(maskedImage, imgRoi);
+        //hsvMasked = Mat(hsvMasked, imgRoi);
+        grayImg = Mat(grayImg, imgRoi);
+        hsvImg = Mat(hsvImg, imgRoi);
+
+        fix_mask(croppedMask);
+
+        grayImg.copyTo(maskedImage, croppedMask);
+        hsvImg.copyTo(hsvMasked, croppedMask);
+
+        grayImg = maskedImage;//Mat(maskedImage, roi);
         hsvImg = hsvMasked;
 
+
+/*
+        if (verbose)
+        {
+            show(contour, "Contour");
+            show(maskedImage, "Masked image");
+        }
+*/
 
     }
     else
     {
         verticalBoundaries.first = 0;
         verticalBoundaries.second = grayImg.rows;
-        //cout << "No masking" << endl;
     }
-
 }
 
 void video(string videoFile)
@@ -256,7 +275,22 @@ int main( int argc, char** argv )
         return 0;
     }
 
+    if (save)
+    {
+        std::pair<int, int> verticalBoundaries;
+        cvtColor(src, gray, CV_BGR2GRAY);
+        cvtColor(src, hsv, CV_BGR2HSV);
 
+        remove_background(gray, hsv, verticalBoundaries, false);
+
+        string file = "processed/p_" + imgFile;
+
+        imwrite(file, gray);
+        return 0;
+    }
+
+
+/*
     Mat g;
     cvtColor(src, g, CV_BGR2GRAY);
     //normalize(g, g, 0, 95, NORM_MINMAX);
@@ -264,7 +298,8 @@ int main( int argc, char** argv )
 
     maskOut = should_mask_contour(g, max);
 
-    //cout << "max: " << max << endl;
+  */
+  //cout << "max: " << max << endl;
 
     /// Create a window to display results
     namedWindow( window_name, 0 );
@@ -299,7 +334,7 @@ void Threshold_Demo( int, void* )
     std::pair<int, int> verticalBoundaries;
 
 //    remove_background(gray, hsv, verticalBoundaries, maskOut, CV_THRESH_BINARY_INV);
-    remove_background(thresh_otsu, hsv, verticalBoundaries, maskOut, CV_THRESH_BINARY_INV + CV_THRESH_OTSU);
+    //remove_background(thresh_otsu, hsv, verticalBoundaries, maskOut, CV_THRESH_BINARY_INV + CV_THRESH_OTSU);
     //remove_background(thresh_triangle, hsv, verticalBoundaries, maskOut, CV_THRESH_BINARY_INV + CV_THRESH_TRIANGLE);
 
     if ( save && maskOut)

@@ -79,8 +79,8 @@ int main(int argc, char** argv)
             }
         }
 	
-	Stopwatch stopwatch;
-	stopwatch.start();
+	    Stopwatch stopwatch;
+	    stopwatch.start();
 
         switch (TRAINING_METHOD)
         {
@@ -90,12 +90,9 @@ int main(int argc, char** argv)
             case 2:
                 train(trainFile, testFile);
                 break;
-	        case 3:
-                train_myNet_type(trainFile);
-                break;
         }
 
-	stopwatch.stop();
+    	stopwatch.stop();
         cout << "Training finished after: " << stopwatch.formatted() << endl;
         return 0;
     }
