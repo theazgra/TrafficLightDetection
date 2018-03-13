@@ -65,7 +65,7 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
     std::vector<matrix<rgb_pixel>> testImages;
     std::vector<std::vector<mmod_rect>> boxes;
     load_image_dataset(testImages, boxes, testFile);
-
+/*
     mmod_rect m;
     mmod_options options(boxes, DW_LONG_SIDE, DW_SHORT_SIDE);
 
@@ -84,7 +84,7 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
         cout << "Average: 	Overall quality of the detector..." << endl;
         cout << "==============================================" << endl;
     }
-
+*/
     image_window window;
 
     if (testType == NoDisplay || testType == SaveCrops)
@@ -143,7 +143,7 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
 
             if (testType == SaveCrops)
             {
-                save_found_crop(openCvImg, d, labelIndex + imgIndex);
+                save_found_crop(openCvImg, d, imgIndex, labelIndex);
 		        continue;
             }
             TLState s = Red;
@@ -363,7 +363,7 @@ void save_video_frames_with_sp(std::string netFile, std::string xmlFile, std::st
 
             for (mmod_rect& detection : detections)
             {
-                full_object_detection fullObjectDetection = sp(frame, detection);
+                full_object_detection fullObjectDetection = sp(scaledFrame, detection);
 
                 rectangle spImprovedRect;
                 for(unsigned long i = 0; i < fullObjectDetection.num_parts(); ++i)
@@ -432,6 +432,127 @@ std::vector<std::vector<dlib::mmod_rect>> get_detected_rectanges(const std::stri
     return detections;
 }
 
+void visualize_detection(std::string netFile, std::string imgFile)
+{
+	using namespace dlib;
+	test_net_type net;
+	shape_predictor sp;
+
+	deserialize(netFile) >> net >> sp;
+
+	matrix<rgb_pixel> img;
+	load_image(img, imgFile);
+
+	image_window win;
+
+	win.set_image(img);
+
+	for (auto&& d : net(img))
+	{
+		auto fd = sp(img, d);
+		rectangle rect;
+		for (unsigned long j = 0; j < fd.num_parts(); ++j)
+			rect += fd.part(j);
+
+		win.add_overlay(rect, rgb_pixel(255,0,0));	
+	}
+
+	std::cin.get();
+
+	const float lower = -2.5;
+	const float upper = 0.0;
+	std::cout << "jet color mapping range:  lower="<< lower << "  upper="<< upper << std::endl;
+
+	std::vector<rectangle> rects;
+	matrix<rgb_pixel> pyramid;
+
+	using pyramid_type = std::remove_reference<decltype(input_layer(net))>::type::pyramid_type;
+
+	create_tiled_pyramid<pyramid_type>(img, pyramid, rects,
+						input_layer(net).get_pyramid_padding(),
+						input_layer(net).get_pyramid_outer_padding());
+
+	image_window winpyr(pyramid, "Tiled pyramid");
+
+	std::cout << "Number of channels in final tensor image: " << net.subnet().get_output().k() << std::endl;
+
+	matrix<float> network_output = image_plane(net.subnet().get_output(),0,0);
+	for (long k; k < net.subnet().get_output().k(); ++k)
+		network_output = max_pointwise(network_output, image_plane(net.subnet().get_output(), 0, k));
+
+	const double network_output_scale = img.nc()/(double)network_output.nc();
+	std::cout << "Network output scale: " << network_output_scale << std::endl;
+
+	resize_image(network_output_scale, network_output);
+
+	image_window win_output(jet(network_output, upper, lower), "Output tensdor from network");
+
+	for (long r = 0; r < pyramid.nr(); ++r)
+    	{
+        	for (long c = 0; c < pyramid.nc(); ++c)
+        	{
+            		dpoint tmp(c,r);
+            		tmp = input_tensor_to_output_tensor(net, tmp);
+        	    tmp = point(network_output_scale*tmp);
+        	    if (get_rect(network_output).contains(tmp))
+        	    {
+	                float val = network_output(tmp.y(),tmp.x());
+                		// alpha blend the network output pixel with the RGB image to make our
+                	// overlay.
+                	rgb_alpha_pixel p;
+                	assign_pixel(p , colormap_jet(val,lower,upper));
+                	p.alpha = 120;
+                	assign_pixel(pyramid(r,c), p);
+            		}	
+        	}
+    	}	
+
+	image_window win_pyr_overlay(pyramid, "Detection scores on image pyramid");
+
+	matrix<float> collapsed(img.nr(), img.nc());
+    resizable_tensor input_tensor;
+    input_layer(net).to_tensor(&img, &img+1, input_tensor);
+    for (long r = 0; r < collapsed.nr(); ++r)
+    {
+        for (long c = 0; c < collapsed.nc(); ++c)
+        {
+            // Loop over a bunch of scale values and look up what part of network_output
+            // corresponds to the point(c,r) in the original image, then take the max
+            // detection score over all the scales and save it at pixel point(c,r).
+            float max_score = -1e30;
+            for (double scale = 1; scale > 0.2; scale *= 5.0/6.0)
+            {
+                // Map from input image coordinates to tiled pyramid coordinates.
+                dpoint tmp = center(input_layer(net).image_space_to_tensor_space(input_tensor,scale, drectangle(dpoint(c,r))));
+                // Now map from pyramid coordinates to network_output coordinates.
+                tmp = point(network_output_scale*input_tensor_to_output_tensor(net, tmp));
+
+                if (get_rect(network_output).contains(tmp))
+                {
+                    float val = network_output(tmp.y(),tmp.x());
+                    if (val > max_score)
+                        max_score = val;
+                }
+            }
+
+            collapsed(r,c) = max_score;
+
+            // Also blend the scores into the original input image so we can view it as
+            // an overlay on the cars.
+            rgb_alpha_pixel p;
+            assign_pixel(p , colormap_jet(max_score,lower,upper));
+            p.alpha = 120;
+            assign_pixel(img(r,c), p);
+        }
+    }
+
+    image_window win_collapsed(jet(collapsed, upper, lower), "Collapsed output tensor from the network");
+    image_window win_img_and_sal(img, "Collapsed detection scores on raw image");
+
+
+    std::cout << "Hit enter to end program" << std::endl;
+    std::cin.get();
+}
 
 
 

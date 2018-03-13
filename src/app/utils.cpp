@@ -62,6 +62,8 @@ void display_help()
     cout << "    --save to save displayed images (only used with display)." << endl;
     cout << "    --save-crops to just save detected traffic lights without displaying them." << endl << endl;
 
+    cout << "--visualize and image to see detection result with heatmap " << endl << endl;
+
     cout << "--video to save frames from video file with detected rectangles. Pass net file, video file and folder where to save frames." << endl;
     cout << "--video-frames to save frames from xml file with detected rectangles. Pass net file, xml file and folder where to save frames." << endl;
     cout << "--video-frames-sp to save frames from xml file with detected rectangles improved by shape predictor. Pass net file, xml file and folder where to save frames." << endl << endl;

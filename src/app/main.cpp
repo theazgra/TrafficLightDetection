@@ -143,6 +143,14 @@ int main(int argc, char** argv)
         return 0;
     }
 
+    if (arguments[1] == "--visualize")
+    {
+        std::string netFile = arguments[2];
+        std::string imgFile = arguments[3];
+        visualize_detection(netFile, imgFile);
+        return 0;
+    }
+
     if (arguments[1] == "--state")
     {
         bool verbose = arguments[3] == "--verbose";

@@ -22,6 +22,7 @@ void save_video(std::string netFile, std::string videoFile, std::string resultFo
 void save_video_frames(std::string netFile, std::string xmlFile, std::string resultFolder);
 void save_video_frames_with_sp(std::string netFile, std::string xmlFile, std::string resultFolder);
 
+void visualize_detection(std::string netFile, std::string imgFile);
 std::vector<std::vector<dlib::mmod_rect>> get_detected_rectanges(const std::string netFile, const std::string xmlFile);
 
 int number_of_label_boxes(std::vector<dlib::mmod_rect> boxes);

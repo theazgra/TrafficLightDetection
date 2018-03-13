@@ -15,8 +15,8 @@ template <long num_filters, typename SUBNET> using con5  = con<num_filters,5,5,1
 /**
  * Downsampler 8x using convolution of size 5
  */
-template <typename SUBNET> using downsampler8x  = relu<bn_con<con5d<40, relu<bn_con<con5d<32, relu<bn_con<con5d<16,SUBNET>>>>>>>>>;
-template <typename SUBNET> using a_downsampler8x  = relu<affine<con5d<40, relu<affine<con5d<32, relu<affine<con5d<16,SUBNET>>>>>>>>>;
+template <typename SUBNET> using downsampler8x  = relu<bn_con<con5d<32, relu<bn_con<con5d<32, relu<bn_con<con5d<16,SUBNET>>>>>>>>>;
+template <typename SUBNET> using a_downsampler8x  = relu<affine<con5d<32, relu<affine<con5d<32, relu<affine<con5d<16,SUBNET>>>>>>>>>;
 
 /**
  * CNN blocks using convolution of size 5, original filter size is 55
@@ -34,8 +34,8 @@ template <typename SUBNET> using a_rcon5_32  = relu<affine<con5<32,SUBNET>>>;
 /**
  * Net types using convolution of size 5. Test net type has bn_con layer changed to affine layer.
  */
-using net_type = loss_mmod<con<1,9,9,1,1,rcon5_55<rcon5_55<rcon5_50<downsampler8x<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>;
-using test_net_type = loss_mmod<con<1,9,9,1,1,a_rcon5_55<a_rcon5_55<a_rcon5_50<a_downsampler8x<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>;
+using net_type = loss_mmod<con<1,9,9,1,1,rcon5_55<rcon5_55<rcon5_55<downsampler8x<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>;
+using test_net_type = loss_mmod<con<1,9,9,1,1,a_rcon5_55<a_rcon5_55<a_rcon5_55<a_downsampler8x<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>;
 
 
 #endif //NET_DEFINITION_H
