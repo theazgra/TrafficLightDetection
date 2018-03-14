@@ -427,7 +427,7 @@ TLState get_traffic_light_state(cv::Mat & img, bool verbose)
     cvtColor(img, gray, CV_RGB2GRAY);
     cvtColor(img, hsv, CV_RGB2HSV);
 
-    remove_background(gray, hsv, verbose);
+    //remove_background(gray, hsv, verbose);
 
     normalize(gray, gray, 0, 95, NORM_MINMAX); // 150
 
@@ -545,9 +545,9 @@ void save_found_crop(cv::Mat & mat, dlib::mmod_rect rectangle, int imgIndex, int
 
     cvtColor(cropped, cropped, CV_BGR2RGB);
 
-    std::string fn = "crop_" + std::to_string(imgIndex) + "_" + std::to_string(labelIndex) + ".png";
+    std::string fn = "crops/crop_" + std::to_string(imgIndex) + "_" + std::to_string(labelIndex) + ".png";
 
-    std::cout << "Saving: crop_" << fn << std::endl;
+    std::cout << "Saving: " << fn << std::endl;
     cv::imwrite(fn , cropped);
 }
 
