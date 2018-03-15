@@ -573,3 +573,15 @@ dlib::rgb_pixel get_color_for_state(TLState state)
 
     return dlib::rgb_pixel(10, 10, 10);
 }
+
+void save_found_crop(cv::Mat &mat, dlib::mmod_rect detRect, std::string fileName, dlib::rectangle size)
+{
+    cv::Mat cropped = crop_image(mat, detRect);
+    cvtColor(cropped, cropped, CV_BGR2RGB);
+
+    if (!size.is_empty())
+        cv::resize(cropped, cropped, cv::Size(size.width(), size.height()));
+
+    std::cout << "Saving: " << fileName << std::endl;
+    cv::imwrite(fileName, cropped);
+}

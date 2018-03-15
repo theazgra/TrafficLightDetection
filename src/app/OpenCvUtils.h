@@ -56,6 +56,7 @@ TLState get_traffic_light_state(cv::Mat & img, bool verbose = false);
 TLState get_traffic_light_state2(dlib::matrix<dlib::rgb_pixel> dlibImg, bool verbose = false);
 
 void save_found_crop(cv::Mat & mat, dlib::mmod_rect rectangle, int imgIndex, int labelIndex);
+void save_found_crop(cv::Mat & mat, dlib::mmod_rect detRect, std::string fileName, dlib::rectangle size = dlib::rectangle());
 cv::Mat crop_image(cv::Mat & mat, dlib::mmod_rect cropRectangle);
 
 dlib::rgb_pixel get_color_for_state(TLState state);

@@ -61,10 +61,14 @@ void display_help()
     cout << "  Next you can use: " << endl;
     cout << "    --display-only to go straigt to visual testing." << endl;
     cout << "    --display-error to show only images without detection or with false alarms." << endl;
-    cout << "    --save to save displayed images (only used with display)." << endl;
-    cout << "    --save-crops to just save detected traffic lights without displaying them." << endl << endl;
+    cout << "    --save to save displayed images (only used with display)." << endl << endl;
 
-    cout << "--visualize and image to see detection result with heatmap " << endl << endl;
+
+    cout << "--save-crops to save detected objects. Pass net file, xml file and destination folder" << endl;
+    cout << "--save-crops-size to save detected objects with set size in xml. Pass net file, xml file and destination folder" << endl;
+
+
+    cout << "--visualize net and image to see detection result with heatmap " << endl << endl;
 
     cout << "--video to save frames from video file with detected rectangles. Pass net file, video file and folder where to save frames." << endl;
     cout << "--video-frames to save frames from xml file with detected rectangles. Pass net file, xml file and folder where to save frames." << endl;

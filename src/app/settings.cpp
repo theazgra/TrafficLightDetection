@@ -37,6 +37,9 @@ unsigned long FHOG_THREAD_COUNT;
 float FHOG_C;
 float FHOG_EPSILON;
 
+unsigned int CROP_WIDTH;
+unsigned int CROP_HEIGHT;
+
 using namespace pugi;
 
 bool load_settings(const char* xmlSettingsFile)
@@ -122,7 +125,7 @@ bool load_settings(const char* xmlSettingsFile)
     TREE_DEPTH = spTrainer.child("tree_depth").text().as_ullong(2);
     THREAD_COUNT = spTrainer.child("thread_count").text().as_ullong(10);
 
-    xml_node fhogDet = root.child("fhog_detector");
+    xml_node fhogDet = root.child("state_net_settings");
     xml_node scannerWindow = fhogDet.child("scanner");
 
     FHOG_WINDOW_WIDTH = scannerWindow.child("width").text().as_ullong();
@@ -130,6 +133,10 @@ bool load_settings(const char* xmlSettingsFile)
     FHOG_THREAD_COUNT = fhogDet.child("thread_count").text().as_ullong(10);
     FHOG_C = fhogDet.child("c_value").text().as_ullong(1);
     FHOG_EPSILON = fhogDet.child("epsilon").text().as_ullong(0.01);
+
+    xml_node crops = root.child("crop_saving");
+    CROP_WIDTH = crops.child("width").text().as_uint();
+    CROP_HEIGHT = crops.child("height").text().as_uint();
 
     return true;
 }

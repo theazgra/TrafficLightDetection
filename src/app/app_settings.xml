@@ -2,15 +2,13 @@
 <app_settings>
     <cuda_devices>
         <device>0</device>
-<!--
         <device>1</device>
         <device>2</device>
         <device>3</device>
--->
     </cuda_devices>
     <cropper>
-	<batch_size>30</batch_size>
-	<!--200x600 is default chip size for now -->
+	    <batch_size>30</batch_size>
+	    <!--200x600 is default chip size for now -->
         <chip_width>200</chip_width>
         <chip_height>600</chip_height>
         <random_rotation_angle>0</random_rotation_angle>
@@ -53,7 +51,7 @@
         <tree_depth>2</tree_depth>
         <thread_count>5</thread_count>
     </shape_predictor_trainer>
-    <fhog_detector>
+    <state_net_settings>
         <scanner>
             <width>14</width>
             <height>12</height>
@@ -61,5 +59,9 @@
         <thread_count>10</thread_count>
         <c_value>1.5</c_value>
         <epsilon>0.01</epsilon>
-    </fhog_detector>
+    </state_net_settings>
+    <crop_saving>
+        <width>80</width>
+        <height>200</height>
+    </crop_saving>
 </app_settings>

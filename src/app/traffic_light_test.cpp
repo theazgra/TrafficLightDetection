@@ -41,7 +41,7 @@ bool valid_rectangle(const dlib::rectangle& rect, cv::Mat img)
 	return true;
 }
 
-void test(std::string netFile, std::string testFile, TestType testType, bool saveImages)
+void test(std::string netFile, std::string testFile, TestType testType)
 {
     using namespace std;
     using namespace dlib;
@@ -75,7 +75,7 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
 */
     image_window window;
 
-    if (testType == NoDisplay || testType == SaveCrops)
+    if (testType == NoDisplay)
         window.close_window();
 
 
@@ -117,11 +117,10 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
 
         cv::Mat openCvImg;
         openCvImg = toMat(scaledImage);
-        if (testType != SaveCrops)
-        {
-            window.clear_overlay();
-            window.set_image(scaledImage);
-        }
+
+        window.clear_overlay();
+        window.set_image(scaledImage);
+
 
         int labelIndex = -1;
         for (mmod_rect& detection : detections)
@@ -145,12 +144,6 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
                 continue;
             }
 
-            if (testType == SaveCrops)
-            {
-                save_found_crop(openCvImg, spImprovedRect, imgIndex, labelIndex);
-		        continue;
-            }
-
             cout << "\tBounding box " << labelIndex << " with label: " << detection.label << " Detection confidence " << detection.detection_confidence << endl;
 
             if (detection.label == "r")
@@ -165,23 +158,6 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
                 window.add_overlay(detection.rect, rgb_pixel(0,255,0), translate_TL_state(get_traffic_light_state(croppedImage)));
             }
 
-        }
-
-        if (saveImages)
-        {
-
-            cout << "Press s to save image, otherwise press enter for next image." << endl;
-            std::string input;
-            cin >> input;
-            if (input == "s")
-            {
-                save_png(image, "detected_" + to_string(imgIndex) + ".png");
-            }
-        }
-        else if (testType != SaveCrops)
-        {
-            cout << "Press enter for next image." << endl;
-            cin.get();
         }
     }
 
@@ -557,6 +533,91 @@ void visualize_detection(std::string netFile, std::string imgFile)
 
     std::cout << "Hit enter to end program" << std::endl;
     std::cin.get();
+}
+
+TLState detect_state(const std::string netFile, dlib::matrix<dlib::rgb_pixel> dlibImg)
+{
+    using namespace dlib;
+    state_test_net_type net;
+    deserialize(netFile) >> net;
+
+    std::vector<mmod_rect> dets = net(dlibImg);
+
+
+    image_window window;
+
+    window.clear_overlay();
+    window.set_image(dlibImg);
+
+    for (mmod_rect& rect : dets)
+        window.add_overlay(rect, rgb_pixel(10,10,10));
+
+    std::cin.get();
+
+    return Inactive;
+}
+
+void save_detected_objects(const std::string netFile, const std::string xmlFile, const std::string folderPath, dlib::rectangle sizeRect)
+{
+    using namespace std;
+    using namespace dlib;
+
+    cout << "Saving detected objects." << endl;
+
+    bool resizeObjects = !sizeRect.is_empty();
+
+    try
+    {
+        test_net_type net;
+        shape_predictor sp;
+        deserialize(netFile) >> net >> sp;
+
+        std::vector<matrix<rgb_pixel>> images;
+        std::vector<std::vector<mmod_rect>> boxes;
+
+        load_image_dataset(images, boxes, xmlFile);
+        boxes.clear();
+
+        int frameNum = -1;
+
+        matrix<rgb_pixel> scaledFrame;
+        cv::Mat matImg;
+
+        for (matrix<rgb_pixel>& frame : images)
+        {
+            ++frameNum;
+
+            scaledFrame = matrix<rgb_pixel>(frame.nr() * scale_factor, frame.nc() * scale_factor);
+
+            resize_image(frame, scaledFrame);
+
+            matImg = toMat(scaledFrame);
+
+            std::vector<mmod_rect> detections = net(scaledFrame);
+
+            int labelIndex = -1;
+            for (mmod_rect& detection : detections)
+            {
+                ++labelIndex;
+
+                full_object_detection fullObjectDetection = sp(scaledFrame, detection);
+
+                rectangle spImprovedRect;
+                for(unsigned long i = 0; i < fullObjectDetection.num_parts(); ++i)
+                    spImprovedRect += fullObjectDetection.part(i);
+
+
+                std::string fileName = folderPath + "/crop_" + std::to_string(frameNum) + "_" + std::to_string(labelIndex) + ".png";
+                save_found_crop(matImg, spImprovedRect, fileName, sizeRect);
+            }
+        }
+
+        cout << "Succesfully saved all frames." << endl;
+    }
+    catch (std::exception& e)
+    {
+        cout << e.what() << endl;
+    }
 }
 
 

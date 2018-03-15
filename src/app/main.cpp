@@ -104,6 +104,18 @@ int main(int argc, char** argv)
         return 0;
     }
 
+    if (arguments[1] == "--detect-state")
+    {
+        string netFile  = arguments[2];
+        string imgFile  = arguments[3];
+
+        dlib::matrix<dlib::rgb_pixel> dlibImg;
+        dlib::load_image(dlibImg, imgFile);
+
+        detect_state(netFile, dlibImg);
+        return 0;
+    }
+
     if (arguments[1] == "--train-sp")
     {
         string netFile = arguments[2];
@@ -139,15 +151,27 @@ int main(int argc, char** argv)
             testType = DisplayOnly;
         else if (displayArg == "--display-error")
             testType = OnlyErrorDisplay;
-        else if (displayArg == "--save-crops")
-            testType = SaveCrops;
 
-
-        bool save = arguments[5] == "--save";
-
-        test(netFile, testFile, testType, save);
+        test(netFile, testFile, testType);
 
         return 0;
+    }
+
+    if (arguments[1] == "--save-crops-size" || arguments[1] == "--save-crops")
+    {
+        string netFile = arguments[2];
+        string testFile  = arguments[3];
+        string folder = arguments[4];
+
+        if (arguments[1] == "--save-crops-size")
+        {
+            dlib::rectangle sizeRect(CROP_WIDTH, CROP_HEIGHT);
+            save_detected_objects(netFile, testFile, folder, sizeRect);
+        }
+        else
+        {
+            save_detected_objects(netFile, testFile, folder);
+        }
     }
 
     if (arguments[1] == "--visualize")

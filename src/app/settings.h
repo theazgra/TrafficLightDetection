@@ -135,17 +135,8 @@ extern unsigned long FHOG_WINDOW_HEIGHT;
 extern unsigned long FHOG_THREAD_COUNT;
 extern float FHOG_C;
 extern float FHOG_EPSILON;
-/*
- *
-scanner.set_detection_window_size(20, 30);
 
-    structural_object_detection_trainer<image_scanner_type> trainer(scanner);
-
-    trainer.set_num_threads(10);
-
-    trainer.set_c(1);
-    trainer.be_verbose();
-    trainer.set_epsilon(0.01);
- */
+extern unsigned int CROP_WIDTH;
+extern unsigned int CROP_HEIGHT;
 
 #endif //SETTINGS_H
