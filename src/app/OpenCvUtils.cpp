@@ -551,9 +551,9 @@ void save_found_crop(cv::Mat & mat, dlib::mmod_rect rectangle, int imgIndex, int
     cv::imwrite(fn , cropped);
 }
 
-cv::Mat crop_image(cv::Mat & mat, dlib::mmod_rect cropRectangle)
+cv::Mat crop_image(cv::Mat & mat, dlib::rectangle cropRectangle)
 {
-    cv::Rect roi(cropRectangle.rect.left(), cropRectangle.rect.top(), cropRectangle.rect.width(), cropRectangle.rect.height());
+    cv::Rect roi(cropRectangle.left(), cropRectangle.top(), cropRectangle.width(), cropRectangle.height());
     cv::Mat cropped = mat(roi);
 
     return cropped;
@@ -574,13 +574,28 @@ dlib::rgb_pixel get_color_for_state(TLState state)
     return dlib::rgb_pixel(10, 10, 10);
 }
 
-void save_found_crop(cv::Mat &mat, dlib::mmod_rect detRect, std::string fileName, dlib::rectangle size)
+dlib::rectangle resized_rectangle(dlib::rectangle original, dlib::rectangle sizeRectangle)
 {
-    cv::Mat cropped = crop_image(mat, detRect);
+    long halfDeltaW = (sizeRectangle.width() - original.width()) / 2;
+    long halfDeltaH = (sizeRectangle.height() - original.height()) / 2;
+
+    dlib::rectangle sized(  original.left() - halfDeltaW,   original.top() - halfDeltaH,
+                            original.right() + halfDeltaW,  original.bottom() + halfDeltaH);
+
+
+    return sized;
+
+}
+
+void save_found_crop(cv::Mat &mat, dlib::mmod_rect detRect, std::string fileName, dlib::rectangle sizeRect)
+{
+    if (!sizeRect.is_empty())
+        detRect.rect = resized_rectangle(detRect.rect, sizeRect);
+
+    cv::Mat cropped = crop_image(mat, detRect.rect);
     cvtColor(cropped, cropped, CV_BGR2RGB);
 
-    if (!size.is_empty())
-        cv::resize(cropped, cropped, cv::Size(size.width(), size.height()));
+    //cv::resize(cropped, cropped, cv::Size(sizeRect.width(), sizeRect.height()));
 
     std::cout << "Saving: " << fileName << std::endl;
     cv::imwrite(fileName, cropped);
