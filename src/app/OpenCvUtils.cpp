@@ -558,3 +558,18 @@ cv::Mat crop_image(cv::Mat & mat, dlib::mmod_rect cropRectangle)
 
     return cropped;
 }
+
+dlib::rgb_pixel get_color_for_state(TLState state)
+{
+    std::cout << "Detected state: " << state << std::endl;
+    if (state == Red)
+        return dlib::rgb_pixel(255, 0, 0);
+
+    if (state == Green)
+        return dlib::rgb_pixel(0, 255, 0);
+
+    if (state == Orange || state == RedOrange)
+        return dlib::rgb_pixel(255, 158, 48);
+
+    return dlib::rgb_pixel(10, 10, 10);
+}

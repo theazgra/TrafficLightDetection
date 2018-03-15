@@ -41,19 +41,6 @@ bool valid_rectangle(const dlib::rectangle& rect, cv::Mat img)
 	return true;
 }
 
-dlib::rgb_pixel get_color_for_label(std::string label)
-{
-    std::cout << "Detected label: " << label << std::endl;
-    if (label == "r" || label == "Red")
-        return rgb_pixel(255, 0, 0);
-    if (label == "g" || label == "Green")
-        return rgb_pixel(0, 255, 0);
-    if (label == "y" || label == "o" || label == "Orange" || label == "RedOrange")
-        return rgb_pixel(255, 127, 80);
-
-    return rgb_pixel(10, 10, 10);
-}
-
 void test(std::string netFile, std::string testFile, TestType testType, bool saveImages)
 {
     using namespace std;
@@ -254,7 +241,7 @@ void save_video(std::string netFile, std::string videoFile, std::string resultFo
 
                 draw_rectangle(scaledImage,
                                detection.rect,
-                               get_color_for_label(translate_TL_state(get_traffic_light_state(croppedImage))),
+                               get_color_for_state(get_traffic_light_state(croppedImage)),
                                RECT_WIDTH);
             }
 
@@ -313,7 +300,7 @@ void save_video_frames(std::string netFile, std::string xmlFile, std::string res
 	        croppedImage = crop_image(openCvImg, detection);
             draw_rectangle(scaledFrame,
                            detection.rect,
-                           get_color_for_label(translate_TL_state(get_traffic_light_state(croppedImage))),
+                           get_color_for_state(get_traffic_light_state(croppedImage)),
                            RECT_WIDTH);
         }
 
@@ -397,9 +384,11 @@ void save_video_frames_with_sp(std::string netFile, std::string xmlFile, std::st
                 }
 
                 croppedImage = crop_image(openCvImg, spImprovedRect);
+                TLState detectedState = get_traffic_light_state(croppedImage);
+                cout << "Detected state: " << translate_TL_state(detectedState) << "; for rectangle: " << spImprovedRect << endl;
                 draw_rectangle(scaledFrame,
                                spImprovedRect,
-                               get_color_for_label(translate_TL_state(get_traffic_light_state(croppedImage))),
+                               get_color_for_state(detectedState),
                                RECT_WIDTH);
             }
 
