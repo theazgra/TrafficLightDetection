@@ -31,6 +31,12 @@ double NU = 0.05;
 unsigned long TREE_DEPTH = 2;
 unsigned long THREAD_COUNT = 10;
 
+unsigned long FHOG_WINDOW_WIDTH;
+unsigned long FHOG_WINDOW_HEIGHT;
+unsigned long FHOG_THREAD_COUNT;
+float FHOG_C;
+float FHOG_EPSILON;
+
 using namespace pugi;
 
 bool load_settings(const char* xmlSettingsFile)
@@ -115,6 +121,15 @@ bool load_settings(const char* xmlSettingsFile)
     NU = spTrainer.child("nu_value").text().as_double(0.05);
     TREE_DEPTH = spTrainer.child("tree_depth").text().as_ullong(2);
     THREAD_COUNT = spTrainer.child("thread_count").text().as_ullong(10);
+
+    xml_node fhogDet = root.child("fhog_detector");
+    xml_node scannerWindow = fhogDet.child("scanner");
+
+    FHOG_WINDOW_WIDTH = scannerWindow.child("width").text().as_ullong();
+    FHOG_WINDOW_HEIGHT = scannerWindow.child("height").text().as_ullong();
+    FHOG_THREAD_COUNT = fhogDet.child("thread_count").text().as_ullong(10);
+    FHOG_C = fhogDet.child("c_value").text().as_ullong(1);
+    FHOG_EPSILON = fhogDet.child("epsilon").text().as_ullong(0.01);
 
     return true;
 }

@@ -97,6 +97,13 @@ int main(int argc, char** argv)
         return 0;
     }
 
+    if (arguments[1] == "--train-state")
+    {
+        string xmlFile  = arguments[2];
+        train_state(xmlFile);
+        return 0;
+    }
+
     if (arguments[1] == "--train-sp")
     {
         string netFile = arguments[2];

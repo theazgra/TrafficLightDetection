@@ -263,7 +263,7 @@ std::pair<int, int> find_vertical_boundaries(cv::Mat1b & img)
     int pxInRow = 0;
     float pxInRowThreshold = 0.65f;
     for (int r = 0; r < img.rows / 2; ++r) {
-
+        pxInRow = 0;
         for (int c = 0; c < img.cols; ++c) {
             if (img.at<uchar>(r,c) == 255)
             {
@@ -277,8 +277,8 @@ std::pair<int, int> find_vertical_boundaries(cv::Mat1b & img)
         }
     }
 
-    pxInRow = 0;
     for (int r = img.rows - 1 ; r > img.rows / 2; --r) {
+        pxInRow = 0;
         for (int c = 0; c < img.cols; ++c) {
             if (img.at<uchar>(r,c) == 255)
             {
@@ -406,10 +406,10 @@ bool is_orange(float grayTop, float grayMiddle, float grayBottom, float hsvTop, 
     if (all_below_or_equal({hsvTop, hsvMiddle, hsvBottom}, 0))
         return false;
 
-    if (!all_over_or_equal({hsvTop, hsvMiddle}, hsvBottom))
+    if (!all_over_or_equal({hsvTop, hsvBottom}, hsvMiddle))
         return false;
 
-    if (all_over_or_equal({grayTop, grayMiddle}, grayBottom * 1.25f))
+    if (all_below_or_equal({grayTop, grayBottom}, grayMiddle * 0.9f))
         return true;
 
     return false;

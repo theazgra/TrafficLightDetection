@@ -50,6 +50,8 @@ void display_help()
     cout << "  if you want to train with train-test method specify xml file for testing data and change method in xml settings to 2" << endl;
     cout << "  eg. --train ../test/train.xml {../test/test.xml}" << endl << endl;
 
+    cout << "--train-state" << endl;
+
     cout << "--train-sp to train shape predictor. Pass net file and xml file." << endl;
     cout << "  This method uses dlib routine to create dataset for shape predictor" << endl << endl;
 

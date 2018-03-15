@@ -128,13 +128,24 @@ extern unsigned long TREE_DEPTH;
  * Thread count.
  */
 extern unsigned long THREAD_COUNT;
+
+///*******<FHOG DETECTOR SETTIGNS>*******
+extern unsigned long FHOG_WINDOW_WIDTH;
+extern unsigned long FHOG_WINDOW_HEIGHT;
+extern unsigned long FHOG_THREAD_COUNT;
+extern float FHOG_C;
+extern float FHOG_EPSILON;
 /*
  *
-        trainer.set_oversampling_amount(5); //
-        trainer.set_nu(0.05);
-        trainer.set_tree_depth(2);
+scanner.set_detection_window_size(20, 30);
 
-        trainer.set_num_threads(10);
+    structural_object_detection_trainer<image_scanner_type> trainer(scanner);
+
+    trainer.set_num_threads(10);
+
+    trainer.set_c(1);
+    trainer.be_verbose();
+    trainer.set_epsilon(0.01);
  */
 
 #endif //SETTINGS_H

@@ -354,6 +354,160 @@ void train_shape_predictor(const std::string netFile, const std::string xmlFile)
 
 }
 
+void train_state(const std::string trainFile)
+{
+    using namespace dlib;
+    using namespace std;
+    //"Debug" mode.
+    try
+    {
+        std::vector<matrix<rgb_pixel>>      trainingImages;
+        std::vector<std::vector<mmod_rect>> trainingBoxes;
+
+        load_image_dataset(trainingImages, trainingBoxes, trainFile);
+
+        cout << "Loading and checking bounding boxes." << endl;
+
+        int overlappingBoxesCount = 0;
+        int tooSmallBoxesCount = 0;
+/*
+        for (std::vector<mmod_rect>& boxes : trainingBoxes)
+        {
+            overlappingBoxesCount += overlapped_boxes_count(boxes, test_box_overlap(OVERLAP_IOU, COVERED_THRESHOLD));
+
+            for (mmod_rect& boundingBox : boxes)
+            {
+                if (boundingBox.rect.width() < MIN_BOUNDING_BOX_SIZE && boundingBox.rect.height() < MIN_BOUNDING_BOX_SIZE)
+                {
+                    boundingBox.ignore = true;
+                    ++tooSmallBoxesCount;
+                }
+            }
+        }
+
+        cout << "Number of boxes ignored because of overlapping: " << overlappingBoxesCount << endl;
+        cout << "Number of boxes ignored because both sides are smaller than " << MIN_BOUNDING_BOX_SIZE << " : " << tooSmallBoxesCount << endl;
+*/
+
+        cout << "Number of training images: " << trainingImages.size() << endl;
+
+        mmod_options options(trainingBoxes, FHOG_WINDOW_WIDTH, FHOG_WINDOW_HEIGHT);
+
+        options.overlaps_ignore = test_box_overlap(OVERLAP_IOU, COVERED_THRESHOLD);
+
+        cout << "Number of detector windows " << options.detector_windows.size() << endl;
+        state_net_type net(options);
+
+        net.subnet().layer_details().set_num_filters(options.detector_windows.size());
+
+
+#ifdef MULTIPLE_GPUS
+        dnn_trainer<state_net_type> trainer(net, sgd(SGD_WEIGHT_DECAY, SGD_MOMENTUM), CUDA_DEVICES);
+#else
+        dnn_trainer<state_net_type> trainer(net, sgd(SGD_WEIGHT_DECAY, SGD_MOMENTUM));
+#endif
+
+        trainer.be_verbose();
+        trainer.set_learning_rate(LEARNING_RATE);
+
+        trainer.set_iterations_without_progress_threshold(TRAIN_ITERATION_WITHOUT_PROGRESS_THRESHOLD);
+
+        trainer.set_synchronization_file("STATE_SYNC", std::chrono::minutes(SYNC_INTERVAL));
+
+        trainer.train(trainingImages, trainingBoxes);
+
+        /*
+        random_cropper cropper;
+
+        //rows then cols
+        cropper.set_chip_dims(CHIP_HEIGHT, CHIP_WIDTH);
+        cropper.set_min_object_size(MIN_OBJECT_SIZE_L, MIN_OBJECT_SIZE_S);
+        cropper.set_max_object_size(MAX_OBJECT_SIZE);
+
+        cropper.set_background_crops_fraction(BACKGROUND_CROP_FRACTION);
+
+        //defaulted to false
+        cropper.set_randomly_flip(RANDOM_FLIP);
+        cropper.set_max_rotation_degrees(RANDOM_ROTATION_ANGLE);
+        cropper.set_translate_amount(0);
+
+        dlib::rand rnd;
+
+        cout << trainer << cropper << endl;
+
+        std::vector<matrix<rgb_pixel>>      miniBatchImages;
+        std::vector<std::vector<mmod_rect>> miniBatchLabels;
+
+
+        while (trainer.get_learning_rate() >= MINIMAL_LEARNING_RATE)
+        {
+            cropper(BATCH_SIZE, trainingImages, trainingBoxes, miniBatchImages, miniBatchLabels);
+
+            for (matrix<rgb_pixel> &img : miniBatchImages)
+                disturb_colors(img, rnd);
+
+
+            trainer.train_one_step(miniBatchImages, miniBatchLabels);
+        }
+*/
+        trainer.get_net();
+        net.clean();
+        serialize("state_net.dat") << net;
+
+        cout << "Training is completed." << endl;
+        cout << "Training results: " << test_object_detection_function(net, trainingImages, trainingBoxes, test_box_overlap(), 0, options.overlaps_ignore) << endl;
+
+    }
+    catch (std::exception& e)
+    {
+        cout << "*****EXCEPTION*****" << endl;
+        cout << e.what() << endl;
+        cout << "*******************" << endl;
+    }
+/*
+    std::vector<matrix<rgb_pixel>> trainImages;
+    std::vector<std::vector<rectangle>> trainRectangles;
+
+    load_image_dataset(trainImages, trainRectangles, trainFile);
+
+    upsample_image_dataset<pyramid_down<2>>(trainImages, trainRectangles);
+
+    cout << "Number of training images: " << trainImages.size() << endl;
+
+    typedef scan_fhog_pyramid<pyramid_down<1>> image_scanner_type;
+
+    image_scanner_type scanner;
+
+    scanner.set_detection_window_size(FHOG_WINDOW_WIDTH, FHOG_WINDOW_HEIGHT);
+
+    structural_object_detection_trainer<image_scanner_type> trainer(scanner);
+
+    trainer.set_num_threads(FHOG_THREAD_COUNT);
+
+    trainer.set_c(FHOG_C);
+    trainer.be_verbose();
+    trainer.set_epsilon(FHOG_EPSILON);
+
+    object_detector<image_scanner_type> detector = trainer.train(trainImages, trainRectangles);
+
+    cout << "training results: " << test_object_detection_function(detector, trainImages, trainRectangles) << endl;
+
+    image_window win;
+    for (unsigned long i = 0; i < trainImages.size(); ++i)
+    {
+        // Run the detector and get the face detections.
+        std::vector<rectangle> dets = detector(trainImages[i]);
+        win.clear_overlay();
+        win.set_image(trainImages[i]);
+        win.add_overlay(dets, rgb_pixel(255,0,0));
+        cout << "Hit enter to process the next image..." << endl;
+        cin.get();
+    }
+    */
+
+
+}
+
 
 
 
