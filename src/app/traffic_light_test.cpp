@@ -60,7 +60,8 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
     using namespace dlib;
 
     test_net_type net;
-    deserialize(netFile) >> net;
+    shape_predictor sp;
+    deserialize(netFile) >> net >> sp;
 
     std::vector<matrix<rgb_pixel>> testImages;
     std::vector<std::vector<mmod_rect>> boxes;
@@ -136,30 +137,45 @@ void test(std::string netFile, std::string testFile, TestType testType, bool sav
         }
 
         int labelIndex = -1;
-        for (mmod_rect& d : detections)
+        for (mmod_rect& detection : detections)
         {
-
             ++labelIndex;
+
+            full_object_detection fullObjectDetection = sp(scaledImage, detection);
+
+            rectangle spImprovedRect;
+            for(unsigned long i = 0; i < fullObjectDetection.num_parts(); ++i)
+                spImprovedRect += fullObjectDetection.part(i);
+
+            if (!valid_rectangle(spImprovedRect, openCvImg))
+            {
+                std::cout << ("Wrong rectangle: L: " +
+                                  std::to_string(spImprovedRect.left()) + ";T: " +
+                                  std::to_string(spImprovedRect.top()) + "; W: " +
+                                  std::to_string(spImprovedRect.width()) + ";H:" +
+                                  std::to_string(spImprovedRect.height())) << std::endl;
+
+                continue;
+            }
 
             if (testType == SaveCrops)
             {
-                save_found_crop(openCvImg, d, imgIndex, labelIndex);
+                save_found_crop(openCvImg, spImprovedRect, imgIndex, labelIndex);
 		        continue;
             }
-            TLState s = Red;
 
-            cout << "\tBounding box " << labelIndex << " with label: " << d.label << " Detection confidence " << d.detection_confidence << endl;
+            cout << "\tBounding box " << labelIndex << " with label: " << detection.label << " Detection confidence " << detection.detection_confidence << endl;
 
-            if (d.label == "r")
-                window.add_overlay(d.rect, rgb_pixel(255, 0, 0), "red_" + to_string(labelIndex));
-            else if (d.label == "y") //y for orange, WTF?
-                window.add_overlay(d.rect, rgb_pixel(255, 255, 0), "orange" + to_string(labelIndex));
-            else if (d.label == "g")
-                window.add_overlay(d.rect, rgb_pixel(0, 255, 0), "green" + to_string(labelIndex));
-            else if (d.label == "s")
+            if (detection.label == "r")
+                window.add_overlay(detection.rect, rgb_pixel(255, 0, 0), "red_" + to_string(labelIndex));
+            else if (detection.label == "y") //y for orange, WTF?
+                window.add_overlay(detection.rect, rgb_pixel(255, 255, 0), "orange" + to_string(labelIndex));
+            else if (detection.label == "g")
+                window.add_overlay(detection.rect, rgb_pixel(0, 255, 0), "green" + to_string(labelIndex));
+            else if (detection.label == "s")
             {
-                cv::Mat croppedImage = crop_image(openCvImg, d);
-                window.add_overlay(d.rect, rgb_pixel(0,255,0), translate_TL_state(get_traffic_light_state(croppedImage)));
+                cv::Mat croppedImage = crop_image(openCvImg, spImprovedRect);
+                window.add_overlay(detection.rect, rgb_pixel(0,255,0), translate_TL_state(get_traffic_light_state(croppedImage)));
             }
 
         }
