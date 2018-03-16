@@ -61,6 +61,9 @@ cv::Mat crop_image(cv::Mat & mat, dlib::rectangle cropRectangle);
 
 dlib::rgb_pixel get_color_for_state(TLState state);
 
+bool valid_rectangle(const dlib::rectangle& rect, const cv::Mat& img);
+bool valid_rectangle(const dlib::rectangle& rect, const dlib::matrix<dlib::rgb_pixel>& img);
+
 
 
 #endif //DISPLAYIMAGE_OPENCVUTILS_H

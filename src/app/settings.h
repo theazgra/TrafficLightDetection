@@ -130,11 +130,12 @@ extern unsigned long TREE_DEPTH;
 extern unsigned long THREAD_COUNT;
 
 ///*******<FHOG DETECTOR SETTIGNS>*******
-extern unsigned long FHOG_WINDOW_WIDTH;
-extern unsigned long FHOG_WINDOW_HEIGHT;
-extern unsigned long FHOG_THREAD_COUNT;
-extern float FHOG_C;
-extern float FHOG_EPSILON;
+extern unsigned long STATE_WINDOW_WIDTH;
+extern unsigned long STATE_WINDOW_HEIGHT;
+extern unsigned long STATE_CHIP_WIDTH;
+extern unsigned long STATE_CHIP_HEIGHT;
+extern unsigned long STATE_BATCH_SIZE;
+extern unsigned long STATE_ITERATION_WITHOUT_PROGRESS_THRESHOLD;
 
 extern unsigned int CROP_WIDTH;
 extern unsigned int CROP_HEIGHT;

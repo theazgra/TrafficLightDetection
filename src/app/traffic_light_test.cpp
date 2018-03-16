@@ -30,17 +30,6 @@ int number_of_label_boxes(std::vector<dlib::mmod_rect> boxes)
     return count;
 }
 
-bool valid_rectangle(const dlib::rectangle& rect, cv::Mat img)
-{
-	if (rect.left() < 0 || rect.width() < 0 || rect.top() < 0 || rect.height() < 0)
-		return false;
-
-	if (rect.right() > img.cols || rect.width() > img.cols || rect.bottom() > img.rows || rect.height() > img.rows)
-		return false;
-
-	return true;
-}
-
 void test(std::string netFile, std::string testFile, TestType testType)
 {
     using namespace std;
@@ -606,9 +595,11 @@ void save_detected_objects(const std::string netFile, const std::string xmlFile,
                 for(unsigned long i = 0; i < fullObjectDetection.num_parts(); ++i)
                     spImprovedRect += fullObjectDetection.part(i);
 
-
-                std::string fileName = folderPath + "/crop_" + std::to_string(frameNum) + "_" + std::to_string(labelIndex) + ".png";
-                save_found_crop(matImg, spImprovedRect, fileName, sizeRect);
+                if (valid_rectangle(spImprovedRect, matImg))
+                {
+                    std::string fileName = folderPath + "/crop_" + std::to_string(frameNum) + "_" + std::to_string(labelIndex) + ".png";
+                    save_found_crop(matImg, spImprovedRect, fileName, sizeRect);
+                }
             }
         }
 
@@ -618,6 +609,28 @@ void save_detected_objects(const std::string netFile, const std::string xmlFile,
     {
         cout << e.what() << endl;
     }
+}
+
+bool valid_rectangle(const dlib::rectangle& rect, const dlib::matrix<dlib::rgb_pixel>& img)
+{
+    if (rect.left() < 0 || rect.width() < 0 || rect.top() < 0 || rect.height() < 0)
+        return false;
+
+    if (rect.right() > img.nc() || rect.width() > img.nc() || rect.bottom() > img.nr() || rect.height() > img.nr())
+        return false;
+
+    return true;
+}
+
+bool valid_rectangle(const dlib::rectangle& rect, const cv::Mat& img)
+{
+    if (rect.left() < 0 || rect.width() < 0 || rect.top() < 0 || rect.height() < 0)
+        return false;
+
+    if (rect.right() > img.cols || rect.width() > img.cols || rect.bottom() > img.rows || rect.height() > img.rows)
+        return false;
+
+    return true;
 }
 
 

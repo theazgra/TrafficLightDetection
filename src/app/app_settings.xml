@@ -52,13 +52,14 @@
         <thread_count>5</thread_count>
     </shape_predictor_trainer>
     <state_net_settings>
-        <scanner>
+        <detector_window>
             <width>10</width>
             <height>8</height>
-        </scanner>
-        <thread_count>10</thread_count>
-        <c_value>1.5</c_value>
-        <epsilon>0.01</epsilon>
+        </detector_window>
+        <chip_width>40</chip_width>
+        <chip_height>40</chip_height>
+        <batch_size>50</batch_size>
+        <tr_iter_wo_prog_threshold>500</tr_iter_wo_prog_threshold>
     </state_net_settings>
     <crop_saving>
         <width>60</width>

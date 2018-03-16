@@ -366,34 +366,10 @@ void train_state(const std::string trainFile)
 
         load_image_dataset(trainingImages, trainingBoxes, trainFile);
 
-        cout << "Loading and checking bounding boxes." << endl;
-
-        int overlappingBoxesCount = 0;
-        int tooSmallBoxesCount = 0;
-/*
-        for (std::vector<mmod_rect>& boxes : trainingBoxes)
-        {
-            overlappingBoxesCount += overlapped_boxes_count(boxes, test_box_overlap(OVERLAP_IOU, COVERED_THRESHOLD));
-
-            for (mmod_rect& boundingBox : boxes)
-            {
-                if (boundingBox.rect.width() < MIN_BOUNDING_BOX_SIZE && boundingBox.rect.height() < MIN_BOUNDING_BOX_SIZE)
-                {
-                    boundingBox.ignore = true;
-                    ++tooSmallBoxesCount;
-                }
-            }
-        }
-
-        cout << "Number of boxes ignored because of overlapping: " << overlappingBoxesCount << endl;
-        cout << "Number of boxes ignored because both sides are smaller than " << MIN_BOUNDING_BOX_SIZE << " : " << tooSmallBoxesCount << endl;
-*/
 
         cout << "Number of training images: " << trainingImages.size() << endl;
 
-	cout << "W: " << FHOG_WINDOW_WIDTH << endl;
-	cout << "H: " << FHOG_WINDOW_HEIGHT << endl;
-        mmod_options options(trainingBoxes, FHOG_WINDOW_WIDTH, FHOG_WINDOW_HEIGHT);
+        mmod_options options(trainingBoxes, STATE_WINDOW_WIDTH, STATE_WINDOW_HEIGHT);
 
         options.overlaps_ignore = test_box_overlap(OVERLAP_IOU, COVERED_THRESHOLD);
 
@@ -412,25 +388,25 @@ void train_state(const std::string trainFile)
         trainer.be_verbose();
         trainer.set_learning_rate(LEARNING_RATE);
 
-        trainer.set_iterations_without_progress_threshold(TRAIN_ITERATION_WITHOUT_PROGRESS_THRESHOLD);
+        trainer.set_iterations_without_progress_threshold(STATE_ITERATION_WITHOUT_PROGRESS_THRESHOLD);
 
         trainer.set_synchronization_file("STATE_SYNC", std::chrono::minutes(SYNC_INTERVAL));
 
-        trainer.train(trainingImages, trainingBoxes);
+        //trainer.train(trainingImages, trainingBoxes);
 
-        /*
+
         random_cropper cropper;
 
         //rows then cols
-        cropper.set_chip_dims(CHIP_HEIGHT, CHIP_WIDTH);
-        cropper.set_min_object_size(MIN_OBJECT_SIZE_L, MIN_OBJECT_SIZE_S);
-        cropper.set_max_object_size(MAX_OBJECT_SIZE);
+        cropper.set_chip_dims(STATE_CHIP_HEIGHT, STATE_CHIP_WIDTH);
+        //cropper.set_min_object_size(MIN_OBJECT_SIZE_L, MIN_OBJECT_SIZE_S);
+        //cropper.set_max_object_size(MAX_OBJECT_SIZE);
 
         cropper.set_background_crops_fraction(BACKGROUND_CROP_FRACTION);
 
         //defaulted to false
-        cropper.set_randomly_flip(RANDOM_FLIP);
-        cropper.set_max_rotation_degrees(RANDOM_ROTATION_ANGLE);
+        cropper.set_randomly_flip(true);
+        cropper.set_max_rotation_degrees(10);
         cropper.set_translate_amount(0);
 
         dlib::rand rnd;
@@ -443,7 +419,7 @@ void train_state(const std::string trainFile)
 
         while (trainer.get_learning_rate() >= MINIMAL_LEARNING_RATE)
         {
-            cropper(BATCH_SIZE, trainingImages, trainingBoxes, miniBatchImages, miniBatchLabels);
+            cropper(STATE_BATCH_SIZE, trainingImages, trainingBoxes, miniBatchImages, miniBatchLabels);
 
             for (matrix<rgb_pixel> &img : miniBatchImages)
                 disturb_colors(img, rnd);
@@ -451,7 +427,7 @@ void train_state(const std::string trainFile)
 
             trainer.train_one_step(miniBatchImages, miniBatchLabels);
         }
-*/
+
         trainer.get_net();
         net.clean();
         serialize("state_net.dat") << net;
@@ -480,7 +456,7 @@ void train_state(const std::string trainFile)
 
     image_scanner_type scanner;
 
-    scanner.set_detection_window_size(FHOG_WINDOW_WIDTH, FHOG_WINDOW_HEIGHT);
+    scanner.set_detection_window_size(STATE_WINDOW_WIDTH, STATE_WINDOW_HEIGHT);
 
     structural_object_detection_trainer<image_scanner_type> trainer(scanner);
 

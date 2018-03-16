@@ -31,11 +31,14 @@ double NU = 0.05;
 unsigned long TREE_DEPTH = 2;
 unsigned long THREAD_COUNT = 10;
 
-unsigned long FHOG_WINDOW_WIDTH;
-unsigned long FHOG_WINDOW_HEIGHT;
-unsigned long FHOG_THREAD_COUNT;
-float FHOG_C;
-float FHOG_EPSILON;
+unsigned long STATE_WINDOW_WIDTH;
+unsigned long STATE_WINDOW_HEIGHT;
+
+unsigned long STATE_CHIP_WIDTH;
+unsigned long STATE_CHIP_HEIGHT;
+
+unsigned long STATE_BATCH_SIZE;
+unsigned long STATE_ITERATION_WITHOUT_PROGRESS_THRESHOLD;
 
 unsigned int CROP_WIDTH;
 unsigned int CROP_HEIGHT;
@@ -125,14 +128,16 @@ bool load_settings(const char* xmlSettingsFile)
     TREE_DEPTH = spTrainer.child("tree_depth").text().as_ullong(2);
     THREAD_COUNT = spTrainer.child("thread_count").text().as_ullong(10);
 
-    xml_node fhogDet = root.child("state_net_settings");
-    xml_node scannerWindow = fhogDet.child("scanner");
+    xml_node stateNet = root.child("state_net_settings");
+    xml_node scannerWindow = stateNet.child("detector_window");
+    STATE_WINDOW_WIDTH = scannerWindow.child("width").text().as_ullong();
+    STATE_WINDOW_HEIGHT = scannerWindow.child("height").text().as_ullong();
 
-    FHOG_WINDOW_WIDTH = scannerWindow.child("width").text().as_ullong();
-    FHOG_WINDOW_HEIGHT = scannerWindow.child("height").text().as_ullong();
-    FHOG_THREAD_COUNT = fhogDet.child("thread_count").text().as_ullong(10);
-    FHOG_C = fhogDet.child("c_value").text().as_ullong(1);
-    FHOG_EPSILON = fhogDet.child("epsilon").text().as_ullong(0.01);
+    STATE_CHIP_WIDTH = stateNet.child("chip_width").text().as_ullong(40);
+    STATE_CHIP_HEIGHT = stateNet.child("chip_height").text().as_ullong(40);
+
+    STATE_BATCH_SIZE = stateNet.child("batch_size").text().as_ullong(50);
+    STATE_ITERATION_WITHOUT_PROGRESS_THRESHOLD = stateNet.child("tr_iter_wo_prog_threshold").text().as_ullong(500);
 
     xml_node crops = root.child("crop_saving");
     CROP_WIDTH = crops.child("width").text().as_uint();
