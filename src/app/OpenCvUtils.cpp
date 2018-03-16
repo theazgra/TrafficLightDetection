@@ -585,13 +585,11 @@ dlib::rectangle resized_rectangle(dlib::rectangle original, dlib::rectangle size
     if (sized.width() != sizeRectangle.width())
     {
         sized.set_right(sized.right() + (sizeRectangle.width() - sized.width()));
-        std::cout << "a" << std::endl;
     }
 
     if (sized.height() != sizeRectangle.height())
     {
         sized.set_bottom(sized.bottom() + (sizeRectangle.height() - sized.height()));
-        std::cout << "b" << std::endl;
     }
     
     
