@@ -599,14 +599,34 @@ dlib::rectangle resized_rectangle(dlib::rectangle original, dlib::rectangle size
 
 void save_found_crop(cv::Mat &mat, dlib::mmod_rect detRect, std::string fileName, dlib::rectangle sizeRect)
 {
-    if (!sizeRect.is_empty())
-        detRect.rect = resized_rectangle(detRect.rect, sizeRect);
+    cv::cvtColor(mat, mat, CV_BGR2RGB);
 
-    cv::Mat cropped = crop_image(mat, detRect.rect);
-    cvtColor(cropped, cropped, CV_BGR2RGB);
+    if (sizeRect.is_empty())
+    {
+        cv::Mat cropped = crop_image(mat, detRect.rect);
+        std::cout << "Saving: " << fileName << std::endl;
+        cv::imwrite(fileName, cropped);
+        return;
+    }
+    else
+    {
+        if (sizeRect.width() > detRect.rect.width() && sizeRect.height() > detRect.rect.height())
+        {
+            long DeltaW = sizeRect.width() - detRect.rect.width();
+            long DeltaH = sizeRect.height() - detRect.rect.height();
 
-    //cv::resize(cropped, cropped, cv::Size(sizeRect.width(), sizeRect.height()));
+            cv::Mat resized;// = cv::Mat::zeros(sizeRect.height(), sizeRect.width(), mat.type());
+            cv::copyMakeBorder(mat, resized, 0, DeltaH, 0, DeltaW, cv::BORDER_CONSTANT, cv::Scalar::all(0));
 
-    std::cout << "Saving: " << fileName << std::endl;
-    cv::imwrite(fileName, cropped);
+            std::cout << "Saving: " << fileName << std::endl;
+            cv::imwrite(fileName, resized);
+        }
+        else
+        {
+            cv::Mat resized;
+            cv::resize(mat, resized, cv::Size(sizeRect.width(), sizeRect.height()));
+            std::cout << "Saving: " << fileName << std::endl;
+            cv::imwrite(fileName, resized);
+        }
+    }
 }
