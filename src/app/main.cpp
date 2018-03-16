@@ -172,6 +172,7 @@ int main(int argc, char** argv)
         {
             save_detected_objects(netFile, testFile, folder);
         }
+	return 0;
     }
 
     if (arguments[1] == "--visualize")

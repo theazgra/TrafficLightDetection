@@ -391,6 +391,8 @@ void train_state(const std::string trainFile)
 
         cout << "Number of training images: " << trainingImages.size() << endl;
 
+	cout << "W: " << FHOG_WINDOW_WIDTH << endl;
+	cout << "H: " << FHOG_WINDOW_HEIGHT << endl;
         mmod_options options(trainingBoxes, FHOG_WINDOW_WIDTH, FHOG_WINDOW_HEIGHT);
 
         options.overlaps_ignore = test_box_overlap(OVERLAP_IOU, COVERED_THRESHOLD);

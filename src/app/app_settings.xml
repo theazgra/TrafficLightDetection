@@ -53,15 +53,15 @@
     </shape_predictor_trainer>
     <state_net_settings>
         <scanner>
-            <width>14</width>
-            <height>12</height>
+            <width>10</width>
+            <height>8</height>
         </scanner>
         <thread_count>10</thread_count>
         <c_value>1.5</c_value>
         <epsilon>0.01</epsilon>
     </state_net_settings>
     <crop_saving>
-        <width>80</width>
-        <height>200</height>
+        <width>60</width>
+        <height>150</height>
     </crop_saving>
 </app_settings>

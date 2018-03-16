@@ -37,8 +37,8 @@ template <typename SUBNET> using a_rcon5_32  = relu<affine<con5<32,SUBNET>>>;
 using net_type = loss_mmod<con<1,9,9,1,1,rcon5_55<rcon5_55<rcon5_55<rcon5_40<downsampler8x<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>>;
 using test_net_type = loss_mmod<con<1,9,9,1,1,a_rcon5_55<a_rcon5_55<a_rcon5_55<a_rcon5_40<a_downsampler8x<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>>;
 
-using state_net_type = loss_mmod<con<1,9,9,1,1,rcon5_32<rcon5_32<input_rgb_image_pyramid<pyramid_down<2>>>>>>;
-using state_test_net_type = loss_mmod<con<1,9,9,1,1,a_rcon5_32<a_rcon5_32<input_rgb_image_pyramid<pyramid_down<2>>>>>>;
+using state_net_type = loss_mmod<con<1,5,5,1,1,rcon5_32<rcon5_32<input_rgb_image_pyramid<pyramid_down<3>>>>>>;
+using state_test_net_type = loss_mmod<con<1,5,5,1,1,a_rcon5_32<a_rcon5_32<input_rgb_image_pyramid<pyramid_down<3>>>>>>;
 
 
 #endif //NET_DEFINITION_H
