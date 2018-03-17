@@ -13,7 +13,6 @@ void train_state(const std::string trainFile);
 
 
 void train_shape_predictor(const std::string netFile, const std::string xmlFile);
-void train_shape_predictor_for_state(const std::string netFile, const std::string xmlFile);
 
 
 
