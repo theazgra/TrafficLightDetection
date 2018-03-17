@@ -422,7 +422,8 @@ void train_state(const std::string trainFile)
             cropper(STATE_BATCH_SIZE, trainingImages, trainingBoxes, miniBatchImages, miniBatchLabels);
 
             for (matrix<rgb_pixel> &img : miniBatchImages)
-                disturb_colors(img, rnd);
+                convert_to_grayscale(img);
+                //disturb_colors(img, rnd);
 
 
             trainer.train_one_step(miniBatchImages, miniBatchLabels);
