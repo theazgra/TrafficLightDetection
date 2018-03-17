@@ -366,10 +366,15 @@ void train_shape_predictor_for_state(const std::string netFile, const std::strin
     cout << "Loading xml dataset." << endl;
     image_dataset_metadata::load_image_dataset_metadata(xmlDataset, xmlFile);
 
-    std::vector<std::vector<dlib::image_dataset_metadata::box>> boxes;
+    std::vector<std::vector<rectangle>> boxes;
     for (auto& img : xmlDataset.images)
     {
-        boxes.push_back(img.boxes);
+        std::vector<rectangle> rects;
+        for (image_dataset_metadata::box& b : img.boxes)
+        {
+            rects.push_back(b.rect);
+        }
+        boxes.push_back(rects);
     }
 
     cout << "Creating shape predictor dataset." << endl;
