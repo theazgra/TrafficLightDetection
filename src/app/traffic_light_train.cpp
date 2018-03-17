@@ -354,81 +354,11 @@ void train_shape_predictor(const std::string netFile, const std::string xmlFile)
 
 }
 
-void train_shape_predictor_for_state(const std::string netFile, const std::string xmlFile)
-{
-    using namespace std;
-    using namespace dlib;
-
-    string shapePredictorDatasetFile = xmlFile + "sp.xml";
-
-    image_dataset_metadata::dataset xmlDataset, shapePredictorDataset;
-
-    cout << "Loading xml dataset." << endl;
-    image_dataset_metadata::load_image_dataset_metadata(xmlDataset, xmlFile);
-
-    std::vector<std::vector<rectangle>> boxes;
-    for (auto& img : xmlDataset.images)
-    {
-        std::vector<rectangle> rects;
-        for (image_dataset_metadata::box& b : img.boxes)
-        {
-            rects.push_back(b.rect);
-        }
-        boxes.push_back(rects);
-    }
-
-    cout << "Creating shape predictor dataset." << endl;
-    shapePredictorDataset = make_bounding_box_regression_training_data(xmlDataset, boxes);
-
-    cout << "Saving shape predictor dataset.." << endl;
-    image_dataset_metadata::save_image_dataset_metadata(shapePredictorDataset, shapePredictorDatasetFile);
-
-    std::cout << "Loaded shape predictor settings: " << std::endl;
-    std::cout << "=============================" << std::endl;
-    std::cout << "Oversampling: " << OVERSAMPLING_AMOUNT << std::endl;
-    std::cout << "NU: " << NU << std::endl;
-    std::cout << "Tree depth: " << TREE_DEPTH  << std::endl;
-    std::cout << "Thread count: " << THREAD_COUNT  << std::endl;
-    std::cout << "=============================" << std::endl;
-
-    cout << "Training shape predictor." << endl;
-    try
-    {
-        std::vector<matrix<rgb_pixel>> trainImages;
-        std::vector<std::vector<full_object_detection>> trainDetections;
-
-        load_image_dataset(trainImages, trainDetections, shapePredictorDatasetFile);
-
-        shape_predictor_trainer trainer;
-
-        trainer.set_oversampling_amount(OVERSAMPLING_AMOUNT); //how many times increase number of training data
-        trainer.set_nu(NU);
-        trainer.set_tree_depth(TREE_DEPTH);
-
-        trainer.set_num_threads(THREAD_COUNT);
-
-        trainer.be_verbose();
-
-        shape_predictor sp = trainer.train(trainImages, trainDetections);
-
-        cout << "Mean training error: " << test_shape_predictor(sp, trainImages, trainDetections) << endl;
-
-        cout << "Serializing shape predictor ." << endl;
-        serialize(netFile) << sp;
-
-    }
-    catch (std::exception& e)
-    {
-        cout << "ERROR" << endl;
-        cout << e.what() << endl;
-    }
-}
-
 void train_state(const std::string trainFile)
 {
     using namespace dlib;
     using namespace std;
-    //"Debug" mode.
+    
     try
     {
         std::vector<matrix<rgb_pixel>>      trainingImages;
@@ -491,8 +421,8 @@ void train_state(const std::string trainFile)
         {
             cropper(STATE_BATCH_SIZE, trainingImages, trainingBoxes, miniBatchImages, miniBatchLabels);
 
-            for (matrix<rgb_pixel> &img : miniBatchImages)
-                convert_to_grayscale(img);
+            //for (matrix<rgb_pixel> &img : miniBatchImages)
+                //convert_to_grayscale(img);
                 //disturb_colors(img, rnd);
 
 
@@ -512,8 +442,8 @@ void train_state(const std::string trainFile)
         cout << "*****EXCEPTION*****" << endl;
         cout << e.what() << endl;
         cout << "*******************" << endl;
-    }
-/*
+
+    /*
     std::vector<matrix<rgb_pixel>> trainImages;
     std::vector<std::vector<rectangle>> trainRectangles;
 
@@ -531,16 +461,19 @@ void train_state(const std::string trainFile)
 
     structural_object_detection_trainer<image_scanner_type> trainer(scanner);
 
-    trainer.set_num_threads(FHOG_THREAD_COUNT);
+    trainer.set_num_threads(10);
 
-    trainer.set_c(FHOG_C);
+    trainer.set_c(1);
     trainer.be_verbose();
-    trainer.set_epsilon(FHOG_EPSILON);
+    trainer.set_epsilon(0.005);
 
     object_detector<image_scanner_type> detector = trainer.train(trainImages, trainRectangles);
 
     cout << "training results: " << test_object_detection_function(detector, trainImages, trainRectangles) << endl;
 
+    serialize("state_detector.svm") << detector;
+    */
+    /*
     image_window win;
     for (unsigned long i = 0; i < trainImages.size(); ++i)
     {
@@ -552,9 +485,7 @@ void train_state(const std::string trainFile)
         cout << "Hit enter to process the next image..." << endl;
         cin.get();
     }
-    */
-
-
+     */
 }
 
 

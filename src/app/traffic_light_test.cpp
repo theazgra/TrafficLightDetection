@@ -550,14 +550,13 @@ TLState detect_state(const std::string netFile, dlib::matrix<dlib::rgb_pixel> dl
     return Inactive;
 }
 
+
 void save_detected_objects(const std::string netFile, const std::string xmlFile, const std::string folderPath, dlib::rectangle sizeRect)
 {
     using namespace std;
     using namespace dlib;
 
     cout << "Saving detected objects." << endl;
-
-    bool resizeObjects = !sizeRect.is_empty();
 
     try
     {
