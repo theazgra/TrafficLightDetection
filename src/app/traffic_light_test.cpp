@@ -427,8 +427,6 @@ void visualize_detection(std::string netFile, std::string imgFile)
 		win.add_overlay(rect, rgb_pixel(255,0,0));	
 	}
 
-	std::cin.get();
-
 	const float lower = -2.5;
 	const float upper = 0.0;
 	std::cout << "jet color mapping range:  lower="<< lower << "  upper="<< upper << std::endl;
@@ -444,6 +442,8 @@ void visualize_detection(std::string netFile, std::string imgFile)
 
 	image_window winpyr(pyramid, "Tiled pyramid");
 
+    save_png(pyramid, "tiled_pyramid.png");
+
 	std::cout << "Number of channels in final tensor image: " << net.subnet().get_output().k() << std::endl;
 
 	matrix<float> network_output = image_plane(net.subnet().get_output(),0,0);
@@ -457,27 +457,30 @@ void visualize_detection(std::string netFile, std::string imgFile)
 
 	image_window win_output(jet(network_output, upper, lower), "Output tensdor from network");
 
+    save_png(jet(network_output, upper, lower), "output_tensor.png");
+
 	for (long r = 0; r < pyramid.nr(); ++r)
-    	{
-        	for (long c = 0; c < pyramid.nc(); ++c)
-        	{
-            		dpoint tmp(c,r);
-            		tmp = input_tensor_to_output_tensor(net, tmp);
-        	    tmp = point(network_output_scale*tmp);
-        	    if (get_rect(network_output).contains(tmp))
-        	    {
-	                float val = network_output(tmp.y(),tmp.x());
-                		// alpha blend the network output pixel with the RGB image to make our
-                	// overlay.
-                	rgb_alpha_pixel p;
-                	assign_pixel(p , colormap_jet(val,lower,upper));
-                	p.alpha = 120;
-                	assign_pixel(pyramid(r,c), p);
-            		}	
-        	}
-    	}	
+    {
+        for (long c = 0; c < pyramid.nc(); ++c)
+        {
+            dpoint tmp(c,r);
+            tmp = input_tensor_to_output_tensor(net, tmp);
+            tmp = point(network_output_scale * tmp);
+            if (get_rect(network_output).contains(tmp))
+            {
+                float val = network_output(tmp.y(),tmp.x());
+                    // alpha blend the network output pixel with the RGB image to make our
+                // overlay.
+                rgb_alpha_pixel p;
+                assign_pixel(p , colormap_jet(val,lower,upper));
+                p.alpha = 120;
+                assign_pixel(pyramid(r,c), p);
+                }
+        }
+    }
 
 	image_window win_pyr_overlay(pyramid, "Detection scores on image pyramid");
+    save_png(pyramid, "pyramid_score.png");
 
 	matrix<float> collapsed(img.nr(), img.nc());
     resizable_tensor input_tensor;
@@ -517,8 +520,9 @@ void visualize_detection(std::string netFile, std::string imgFile)
     }
 
     image_window win_collapsed(jet(collapsed, upper, lower), "Collapsed output tensor from the network");
+    save_png(jet(collapsed, upper, lower), "collapsed_result.png");
     image_window win_img_and_sal(img, "Collapsed detection scores on raw image");
-
+    save_png(img, "collapsed_on_image.png");
 
     std::cout << "Hit enter to end program" << std::endl;
     std::cin.get();
