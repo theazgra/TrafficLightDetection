@@ -354,6 +354,71 @@ void train_shape_predictor(const std::string netFile, const std::string xmlFile)
 
 }
 
+void train_shape_predictor_for_state(const std::string netFile, const std::string xmlFile)
+{
+    using namespace std;
+    using namespace dlib;
+
+    string shapePredictorDatasetFile = xmlFile + "sp.xml";
+
+    image_dataset_metadata::dataset xmlDataset, shapePredictorDataset;
+
+    cout << "Loading xml dataset." << endl;
+    image_dataset_metadata::load_image_dataset_metadata(xmlDataset, xmlFile);
+
+    std::vector<std::vector<dlib::image_dataset_metadata::box>> boxes;
+    for (auto& img : xmlDataset.images)
+    {
+        boxes.push_back(img.boxes);
+    }
+
+    cout << "Creating shape predictor dataset." << endl;
+    shapePredictorDataset = make_bounding_box_regression_training_data(xmlDataset, boxes);
+
+    cout << "Saving shape predictor dataset.." << endl;
+    image_dataset_metadata::save_image_dataset_metadata(shapePredictorDataset, shapePredictorDatasetFile);
+
+    std::cout << "Loaded shape predictor settings: " << std::endl;
+    std::cout << "=============================" << std::endl;
+    std::cout << "Oversampling: " << OVERSAMPLING_AMOUNT << std::endl;
+    std::cout << "NU: " << NU << std::endl;
+    std::cout << "Tree depth: " << TREE_DEPTH  << std::endl;
+    std::cout << "Thread count: " << THREAD_COUNT  << std::endl;
+    std::cout << "=============================" << std::endl;
+
+    cout << "Training shape predictor." << endl;
+    try
+    {
+        std::vector<matrix<rgb_pixel>> trainImages;
+        std::vector<std::vector<full_object_detection>> trainDetections;
+
+        load_image_dataset(trainImages, trainDetections, shapePredictorDatasetFile);
+
+        shape_predictor_trainer trainer;
+
+        trainer.set_oversampling_amount(OVERSAMPLING_AMOUNT); //how many times increase number of training data
+        trainer.set_nu(NU);
+        trainer.set_tree_depth(TREE_DEPTH);
+
+        trainer.set_num_threads(THREAD_COUNT);
+
+        trainer.be_verbose();
+
+        shape_predictor sp = trainer.train(trainImages, trainDetections);
+
+        cout << "Mean training error: " << test_shape_predictor(sp, trainImages, trainDetections) << endl;
+
+        cout << "Serializing shape predictor ." << endl;
+        serialize(netFile) << sp;
+
+    }
+    catch (std::exception& e)
+    {
+        cout << "ERROR" << endl;
+        cout << e.what() << endl;
+    }
+}
+
 void train_state(const std::string trainFile)
 {
     using namespace dlib;
