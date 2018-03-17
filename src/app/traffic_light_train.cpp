@@ -405,8 +405,8 @@ void train_state(const std::string trainFile)
         cropper.set_background_crops_fraction(BACKGROUND_CROP_FRACTION);
 
         //defaulted to false
-        cropper.set_randomly_flip(true);
-        cropper.set_max_rotation_degrees(10);
+        cropper.set_randomly_flip(false);
+        cropper.set_max_rotation_degrees(0);
         cropper.set_translate_amount(0);
 
         dlib::rand rnd;
@@ -434,7 +434,7 @@ void train_state(const std::string trainFile)
         serialize("state_net.dat") << net;
 
         cout << "Training is completed." << endl;
-        cout << "Training results: " << test_object_detection_function(net, trainingImages, trainingBoxes, test_box_overlap(), 0, options.overlaps_ignore) << endl;
+        cout << "Training results: " << test_object_detection_function(net, trainingImages, trainingBoxes) << endl;
 
     }
     catch (std::exception& e)
