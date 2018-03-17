@@ -104,6 +104,14 @@ int main(int argc, char** argv)
         return 0;
     }
 
+    if (arguments[1] == "--train-state-sp")
+    {
+        string spFile  = arguments[2];
+        string xmlFile  = arguments[3];
+        train_shape_predictor_for_state(spFile, xmlFile);
+        return 0;
+    }
+
     if (arguments[1] == "--detect-state")
     {
         string netFile  = arguments[2];
