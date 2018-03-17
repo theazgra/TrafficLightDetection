@@ -358,7 +358,7 @@ void train_state(const std::string trainFile)
 {
     using namespace dlib;
     using namespace std;
-    
+
     try
     {
         std::vector<matrix<rgb_pixel>>      trainingImages;
@@ -442,6 +442,7 @@ void train_state(const std::string trainFile)
         cout << "*****EXCEPTION*****" << endl;
         cout << e.what() << endl;
         cout << "*******************" << endl;
+    }
 
     /*
     std::vector<matrix<rgb_pixel>> trainImages;
