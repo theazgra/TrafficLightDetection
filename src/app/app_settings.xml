@@ -53,16 +53,16 @@
     </shape_predictor_trainer>
     <state_net_settings>
         <detector_window>
-            <width>10</width>
-            <height>8</height>
+            <width>15</width>
+            <height>14</height>
         </detector_window>
         <chip_width>40</chip_width>
         <chip_height>40</chip_height>
         <batch_size>50</batch_size>
-        <tr_iter_wo_prog_threshold>500</tr_iter_wo_prog_threshold>
+        <tr_iter_wo_prog_threshold>1000</tr_iter_wo_prog_threshold>
     </state_net_settings>
     <crop_saving>
-        <width>60</width>
-        <height>150</height>
+        <width>50</width>
+        <height>120</height>
     </crop_saving>
 </app_settings>

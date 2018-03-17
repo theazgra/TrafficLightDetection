@@ -599,9 +599,9 @@ dlib::rectangle resized_rectangle(dlib::rectangle original, dlib::rectangle size
 
 void save_found_crop(cv::Mat &mat, dlib::mmod_rect detRect, std::string fileName, dlib::rectangle sizeRect)
 {
-    cv::cvtColor(mat, mat, CV_BGR2RGB);
-	
+	using namespace cv;
     cv::Mat cropped = crop_image(mat, detRect.rect);
+    cv::cvtColor(cropped, cropped, CV_BGR2RGB);
     if (sizeRect.is_empty())
     {
         //cv::Mat cropped = crop_image(mat, detRect.rect);
@@ -616,9 +616,10 @@ void save_found_crop(cv::Mat &mat, dlib::mmod_rect detRect, std::string fileName
             long DeltaW = sizeRect.width() - detRect.rect.width();
             long DeltaH = sizeRect.height() - detRect.rect.height();
 
-            cv::Mat resized;// = cv::Mat::zeros(sizeRect.height(), sizeRect.width(), mat.type());
-            cv::copyMakeBorder(cropped, resized, 0, DeltaH, 0, DeltaW, cv::BORDER_CONSTANT, cv::Scalar::all(0));
-
+            cv::Mat resized = cv::Mat::zeros(sizeRect.height(), sizeRect.width(), mat.type());
+	    //cv::Scalar black = cv::Scalar::all(0);
+            //cv::copyMakeBorder(cropped, resized, 0, DeltaH, 0, DeltaW, BORDER_CONSTANT, black);
+	    cropped.copyTo(resized(cv::Rect(0, 0, cropped.cols, cropped.rows)));
             std::cout << "Saving sized up: " << fileName << std::endl;
             cv::imwrite(fileName, resized);
         }
@@ -628,6 +629,36 @@ void save_found_crop(cv::Mat &mat, dlib::mmod_rect detRect, std::string fileName
             cv::resize(cropped, resized, cv::Size(sizeRect.width(), sizeRect.height()));
             std::cout << "Saving sized down: " << fileName << std::endl;
             cv::imwrite(fileName, resized);
+        }
+    }
+}
+
+void convert_to_grayscale(dlib::matrix<dlib::rgb_pixel>& image)
+{
+    int lumma;
+    for (long row = 0; row < image.nr(); ++row)
+    {
+        for (long col = 0; col < image.nc(); ++col)
+        {
+            dlib::rgb_pixel px = image(row, col);
+            lumma = 0.299 * px.red + 0.587 * px.green + 0.114 * px.blue;
+            px.red = lumma; px.green = lumma; px.blue = lumma;
+            dlib::assign_pixel(image(row, col), px);
+        }
+    }
+}
+
+void convert_to_grayscale(dlib::array2d<dlib::rgb_pixel>& image)
+{
+    int lumma;
+    for (long row = 0; row < image.nr(); ++row)
+    {
+        for (long col = 0; col < image.nc(); ++col)
+        {
+            dlib::rgb_pixel px = image[row][col];
+            lumma = 0.299 * px.red + 0.587 * px.green + 0.114 * px.blue;
+            px.red = lumma; px.green = lumma; px.blue = lumma;
+            dlib::assign_pixel(image[row][col], px);
         }
     }
 }

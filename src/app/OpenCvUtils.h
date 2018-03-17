@@ -64,6 +64,8 @@ dlib::rgb_pixel get_color_for_state(TLState state);
 bool valid_rectangle(const dlib::rectangle& rect, const cv::Mat& img);
 bool valid_rectangle(const dlib::rectangle& rect, const dlib::matrix<dlib::rgb_pixel>& img);
 
+void convert_to_grayscale(dlib::matrix<dlib::rgb_pixel>& image);
+void convert_to_grayscale(dlib::array2d<dlib::rgb_pixel>& image);
 
 
 #endif //DISPLAYIMAGE_OPENCVUTILS_H
