@@ -6,7 +6,7 @@
 #include <dlib/image_processing.h>
 #include "settings.h"
 #include "Stopwatch.h"
-#include "OpenCvUtils.h"
+#include "cv_utils.h"
 
 enum TestType
 {
@@ -29,7 +29,9 @@ std::vector<std::vector<dlib::mmod_rect>> get_detected_rectanges(const std::stri
 
 int number_of_label_boxes(std::vector<dlib::mmod_rect> boxes);
 
-TLState detect_state(const std::string netFile, dlib::matrix<dlib::rgb_pixel> dlibImg);
+TLState detect_state(const std::string netFile, const dlib::matrix<dlib::rgb_pixel> dlibImg);
+
+TLState get_detected_state(const std::vector<dlib::mmod_rect>& detections, const dlib::matrix<dlib::rgb_pixel>& image);
 
 
 

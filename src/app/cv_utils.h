@@ -24,7 +24,6 @@ struct GrayScaleTestParam
     float result;
 };
 
-
 struct HsvTestParam {
     cv::Mat trafficLightPart;
     cv::Mat1b resultMask;
@@ -47,19 +46,24 @@ enum TLState{
     Green = 2,
     RedOrange = 3,
     Inactive = 4,
-    Error = 5
+    Ambiguous = 5
 };
 
 std::string translate_TL_state(TLState state);
+dlib::rgb_pixel get_color_for_state(TLState state);
+
 float get_mask_coverage(cv::Mat1b & mask);
+
 TLState get_traffic_light_state(cv::Mat & img, bool verbose = false);
 TLState get_traffic_light_state2(dlib::matrix<dlib::rgb_pixel> dlibImg, bool verbose = false);
 
 void save_found_crop(cv::Mat & mat, dlib::mmod_rect rectangle, int imgIndex, int labelIndex);
 void save_found_crop(cv::Mat & mat, dlib::mmod_rect detRect, std::string fileName, dlib::rectangle sizeRect = dlib::rectangle());
-cv::Mat crop_image(cv::Mat & mat, dlib::rectangle cropRectangle);
 
-dlib::rgb_pixel get_color_for_state(TLState state);
+cv::Mat crop_image(const cv::Mat & mat, const dlib::rectangle& cropRectangle);
+dlib::matrix<dlib::rgb_pixel>
+crop_image(const dlib::matrix<dlib::rgb_pixel> &original, const dlib::rectangle& cropRectangle, bool exactCrop = false);
+
 
 bool valid_rectangle(const dlib::rectangle& rect, const cv::Mat& img);
 bool valid_rectangle(const dlib::rectangle& rect, const dlib::matrix<dlib::rgb_pixel>& img);

@@ -1,4 +1,5 @@
-#include "OpenCvUtils.h"
+#include <dlib/image_transforms/interpolation.h>
+#include "cv_utils.h"
 
 
 cv::Scalar lowerWhite(0,0,225);
@@ -86,8 +87,8 @@ std::string translate_TL_state(TLState state)
             return "RedOrange";
         case Inactive:
             return "Inactive";
-        case Error:
-            return "Error";
+        case Ambiguous:
+            return "Ambiguous";
 	default:
 	    return "Error";
     }
@@ -551,12 +552,33 @@ void save_found_crop(cv::Mat & mat, dlib::mmod_rect rectangle, int imgIndex, int
     cv::imwrite(fn , cropped);
 }
 
-cv::Mat crop_image(cv::Mat & mat, dlib::rectangle cropRectangle)
+cv::Mat crop_image(const cv::Mat & mat, const dlib::rectangle& cropRectangle)
 {
     cv::Rect roi(cropRectangle.left(), cropRectangle.top(), cropRectangle.width(), cropRectangle.height());
     cv::Mat cropped = mat(roi);
 
     return cropped;
+}
+
+dlib::matrix<dlib::rgb_pixel> crop_image(const dlib::matrix<dlib::rgb_pixel> &original, const dlib::rectangle& cropRectangle, bool exactCrop)
+{
+    dlib::chip_details chipDetail;
+    if (exactCrop)
+    {
+        if (cropRectangle.width() < 6 || cropRectangle.height() < 6)
+            throw new std::runtime_error("Cannot size down that small rectangle!");
+
+        chipDetail = dlib::chip_details(dlib::rectangle(cropRectangle.left(), cropRectangle.top(), cropRectangle.right() - 5, cropRectangle.bottom() - 5));
+    }
+
+    else
+        chipDetail = dlib::chip_details(cropRectangle);
+
+    dlib::matrix<dlib::rgb_pixel> crop;
+
+    dlib::extract_image_chip(original, chipDetail , crop);
+
+    return crop;
 }
 
 dlib::rgb_pixel get_color_for_state(TLState state)

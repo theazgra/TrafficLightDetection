@@ -3,7 +3,7 @@
 #define uint64 opencv_broken_uint
 
 #include <dlib/opencv.h>
-#include "OpenCvUtils.h"
+#include "cv_utils.h"
 
 #undef int64
 #undef uint64
@@ -528,13 +528,24 @@ void visualize_detection(std::string netFile, std::string imgFile)
     std::cin.get();
 }
 
-TLState detect_state(const std::string netFile, dlib::matrix<dlib::rgb_pixel> dlibImg)
+TLState detect_state(const std::string netFile, const dlib::matrix<dlib::rgb_pixel> dlibImg)
 {
     using namespace dlib;
+
+
     state_test_net_type net;
     deserialize(netFile) >> net;
 
+    Stopwatch netPass;
+    netPass.start();
     std::vector<mmod_rect> dets = net(dlibImg);
+    netPass.stop();
+
+    std::cout << "Net pass time: " << netPass.formatted() << std::endl;
+
+    TLState  state = get_detected_state(dets, dlibImg);
+
+    std::cout << "Detected state: " << translate_TL_state(state) << std::endl;
 
 
     image_window window;
@@ -543,11 +554,51 @@ TLState detect_state(const std::string netFile, dlib::matrix<dlib::rgb_pixel> dl
     window.set_image(dlibImg);
 
     for (mmod_rect& rect : dets)
-        window.add_overlay(rect, rgb_pixel(10,10,10));
+        window.add_overlay(rect, rgb_pixel(255,255,255));
 
     std::cin.get();
 
     return Inactive;
+}
+
+TLState get_detected_state(const std::vector<dlib::mmod_rect>& detections, const dlib::matrix<dlib::rgb_pixel>& image)
+{
+    Logger logger("state_detection_log.txt");
+
+    if (detections.empty())
+        return Inactive;
+
+    long height25Perc = (long)(0.25f * image.nr());
+    long height50Perc = (long)(0.50f * image.nr());
+    long height60Perc = (long)(0.6f * image.nr());
+
+    if (detections.size() == 1)
+    {
+        const rectangle rect = detections.at(0).rect;
+
+        if (rect.top() < height25Perc)
+            return Red;
+
+        if (rect.top() > height25Perc && rect.top() < height50Perc)
+            return Orange;
+
+        if (rect.top() > height60Perc)
+            return Green;
+
+        logger.write_line("Detections had size 1 but no templated was matched for state!");
+    }
+    else if (detections.size() == 2)
+    {
+        TLState state1 = get_detected_state({detections.at(0)}, image);
+        TLState state2 = get_detected_state({detections.at(1)}, image);
+
+        if ((state1 == Red && state2 == Orange) || (state1 == Orange && state2 == Red))
+            return Orange;
+
+        logger.write_line("Detections had size 2 but no templates were matched for state!");
+    }
+
+    return Ambiguous;
 }
 
 

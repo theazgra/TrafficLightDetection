@@ -2,7 +2,7 @@
 #include "traffic_light_train.h"
 #include "traffic_light_test.h"
 #include "utils.h"
-#include "OpenCvUtils.h"
+#include "cv_utils.h"
 
 
 // ----------------------------------------------------------------------------------------

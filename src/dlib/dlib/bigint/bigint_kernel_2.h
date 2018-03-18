@@ -537,7 +537,7 @@ namespace dlib
         out.flags(); 
         out << item << ' '; 
         out.flags(oldflags); 
-        if (!out) throw serialization_error("Error serializing object of type bigint_kernel_c"); 
+        if (!out) throw serialization_error("Error serializing object of type bigint_kernel_c");
     }   
 
     inline void deserialize (
@@ -551,7 +551,7 @@ namespace dlib
         if (in.get() != ' ')
         {
             item = 0;
-            throw serialization_error("Error deserializing object of type bigint_kernel_c"); 
+            throw serialization_error("Error deserializing object of type bigint_kernel_c");
         }
     }   
 
