@@ -1,6 +1,7 @@
 #include "traffic_light_train.h"
 #include "Logger.h"
 
+//#define WINDOW
 
 /**
  * Taken from http://dlib.net/dnn_mmod_train_find_cars_ex.cpp.html
@@ -371,7 +372,7 @@ void train_state(const std::string trainFile)
 
         mmod_options options(trainingBoxes, STATE_WINDOW_WIDTH, STATE_WINDOW_HEIGHT);
 
-        options.overlaps_ignore = test_box_overlap(OVERLAP_IOU, COVERED_THRESHOLD);
+       	//options.overlaps_ignore = test_box_overlap(OVERLAP_IOU, COVERED_THRESHOLD);
 
         cout << "Number of detector windows " << options.detector_windows.size() << endl;
         state_net_type net(options);
@@ -391,16 +392,15 @@ void train_state(const std::string trainFile)
         trainer.set_iterations_without_progress_threshold(STATE_ITERATION_WITHOUT_PROGRESS_THRESHOLD);
 
         trainer.set_synchronization_file("STATE_SYNC", std::chrono::minutes(SYNC_INTERVAL));
-
-        //trainer.train(trainingImages, trainingBoxes);
-
-
+	std::cout << "Max epoch count: " << trainer.get_max_num_epochs() << std::endl;
+        trainer.train(trainingImages, trainingBoxes);
+/*
         random_cropper cropper;
 
         //rows then cols
         cropper.set_chip_dims(STATE_CHIP_HEIGHT, STATE_CHIP_WIDTH);
         //cropper.set_min_object_size(MIN_OBJECT_SIZE_L, MIN_OBJECT_SIZE_S);
-        //cropper.set_max_object_size(MAX_OBJECT_SIZE);
+        cropper.set_max_object_size(0.5f);
 
         cropper.set_background_crops_fraction(BACKGROUND_CROP_FRACTION);
 
@@ -415,20 +415,28 @@ void train_state(const std::string trainFile)
 
         std::vector<matrix<rgb_pixel>>      miniBatchImages;
         std::vector<std::vector<mmod_rect>> miniBatchLabels;
-
-
+#ifdef WINDOW
+	image_window win;
+#endif
         while (trainer.get_learning_rate() >= MINIMAL_LEARNING_RATE)
         {
             cropper(STATE_BATCH_SIZE, trainingImages, trainingBoxes, miniBatchImages, miniBatchLabels);
+	
 
-            //for (matrix<rgb_pixel> &img : miniBatchImages)
-                //convert_to_grayscale(img);
-                //disturb_colors(img, rnd);
+            for (matrix<rgb_pixel> &img : miniBatchImages)
+		{
+                	//convert_to_grayscale(img);
+                	disturb_colors(img, rnd);
+#ifdef WINDOW
+			win.set_image(img);
+			cin.get();
+#endif
+		}
 
 
             trainer.train_one_step(miniBatchImages, miniBatchLabels);
         }
-
+*/
         trainer.get_net();
         net.clean();
         serialize("state_net.dat") << net;
@@ -464,7 +472,7 @@ void train_state(const std::string trainFile)
 
     trainer.set_num_threads(10);
 
-    trainer.set_c(1);
+    trainer.set_c(0.5);
     trainer.be_verbose();
     trainer.set_epsilon(0.005);
 
@@ -473,7 +481,7 @@ void train_state(const std::string trainFile)
     cout << "training results: " << test_object_detection_function(detector, trainImages, trainRectangles) << endl;
 
     serialize("state_detector.svm") << detector;
-    */
+   */ 
     /*
     image_window win;
     for (unsigned long i = 0; i < trainImages.size(); ++i)

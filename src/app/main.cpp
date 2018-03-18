@@ -99,8 +99,12 @@ int main(int argc, char** argv)
 
     if (arguments[1] == "--train-state")
     {
+        Stopwatch stopwatch;
         string xmlFile  = arguments[2];
+        stopwatch.start();
         train_state(xmlFile);
+        stopwatch.stop();
+        cout << "State net finished training after: " << stopwatch.formatted() << endl;
         return 0;
     }
 
@@ -120,9 +124,11 @@ int main(int argc, char** argv)
     {
         string netFile = arguments[2];
         string xmlFile  = arguments[3];
-
+        Stopwatch stopwatch;
+        stopwatch.start();
         train_shape_predictor(netFile, xmlFile);
-
+        stopwatch.stop();
+        cout << "Shape predictor training finished after: " << stopwatch.formatted() << endl;
         return 0;
     }
 

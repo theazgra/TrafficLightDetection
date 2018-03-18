@@ -38,14 +38,14 @@ using net_type = loss_mmod<con<1,9,9,1,1,rcon5_55<rcon5_55<rcon5_55<rcon5_40<dow
 using test_net_type = loss_mmod<con<1,9,9,1,1,a_rcon5_55<a_rcon5_55<a_rcon5_55<a_rcon5_40<a_downsampler8x<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>>;
 
 template <long num_filters, typename SUBNET> using con3  = con<num_filters,3,3,1,1,SUBNET>;
-template <typename SUBNET> using rcon3  = relu<bn_con<con5<55, SUBNET>>>;
-template <typename SUBNET> using rcon32  = relu<bn_con<con5<32, SUBNET>>>;
-template <typename SUBNET> using arcon3  = relu<affine<con5<55, SUBNET>>>;
-template <typename SUBNET> using arcon32  = relu<affine<con5<32, SUBNET>>>;
-//using state_net_type = loss_mmod<con<1,9,9,1,1,rcon3<rcon3<rcon32<input_rgb_image_pyramid<pyramid_down<3>>>>>>>;
-//using state_test_net_type = loss_mmod<con<1,9,9,1,1,arcon3<arcon3<arcon32<input_rgb_image_pyramid<pyramid_down<3>>>>>>>;
+template <typename SUBNET> using rcon3  = relu<bn_con<con3<55, SUBNET>>>;
+template <typename SUBNET> using rcon32  = relu<bn_con<con3<40, SUBNET>>>;
+template <typename SUBNET> using arcon3  = relu<affine<con3<55, SUBNET>>>;
+template <typename SUBNET> using arcon32  = relu<affine<con3<40, SUBNET>>>;
+using state_net_type = loss_mmod<con<1,9,9,1,1,rcon3<rcon32<input_rgb_image_pyramid<pyramid_down<2>>>>>>;
+using state_test_net_type = loss_mmod<con<1,9,9,1,1,arcon3<arcon32<input_rgb_image_pyramid<pyramid_down<2>>>>>>;
 
-using state_net_type = loss_mmod<con<1,9,9,1,1,rcon5_55<rcon5_55<rcon5_40<input_rgb_image_pyramid<pyramid_down<3>>>>>>>;
-using state_test_net_type = loss_mmod<con<1,9,9,1,1,a_rcon5_55<a_rcon5_55<a_rcon5_40<input_rgb_image_pyramid<pyramid_down<3>>>>>>>;
+//using state_net_type = loss_mmod<con<1,9,9,1,1,rcon5_55<rcon5_55<rcon5_40<input_rgb_image_pyramid<pyramid_down<3>>>>>>>;
+//using state_test_net_type = loss_mmod<con<1,9,9,1,1,a_rcon5_55<a_rcon5_55<a_rcon5_40<input_rgb_image_pyramid<pyramid_down<3>>>>>>>;
 
 #endif //NET_DEFINITION_H
