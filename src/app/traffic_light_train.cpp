@@ -75,9 +75,8 @@ void train(const std::string trainFile)
 
 
         cout << "Number of training images: " << trainingImages.size() << endl;
-        //mmod_options options(trainingBoxes, MIN_LONG_SIDE_SIZE, MIN_SMALL_SIDE_SIZE);
-        //mmod_options options(trainingBoxes, MIN_OBJECT_SIZE_L, MIN_OBJECT_SIZE_S);
-	mmod_options options(trainingBoxes, DW_LONG_SIDE, DW_SHORT_SIDE);
+        
+	    mmod_options options(trainingBoxes, DW_LONG_SIDE, DW_SHORT_SIDE);
         options.overlaps_ignore = test_box_overlap(OVERLAP_IOU, COVERED_THRESHOLD);
 
         cout << "Number of detector windows " << options.detector_windows.size() << endl;
@@ -451,50 +450,6 @@ void train_state(const std::string trainFile)
         cout << e.what() << endl;
         cout << "*******************" << endl;
     }
-
-    /*
-    std::vector<matrix<rgb_pixel>> trainImages;
-    std::vector<std::vector<rectangle>> trainRectangles;
-
-    load_image_dataset(trainImages, trainRectangles, trainFile);
-
-    upsample_image_dataset<pyramid_down<2>>(trainImages, trainRectangles);
-
-    cout << "Number of training images: " << trainImages.size() << endl;
-
-    typedef scan_fhog_pyramid<pyramid_down<1>> image_scanner_type;
-
-    image_scanner_type scanner;
-
-    scanner.set_detection_window_size(STATE_WINDOW_WIDTH, STATE_WINDOW_HEIGHT);
-
-    structural_object_detection_trainer<image_scanner_type> trainer(scanner);
-
-    trainer.set_num_threads(10);
-
-    trainer.set_c(0.5);
-    trainer.be_verbose();
-    trainer.set_epsilon(0.005);
-
-    object_detector<image_scanner_type> detector = trainer.train(trainImages, trainRectangles);
-
-    cout << "training results: " << test_object_detection_function(detector, trainImages, trainRectangles) << endl;
-
-    serialize("state_detector.svm") << detector;
-   */ 
-    /*
-    image_window win;
-    for (unsigned long i = 0; i < trainImages.size(); ++i)
-    {
-        // Run the detector and get the face detections.
-        std::vector<rectangle> dets = detector(trainImages[i]);
-        win.clear_overlay();
-        win.set_image(trainImages[i]);
-        win.add_overlay(dets, rgb_pixel(255,0,0));
-        cout << "Hit enter to process the next image..." << endl;
-        cin.get();
-    }
-     */
 }
 
 

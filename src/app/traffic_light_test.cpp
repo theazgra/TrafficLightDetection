@@ -30,6 +30,28 @@ int number_of_label_boxes(std::vector<dlib::mmod_rect> boxes)
     return count;
 }
 
+bool valid_rectangle(const dlib::rectangle& rect, const dlib::matrix<dlib::rgb_pixel>& img)
+{
+    if (rect.left() < 0 || rect.width() < 0 || rect.top() < 0 || rect.height() < 0)
+        return false;
+
+    if (rect.right() > img.nc() || rect.width() > img.nc() || rect.bottom() > img.nr() || rect.height() > img.nr())
+        return false;
+
+    return true;
+}
+
+bool valid_rectangle(const dlib::rectangle& rect, const cv::Mat& img)
+{
+    if (rect.left() < 0 || rect.width() < 0 || rect.top() < 0 || rect.height() < 0)
+        return false;
+
+    if (rect.right() > img.cols || rect.width() > img.cols || rect.bottom() > img.rows || rect.height() > img.rows)
+        return false;
+
+    return true;
+}
+
 void test(std::string netFile, std::string testFile, TestType testType)
 {
     using namespace std;
@@ -665,28 +687,92 @@ void save_detected_objects(const std::string netFile, const std::string xmlFile,
     }
 }
 
-bool valid_rectangle(const dlib::rectangle& rect, const dlib::matrix<dlib::rgb_pixel>& img)
+void save_video_frames_with_sp2(const std::string netFile, const std::string stateNetFile,
+                                const std::string xmlFile, const std::string resultFolder)
 {
-    if (rect.left() < 0 || rect.width() < 0 || rect.top() < 0 || rect.height() < 0)
-        return false;
+    using namespace std;
+    using namespace dlib;
 
-    if (rect.right() > img.nc() || rect.width() > img.nc() || rect.bottom() > img.nr() || rect.height() > img.nr())
-        return false;
+    cout << "Saving frames with help of shape predictor and state net." << endl;
+    try
+    {
+        test_net_type net;
+        shape_predictor sp;
+        state_test_net_type stateNet;
 
-    return true;
+        deserialize(netFile) >> net >> sp;
+        deserialize(stateNetFile) >> stateNet;
+
+        std::vector<matrix<rgb_pixel>> videoFrames;
+        std::vector<std::vector<mmod_rect>> boxes;
+
+        load_image_dataset(videoFrames, boxes, xmlFile);
+        boxes.clear();
+
+        int frameNum = -1;
+
+        //cv::Mat openCvImg, croppedImage;
+        matrix<rgb_pixel> scaledFrame;
+        Stopwatch stopwatch;
+        int netStopwatch = stopwatch.get_next_stopwatch_id();
+        int stateStopwatch = stopwatch.get_next_stopwatch_id();
+
+        for (matrix<rgb_pixel>& frame : videoFrames)
+        {
+            ++frameNum;
+            scaledFrame = matrix<rgb_pixel>(frame.nr() * scale_factor, frame.nc() * scale_factor);
+            resize_image(frame, scaledFrame);
+            //openCvImg = toMat(scaledFrame);
+            cout << "Processing frame: " << std::to_string(frameNum) << endl;
+
+	        stopwatch.start(netStopwatch);
+            std::vector<mmod_rect> detections = net(scaledFrame);
+	        stopwatch.stop(netStopwatch);
+
+            stopwatch.start(stateStopwatch);
+            stopwatch.stop(stateStopwatch);
+
+            //TODO: Paralelize state detection?
+            for (mmod_rect& detection : detections)
+            {
+                full_object_detection fullObjectDetection = sp(scaledFrame, detection);
+
+                rectangle spImprovedRect;
+                for(unsigned long i = 0; i < fullObjectDetection.num_parts(); ++i)
+                    spImprovedRect += fullObjectDetection.part(i);
+
+                if (!valid_rectangle(spImprovedRect, openCvImg))
+                    continue;
+
+                //croppedImage = crop_image(openCvImg, spImprovedRect);
+                //TLState detectedState = get_traffic_light_state(croppedImage);
+                
+                matrix<rgb_pixel> foundTrafficLight = crop_image(scaledFrame, spImprovedRect);
+                std::vector<mmod_rect> trafficLightDets = stateNet(foundTrafficLight);
+
+                TLState detectedState = get_detected_state(trafficLightDets, foundTrafficLight);
+                
+                draw_rectangle(scaledFrame,
+                                spImprovedRect,
+                                get_color_for_state(detectedState),
+                                RECT_WIDTH);
+            }
+
+            resize_image(scaledFrame, frame);
+
+	        cout << "Time for network pass: " << std::to_string(stopwatch.elapsed_milliseconds(netStopwatch)) << " ms" << endl;
+            cout << "Time for state detection: " << std::to_string(stopwatch.elapsed_milliseconds(stateStopwatch)) << " ms." << endl;
+            std::string fileName = resultFolder + "/" + std::to_string(frameNum) + ".png";
+            save_png(frame, fileName);
+        }
+
+        logger.write_line("Succesfully saved all frames.");
+    }
+    catch (std::exception& e)
+    {
+        logger.write_line(e.what());
+    }
 }
-
-bool valid_rectangle(const dlib::rectangle& rect, const cv::Mat& img)
-{
-    if (rect.left() < 0 || rect.width() < 0 || rect.top() < 0 || rect.height() < 0)
-        return false;
-
-    if (rect.right() > img.cols || rect.width() > img.cols || rect.bottom() > img.rows || rect.height() > img.rows)
-        return false;
-
-    return true;
-}
-
 
 
 
