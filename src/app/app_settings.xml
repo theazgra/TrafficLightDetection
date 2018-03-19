@@ -60,7 +60,7 @@
         <chip_width>80</chip_width>
         <chip_height>140</chip_height>
         <batch_size>40</batch_size>
-        <tr_iter_wo_prog_threshold>1000</tr_iter_wo_prog_threshold>
+        <tr_iter_wo_prog_threshold>1500</tr_iter_wo_prog_threshold>
     </state_net_settings>
     <crop_saving>
         <width>50</width>
