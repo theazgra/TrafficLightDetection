@@ -354,7 +354,7 @@ void train_shape_predictor(const std::string netFile, const std::string xmlFile)
 
 }
 
-void train_state(const std::string trainFile)
+void train_state(const std::string trainFile, const std::string outFile)
 {
     using namespace dlib;
     using namespace std;
@@ -438,7 +438,12 @@ void train_state(const std::string trainFile)
 */
         trainer.get_net();
         net.clean();
-        serialize("state_net.dat") << net;
+
+        std::string serializationFile = "state_net.dat";
+        if (outFile.length() != 0)
+            serializationFile = outFile;
+
+        serialize(serializationFile) << net;
 
         cout << "Training is completed." << endl;
         cout << "Training results: " << test_object_detection_function(net, trainingImages, trainingBoxes) << endl;

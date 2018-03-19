@@ -35,7 +35,7 @@ template <typename SUBNET> using a_rcon5_32  = relu<affine<con5<32,SUBNET>>>;
  * Net types using convolution of size 5. Test net type has bn_con layer changed to affine layer.
  */
 using net_type = loss_mmod<con<1,9,9,1,1,rcon5_55<rcon5_55<rcon5_55<rcon5_40<downsampler8x<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>>;
-using test_net_type = loss_mmod<con<1,9,9,1,1,a_rcon5_55<a_rcon5_55<a_rcon5_5<a_rcon5_40<a_downsampler8x<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>>;
+using test_net_type = loss_mmod<con<1,9,9,1,1,a_rcon5_55<a_rcon5_55<a_rcon5_55<a_rcon5_40<a_downsampler8x<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>>;
 
 template <long num_filters, typename SUBNET> using con3  = con<num_filters,3,3,1,1,SUBNET>;
 template <typename SUBNET> using rcon3_55  = relu<bn_con<con3<55, SUBNET>>>;

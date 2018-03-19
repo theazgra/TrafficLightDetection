@@ -10,8 +10,7 @@
 
 enum TestType
 {
-    FullTest,
-    DisplayOnly,
+    Display,
     NoDisplay,
     OnlyErrorDisplay
 };

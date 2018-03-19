@@ -45,7 +45,7 @@ void test_cropper(const std::string xmlFile, bool display, bool displayOnly)
 
             for (size_t i = 0; i < batchImgs.size(); ++i)
             {
-            numOverlapped += overlapped_boxes_count(batchBoxes[i], test_box_overlap(OVERLAP_IOU, COVERED_THRESHOLD));
+                numOverlapped += overlapped_boxes_count(batchBoxes[i], test_box_overlap(OVERLAP_IOU, COVERED_THRESHOLD));
                 for (auto b : batchBoxes[i])
                 {
                     if (b.ignore)
@@ -74,7 +74,7 @@ void test_cropper(const std::string xmlFile, bool display, bool displayOnly)
             {
                 cout << "Img #: " << i << endl;
                 win.clear_overlay();
-		//dlib::equalize_histogram(batchImgs[i], batchImgs[i]);
+
                 win.set_image(batchImgs[i]);
                 for (auto b : batchBoxes[i])
                 {

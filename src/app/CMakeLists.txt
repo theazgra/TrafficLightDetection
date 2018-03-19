@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(Bachelor)
+project(tld)
 
 include(../dlib/dlib/cmake)
 find_package(OpenCV REQUIRED)
@@ -12,7 +12,7 @@ set(SOURCE_FILES pugi_xml main.cpp net_definition.h settings.h settings.cpp traf
         Logger.cpp Logger.h Stopwatch.cpp Stopwatch.h)
 #set(SOURCE_FILES main.cpp cropper_test.cpp cropper_test.h settings.h)
 
-add_executable(Bachelor ${SOURCE_FILES})
+add_executable(tld ${SOURCE_FILES})
 
-target_link_libraries(Bachelor dlib::dlib)
-target_link_libraries(Bachelor ${OpenCV_LIBS})
+target_link_libraries(tld dlib::dlib)
+target_link_libraries(tld ${OpenCV_LIBS})
