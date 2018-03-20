@@ -3,7 +3,7 @@
 #include "traffic_light_test.h"
 #include "utils.h"
 #include "cv_utils.h"
-#include "cxxopts/cxxopts.hpp"
+#include "args.hxx"
 
 
 // ----------------------------------------------------------------------------------------
@@ -39,90 +39,87 @@ int main(int argc, const char* argv[])
     if (!load_settings("../app_settings.xml"))
         return 1;
 
-    bool _display, _displayErr;
-    _display = _displayErr = false;
+    args::ArgumentParser parser("Traffic light detection system.",
+                                "Mandatory arguments are in <>, optional arguments are in []");
+    args::Group methodGroup(parser, "Methods", args::Group::Validators::AtMostOne);//Maybe xor
+    args::HelpFlag _help(methodGroup, "help", "Print help", {'h', "help"});
+    args::Flag _train(methodGroup, "train", "Training main CNN. <xml> <out-file> [xml2]", {"train"});
+    args::Flag _trainState(methodGroup, "train-state", "Training state CNN. <xml> <out-file>", {"train-state"});
+    args::Flag _trainSp(methodGroup, "train-sp", "Training of shape predictor.<xml> <net>", {"train-sp"});
+    args::Flag _test(methodGroup, "test", "Overall testing in window. <xml> <net> [display, display-error]", {"test"});
+    args::Flag _testState(methodGroup, "test-state", "Testing state detection. <net> <file>", {"test-state"});
+    args::Flag _cropper(methodGroup, "cropper", "Testing cropper settings. <xml> [display]", {'c', "cropper"});
+    args::Flag _visualize(methodGroup, "visualize", "Visualizing of main CNN output. <net> <file>", {"visualize"});
+    args::Flag _crops(methodGroup, "crops", "Saving detections in original size. <net> <xml> <out-folder>", {"crops"});
+    args::Flag _cropsSized(methodGroup, "sized-crops", "Saving detections in defined size. <net> <xml> <out-folder>", {"sized-crops"});
+    args::Flag _video(methodGroup, "video", "Saving frames from videl file. <net> <file> <out-folder>", {"video"});
+    args::Flag _videoFrames(methodGroup, "video-frames", "Saving frames from xml file. <net> <xml> <out-folder>", {"video-frames"});
+    args::Flag _videoFramesSp(methodGroup, "video-frames-sp",
+                              "Saving frames from xml file with help of shape predictor. <net> <state-net> <xml> <out-folder>", {"video-frames-sp"});
 
-    cxxopts::Options options("Traffic light detection", "Settings are loaded from ../app_settings.xml");
+    args::ValueFlag<std::string> _netFile(parser, "net", "Serialized net file.", {"net"});
+    args::ValueFlag<std::string> _stateNetFile(parser, "state-net", "Serialized state net file.", {"state-net"});
+    args::ValueFlag<std::string> _xml(parser, "xml", "Xml file containing data annotations..", {"xml"});
+    args::ValueFlag<std::string> _xml2(parser, "xml2", "Xml file containing second data annotations..", {"xml2"});
+    args::ValueFlag<std::string> _file(parser, "file", "Image or video vile.", {"file"});
+    args::ValueFlag<std::string> _outFile(parser, "out-file", "Output file where to serialize result.", {"out-file"});
+    args::ValueFlag<std::string> _outFolder(parser, "out-folder", "Output folder.", {"out-folder"});
 
-    options.add_options()
-            ("h, help", "Print help")
-            ("train", "Training main CNN. <xml> <out-file> [xml2]")
-            ("train-state", "Training state CNN. <xml> <out-file>")
-            ("train-sp", "Training of shape predictor.<xml> <net>")
-            ("test", "Overall testing in window. <xml> <net> [display, display-error]")
-            ("test-state", "Testing state detection. <net> <file>")
-            ("c, cropper", "Testing cropper settings. <xml> [display]")
-            ("visualize", "Visualizing of main CNN output. <net> <file>")
-            ("crops", "Saving detections in original size. <net> <xml> <out-folder>")
-            ("sized-crops", "Saving detections in defined size. <net> <xml> <out-folder>")
-            ("video", "Saving frames from videl file. <net> <file> <out-folder>")
-            ("video-frames", "Saving frames from xml file. <net> <xml> <out-folder>")
-            ("video-frames-sp", "Saving frames from xml file with help of shape predictor. <net> <state-net> <xml> <out-folder>");
+    //args::Group methodGroup(parser, "display arguments", args::Group::Validators::Xor);//Maybe xor
+    args::Flag _display(parser, "display", "Display images.", {"display"});
+    args::Flag _displayErr(parser, "display-error", "Display only errors.", {"display-error"});
 
-    options.add_options("Method arguments, mandatory in <>, optional in [].")
-            ("net", "Serialized net file.", cxxopts::value<string>())
-            ("state-net", "Serialized state net file.", cxxopts::value<string>())
-            ("xml", "Xml file containing data annotations.", cxxopts::value<string>())
-            ("xml2", "Xml file containing second data annotations.", cxxopts::value<string>())
-            ("file", "Image file.", cxxopts::value<string>())
-            ("out-file", "Output file where to serialize results.", cxxopts::value<string>())
-            ("out-folder", "Output folder.", cxxopts::value<string>())
-            ("display", "Display images.", cxxopts::value<bool>(_display))
-            ("display-error", "Display only error.", cxxopts::value<bool>(_displayErr));
-
-    try
-    {
-        auto result = options.parse(argc, argv);
-
-        if (result.count("help"))
-        {
-            std::cout << options.help({"", "Method arguments, mandatory in <>, optional in []."}) << std::endl;
-            return 0;
-        }
-
-        string netFile, stateNetFile, xmlFile, xmlFile2, outFolder, outFile, file;
-
-        netFile = result.count("net") ? result["net"].as<string>() : "" ;
-        stateNetFile = result.count("state-net") ? result["state-net"].as<string>() : "" ;
-        xmlFile = result.count("xml") ? result["xml"].as<string>() : "" ;
-        xmlFile2 = result.count("xml2") ? result["xml2"].as<string>() : "" ;
-        outFile = result.count("out-file") ? result["out-file"].as<string>() : "" ;
-        outFolder = result.count("out-folder") ? result["out-folder"].as<string>() : "" ;
-        file = result.count("file") ? result["file"].as<string>() : "" ;
-
-        if (result.count("train"))
-            return start_train(xmlFile, xmlFile2);
-        if (result.count("test"))
-            return start_test(netFile, xmlFile, _display, _displayErr);
-        if (result.count("train-state"))
-            return start_train_state(xmlFile, outFile);
-        if (result.count("train-sp"))
-            return start_train_sp(netFile, xmlFile);
-        if (result.count("test-state"))
-            return start_detect_state(netFile, file);
-        if (result.count("cropper"))
-            return start_cropper_test(xmlFile, _display);
-        if (result.count("visualize"))
-            return start_visualize(netFile, file);
-        if (result.count("crops"))
-            return start_crops(netFile, xmlFile, outFolder);
-        if (result.count("sized-crops"))
-            return start_sized_crops(netFile, xmlFile, outFolder);
-        if (result.count("video"))
-            return start_video(netFile, file, outFolder);
-        if (result.count("video-frames"))
-            return start_video_frames(netFile, xmlFile, outFolder);
-        if (result.count("video-frames-sp"))
-            return start_video_frames_sp(netFile, xmlFile, outFolder);
-
-
+    try {
+        parser.ParseCLI(argc, argv);
     }
-    catch (const cxxopts::OptionException& e)
-    {
-        cout << "error parsing options: " << e.what() << endl << "Try: " << endl;
-        cout << options.help({"", "Method arguments, mandatory in <>, optional in []."}) << endl;
+    catch (args::Help) {
+        std::cout << parser;
+        return 0;
+    }
+    catch (args::ParseError e) {
+        std::cerr << e.what() << std::endl;
+        std::cerr << parser;
         return 1;
     }
+    catch (args::ValidationError e) {
+        std::cerr << e.what() << std::endl;
+        std::cerr << parser;
+        return 1;
+    }
+
+    std::string netFile, stateNetFile, xmlFile, xmlFile2, outFolder, outFile, file;
+    netFile = _netFile ? _netFile.Get() : "";
+    stateNetFile = _stateNetFile ? _stateNetFile.Get() : "";
+    xmlFile = _xml ? _xml.Get() : "";
+    xmlFile2 = _xml2 ? _xml2.Get() : "";
+    outFile = _outFile ? _outFile.Get() : "";
+    outFolder = _outFolder ? _outFolder.Get() : "";
+    file = _file ? _file.Get() : "";
+
+    if (_train)
+        return start_train(xmlFile, xmlFile2);
+    if (_test)
+        return start_test(netFile, xmlFile, _display, _displayErr);
+    if (_trainState)
+        return start_train_state(xmlFile, outFile);
+    if (_trainSp)
+        return start_train_sp(netFile, xmlFile);
+    if (_testState)
+        return start_detect_state(netFile, file);
+    if (_cropper)
+        return start_cropper_test(xmlFile, _display);
+    if (_visualize)
+        return start_visualize(netFile, file);
+    if (_crops)
+        return start_crops(netFile, xmlFile, outFolder);
+    if (_cropsSized)
+        return start_sized_crops(netFile, xmlFile, outFolder);
+    if (_video)
+        return start_video(netFile, file, outFolder);
+    if (_videoFrames)
+        return start_video_frames(netFile, xmlFile, outFolder);
+    if (_videoFramesSp)
+        return start_video_frames_sp(netFile, xmlFile, outFolder);
 
     return 0;
 
