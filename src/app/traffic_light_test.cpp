@@ -9,7 +9,7 @@
 #undef uint64
 
 //width used for drawing rectangle
-unsigned int RECT_WIDTH = 2;
+unsigned int RECT_WIDTH = 3;
 const float scale_factor = 2.0f;
 
 /**
@@ -711,8 +711,6 @@ void save_video_frames_with_sp2(const std::string netFile, const std::string sta
 	        stopwatch.stop(netStopwatch);
 
             stopwatch.start(stateStopwatch);
-            stopwatch.stop(stateStopwatch);
-
             //TODO: Paralelize state detection?
             for (mmod_rect& detection : detections)
             {
@@ -738,6 +736,7 @@ void save_video_frames_with_sp2(const std::string netFile, const std::string sta
                                 get_color_for_state(detectedState),
                                 RECT_WIDTH);
             }
+            stopwatch.stop(stateStopwatch);
 
             resize_image(scaledFrame, frame);
 
@@ -746,8 +745,6 @@ void save_video_frames_with_sp2(const std::string netFile, const std::string sta
             std::string fileName = resultFolder + "/" + std::to_string(frameNum) + ".png";
             save_png(frame, fileName);
         }
-
-
     }
     catch (std::exception& e)
     {

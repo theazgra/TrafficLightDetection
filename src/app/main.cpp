@@ -32,7 +32,7 @@ int start_crops(const std::string netFile, const std::string xmlFile, const std:
 int start_sized_crops(const std::string netFile, const std::string xmlFile, const std::string outFolder);
 int start_video(const std::string netFile, const std::string videoFile, const std::string outFolder);
 int start_video_frames(const std::string netFile, const std::string xmlFile, const std::string outFolder);
-int start_video_frames_sp(const std::string netFile, const std::string xmlFile, const std::string outFolder);
+int start_video_frames_sp(const std::string netFile, const std::string xmlFile, const std::string outFolder, const std::string stateNetFile = "");
 /******************************************************************************************************************/
 int main(int argc, const char* argv[])
 {
@@ -119,7 +119,7 @@ int main(int argc, const char* argv[])
     if (_videoFrames)
         return start_video_frames(netFile, xmlFile, outFolder);
     if (_videoFramesSp)
-        return start_video_frames_sp(netFile, xmlFile, outFolder);
+        return start_video_frames_sp(netFile, xmlFile, outFolder, stateNetFile);
 
     return 0;
 
@@ -354,7 +354,7 @@ int start_video_frames(const std::string netFile, const std::string xmlFile, con
     return 0;
 }
 /******************************************************************************************************************/
-int start_video_frames_sp(const std::string netFile, const std::string xmlFile, const std::string outFolder)
+int start_video_frames_sp(const std::string netFile, const std::string xmlFile, const std::string outFolder, const std::string stateNetFile)
 {
     if (!file::file_exists(netFile))
     {
@@ -367,7 +367,11 @@ int start_video_frames_sp(const std::string netFile, const std::string xmlFile, 
         cout << "XML does not exist!" << endl;
         return 1;
     }
-    save_video_frames_with_sp(netFile, xmlFile, outFolder);
+
+    if (file::file_exists(stateNetFile))
+        save_video_frames_with_sp2(netFile, stateNetFile, xmlFile, outFolder);
+    else
+        save_video_frames_with_sp(netFile, xmlFile, outFolder);
 
     return 0;
 }
