@@ -49,23 +49,37 @@ using state_net_type = loss_mmod<con<1,9,9,1,1,rcon3_55<rcon3_40<input_rgb_image
 using state_test_net_type = loss_mmod<con<1,9,9,1,1,arcon3_55<arcon3_40<input_rgb_image_pyramid<pyramid_down<3>>>>>>;
 
 //**********************************ResNet*****************************************
-template <int num_filters, template <typename> class BN, int stride, typename SUBNET>
-using block = BN<con<num_filters, 3,3,1,1,relu<BN<con<num_filters,3,3,stride, stride, SUBNET>>>>>;
+template <
+        long num_filters,
+        template <typename> class BN,
+        long stride,
+        typename SUBNET
+>
+using block  = BN<con<num_filters,3,3,1,1,relu<BN<con<num_filters,3,3,stride,stride,SUBNET>>>>>;
 
-template <template <int, template <typename> class, int, typename> class block, int num_filters, template <typename> class BN, typename SUBNET>
-using residual = add_prev1<block<num_filters, BN, 1, tag1<SUBNET>>>;
+template <
+        template <long,template<typename>class,long,typename> class block,
+        long num_filters,
+        template<typename>class BN,
+        typename SUBNET
+>
+using residual = add_prev1<block<num_filters,BN,1,tag1<SUBNET>>>;
 
-template <template <int, template <typename> class, int, typename> class block, int num_filters, template <typename> class BN, typename SUBNET>
-using residual_downsample = add_prev2<avg_pool<2,2,2,2,skip1<tag2<block<num_filters, BN, 2, tag1<SUBNET>>>>>>;
+template <
+        template <long,template<typename>class,long,typename> class block,
+        long num_filters,
+        template<typename>class BN,
+        typename SUBNET
+>
+using residual_down = add_prev2<avg_pool<2,2,2,2,skip1<tag2<block<num_filters,BN,2,tag1<SUBNET>>>>>>;
 
-template <typename SUBNET> using res      = relu<residual<block, 8, bn_con, SUBNET>>;
-template <typename SUBNET> using res_down = relu<residual_downsample<block, 8, bn_con, SUBNET>>; 
+template <typename SUBNET> using res       = relu<residual<block,8,bn_con,SUBNET>>;
+template <typename SUBNET> using ares      = relu<residual<block,8,affine,SUBNET>>;
+template <typename SUBNET> using res_down  = relu<residual_down<block,8,bn_con,SUBNET>>;
+template <typename SUBNET> using ares_down = relu<residual_down<block,8,affine,SUBNET>>;
 
-template <typename SUBNET> using ares      = relu<residual<block, 8, affine, SUBNET>>;
-template <typename SUBNET> using ares_down = relu<residual_downsample<block, 8, affine, SUBNET>>; 
-
-using resnet_net_type = 
-loss_mmod<con<1,9,9,1,1,avg_pool_everything<res<res<res<res_down<repeat<9, res, res_down<res<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>>>>>;
+using resnet_net_type = loss_mmod<con<1,9,9,1,1,res<res<res<res_down<repeat<9,res,res_down<res<con5d<16, input_rgb_image_pyramid<pyramid_down<6>>>>>>>>>>>>;
+//using resnet_net_type=loss_mmod<con<1,9,9,1,1,con<25,5,5,1,1,con<20,5,5,2,2,input_rgb_image_pyramid<pyramid_down<6>>>>>>;
 
 using resnet_test_net_type = 
 loss_mmod<con<1,9,9,1,1,avg_pool_everything<ares<ares<ares<ares_down<repeat<9, ares, ares_down<ares<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>>>>>;

@@ -8,6 +8,7 @@ int overlapped_boxes_count(std::vector<dlib::mmod_rect> boxes, const dlib::test_
 
 void train(const std::string trainFile);
 void train(const std::string trainFile, const std::string testFile);
+void train_resnet(const std::string trainFile);
 
 void train_state(const std::string trainFile, const std::string outFile = "");
 

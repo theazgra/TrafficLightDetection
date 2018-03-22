@@ -612,60 +612,52 @@ void save_detected_objects(const std::string netFile, const std::string xmlFile,
 
     cout << "Saving detected objects." << endl;
 
-    try
+    test_net_type net;
+    shape_predictor sp;
+    deserialize(netFile) >> net >> sp;
+
+    std::vector<matrix<rgb_pixel>> images;
+    std::vector<std::vector<mmod_rect>> boxes;
+
+    load_image_dataset(images, boxes, xmlFile);
+    boxes.clear();
+
+    int frameNum = -1;
+
+    matrix<rgb_pixel> scaledFrame;
+    cv::Mat matImg;
+
+    for (matrix<rgb_pixel>& frame : images)
     {
-        test_net_type net;
-        shape_predictor sp;
-        deserialize(netFile) >> net >> sp;
+        ++frameNum;
 
-        std::vector<matrix<rgb_pixel>> images;
-        std::vector<std::vector<mmod_rect>> boxes;
+        scaledFrame = matrix<rgb_pixel>(frame.nr() * scale_factor, frame.nc() * scale_factor);
 
-        load_image_dataset(images, boxes, xmlFile);
-        boxes.clear();
+        resize_image(frame, scaledFrame);
 
-        int frameNum = -1;
+        matImg = toMat(scaledFrame);
 
-        matrix<rgb_pixel> scaledFrame;
-        cv::Mat matImg;
+        std::vector<mmod_rect> detections = net(scaledFrame);
 
-        for (matrix<rgb_pixel>& frame : images)
+        int labelIndex = -1;
+        for (mmod_rect& detection : detections)
         {
-            ++frameNum;
+            ++labelIndex;
 
-            scaledFrame = matrix<rgb_pixel>(frame.nr() * scale_factor, frame.nc() * scale_factor);
+            full_object_detection fullObjectDetection = sp(scaledFrame, detection);
 
-            resize_image(frame, scaledFrame);
+            rectangle spImprovedRect;
+            for(unsigned long i = 0; i < fullObjectDetection.num_parts(); ++i)
+                spImprovedRect += fullObjectDetection.part(i);
 
-            matImg = toMat(scaledFrame);
-
-            std::vector<mmod_rect> detections = net(scaledFrame);
-
-            int labelIndex = -1;
-            for (mmod_rect& detection : detections)
+            if (valid_rectangle(spImprovedRect, matImg))
             {
-                ++labelIndex;
-
-                full_object_detection fullObjectDetection = sp(scaledFrame, detection);
-
-                rectangle spImprovedRect;
-                for(unsigned long i = 0; i < fullObjectDetection.num_parts(); ++i)
-                    spImprovedRect += fullObjectDetection.part(i);
-
-                if (valid_rectangle(spImprovedRect, matImg))
-                {
-                    std::string fileName = folderPath + "/crop_" + std::to_string(frameNum) + "_" + std::to_string(labelIndex) + ".png";
-                    save_found_crop(matImg, spImprovedRect, fileName, sizeRect);
-                }
+                std::string fileName = folderPath + "/crop_" + std::to_string(frameNum) + "_" + std::to_string(labelIndex) + ".png";
+                save_found_crop(matImg, spImprovedRect, fileName, sizeRect);
             }
         }
-
-        cout << "Succesfully saved all frames." << endl;
     }
-    catch (std::exception& e)
-    {
-        cout << e.what() << endl;
-    }
+    cout << "Succesfully saved all frames." << endl;
 }
 
 void save_video_frames_with_sp2(const std::string netFile, const std::string stateNetFile,
@@ -675,116 +667,154 @@ void save_video_frames_with_sp2(const std::string netFile, const std::string sta
     using namespace dlib;
 
     cout << "Saving frames with help of shape predictor and state net." << endl;
-    try
+
+    test_net_type net;
+    shape_predictor sp;
+    state_test_net_type stateNet;
+
+    deserialize(netFile) >> net >> sp;
+    deserialize(stateNetFile) >> stateNet;
+
+    std::vector<matrix<rgb_pixel>> videoFrames;
+    std::vector<std::vector<mmod_rect>> boxes;
+
+    load_image_dataset(videoFrames, boxes, xmlFile);
+    boxes.clear();
+
+    int frameNum = -1;
+
+    //cv::Mat openCvImg, croppedImage;
+    matrix<rgb_pixel> scaledFrame;
+    Stopwatch stopwatch;
+    int netStopwatch = stopwatch.get_next_stopwatch_id();
+    int stateStopwatch = stopwatch.get_next_stopwatch_id();
+
+    for (matrix<rgb_pixel>& frame : videoFrames)
     {
-        test_net_type net;
-        shape_predictor sp;
-        state_test_net_type stateNet;
+        ++frameNum;
+        scaledFrame = matrix<rgb_pixel>(frame.nr() * scale_factor, frame.nc() * scale_factor);
+        resize_image(frame, scaledFrame);
+        //openCvImg = toMat(scaledFrame);
+        cout << "Processing frame: " << std::to_string(frameNum) << endl;
 
-        deserialize(netFile) >> net >> sp;
-        deserialize(stateNetFile) >> stateNet;
+        stopwatch.start(netStopwatch);
+        std::vector<mmod_rect> detections = net(scaledFrame);
+        stopwatch.stop(netStopwatch);
 
-        std::vector<matrix<rgb_pixel>> videoFrames;
-        std::vector<std::vector<mmod_rect>> boxes;
-
-        load_image_dataset(videoFrames, boxes, xmlFile);
-        boxes.clear();
-
-        int frameNum = -1;
-
-        //cv::Mat openCvImg, croppedImage;
-        matrix<rgb_pixel> scaledFrame;
-        Stopwatch stopwatch;
-        int netStopwatch = stopwatch.get_next_stopwatch_id();
-        int stateStopwatch = stopwatch.get_next_stopwatch_id();
-
-        for (matrix<rgb_pixel>& frame : videoFrames)
+        stopwatch.start(stateStopwatch);
+        //TODO: Paralelize state detection?
+        for (mmod_rect& detection : detections)
         {
-            ++frameNum;
-            scaledFrame = matrix<rgb_pixel>(frame.nr() * scale_factor, frame.nc() * scale_factor);
-            resize_image(frame, scaledFrame);
-            //openCvImg = toMat(scaledFrame);
-            cout << "Processing frame: " << std::to_string(frameNum) << endl;
+            full_object_detection fullObjectDetection = sp(scaledFrame, detection);
 
-	        stopwatch.start(netStopwatch);
-            std::vector<mmod_rect> detections = net(scaledFrame);
-	        stopwatch.stop(netStopwatch);
+            rectangle spImprovedRect;
+            for(unsigned long i = 0; i < fullObjectDetection.num_parts(); ++i)
+                spImprovedRect += fullObjectDetection.part(i);
 
-            stopwatch.start(stateStopwatch);
-            //TODO: Paralelize state detection?
-            for (mmod_rect& detection : detections)
-            {
-                full_object_detection fullObjectDetection = sp(scaledFrame, detection);
+            if (!valid_rectangle(spImprovedRect, scaledFrame))
+                continue;
 
-                rectangle spImprovedRect;
-                for(unsigned long i = 0; i < fullObjectDetection.num_parts(); ++i)
-                    spImprovedRect += fullObjectDetection.part(i);
+            //croppedImage = crop_image(openCvImg, spImprovedRect);
+            //TLState detectedState = get_traffic_light_state(croppedImage);
 
-                if (!valid_rectangle(spImprovedRect, scaledFrame))
-                    continue;
+            matrix<rgb_pixel> foundTrafficLight = crop_image(scaledFrame, spImprovedRect);
+            std::vector<mmod_rect> trafficLightDets = stateNet(foundTrafficLight);
 
-                //croppedImage = crop_image(openCvImg, spImprovedRect);
-                //TLState detectedState = get_traffic_light_state(croppedImage);
-                
-                matrix<rgb_pixel> foundTrafficLight = crop_image(scaledFrame, spImprovedRect);
-                std::vector<mmod_rect> trafficLightDets = stateNet(foundTrafficLight);
+            TLState detectedState = get_detected_state(trafficLightDets, foundTrafficLight);
 
-                TLState detectedState = get_detected_state(trafficLightDets, foundTrafficLight);
-                
-                draw_rectangle(scaledFrame,
-                                spImprovedRect,
-                                get_color_for_state(detectedState),
-                                RECT_WIDTH);
-            }
-            stopwatch.stop(stateStopwatch);
-
-            resize_image(scaledFrame, frame);
-
-	        cout << "Time for network pass: " << std::to_string(stopwatch.elapsed_milliseconds(netStopwatch)) << " ms" << endl;
-            cout << "Time for state detection: " << std::to_string(stopwatch.elapsed_milliseconds(stateStopwatch)) << " ms." << endl;
-            std::string fileName = resultFolder + "/" + std::to_string(frameNum) + ".png";
-            save_png(frame, fileName);
+            draw_rectangle(scaledFrame,
+                            spImprovedRect,
+                            get_color_for_state(detectedState),
+                            RECT_WIDTH);
         }
-    }
-    catch (std::exception& e)
-    {
-        std::cout << e.what() << std::endl;
+        stopwatch.stop(stateStopwatch);
+
+        resize_image(scaledFrame, frame);
+
+        cout << "Time for network pass: " << std::to_string(stopwatch.elapsed_milliseconds(netStopwatch)) << " ms" << endl;
+        cout << "Time for state detection: " << std::to_string(stopwatch.elapsed_milliseconds(stateStopwatch)) << " ms." << endl;
+        std::string fileName = resultFolder + "/" + std::to_string(frameNum) + ".png";
+        save_png(frame, fileName);
     }
 }
 
+void resnet_save_video_frames_with_sp2( const std::string netFile, const std::string stateNetFile,
+                                        const std::string xmlFile, const std::string resultFolder)
+{
+    /*
+    using namespace std;
+    using namespace dlib;
 
+    cout << "Saving frames with help of shape predictor and state net (RESNET)." << endl;
 
+    resnet_test_net_type net;
+    shape_predictor sp;
+    state_test_net_type stateNet;
 
+    deserialize(netFile) >> net >> sp;
+    deserialize(stateNetFile) >> stateNet;
 
+    std::vector<matrix<rgb_pixel>> videoFrames;
+    std::vector<std::vector<mmod_rect>> boxes;
 
+    load_image_dataset(videoFrames, boxes, xmlFile);
+    boxes.clear();
 
+    int frameNum = -1;
 
+    //cv::Mat openCvImg, croppedImage;
+    matrix<rgb_pixel> scaledFrame;
+    Stopwatch stopwatch;
+    int netStopwatch = stopwatch.get_next_stopwatch_id();
+    int stateStopwatch = stopwatch.get_next_stopwatch_id();
 
+    for (matrix<rgb_pixel> &frame : videoFrames) {
+        ++frameNum;
+        scaledFrame = matrix<rgb_pixel>(frame.nr() * scale_factor, frame.nc() * scale_factor);
+        resize_image(frame, scaledFrame);
+        //openCvImg = toMat(scaledFrame);
+        cout << "Processing frame: " << std::to_string(frameNum) << endl;
 
+        stopwatch.start(netStopwatch);
+        std::vector<mmod_rect> detections = net(scaledFrame);
+        stopwatch.stop(netStopwatch);
 
+        stopwatch.start(stateStopwatch);
+        //TODO: Paralelize state detection?
+        for (mmod_rect &detection : detections) {
+            full_object_detection fullObjectDetection = sp(scaledFrame, detection);
 
+            rectangle spImprovedRect;
+            for (unsigned long i = 0; i < fullObjectDetection.num_parts(); ++i)
+                spImprovedRect += fullObjectDetection.part(i);
 
+            if (!valid_rectangle(spImprovedRect, scaledFrame))
+                continue;
 
+            //croppedImage = crop_image(openCvImg, spImprovedRect);
+            //TLState detectedState = get_traffic_light_state(croppedImage);
 
+            matrix<rgb_pixel> foundTrafficLight = crop_image(scaledFrame, spImprovedRect);
+            std::vector<mmod_rect> trafficLightDets = stateNet(foundTrafficLight);
 
+            TLState detectedState = get_detected_state(trafficLightDets, foundTrafficLight);
 
+            draw_rectangle(scaledFrame,
+                           spImprovedRect,
+                           get_color_for_state(detectedState),
+                           RECT_WIDTH);
+        }
+        stopwatch.stop(stateStopwatch);
 
+        resize_image(scaledFrame, frame);
 
+        cout << "Time for network pass: " << std::to_string(stopwatch.elapsed_milliseconds(netStopwatch)) << " ms"
+             << endl;
+        cout << "Time for state detection: " << std::to_string(stopwatch.elapsed_milliseconds(stateStopwatch))
+             << " ms." << endl;
+        std::string fileName = resultFolder + "/" + std::to_string(frameNum) + ".png";
+        save_png(frame, fileName);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    }
+     */
+}

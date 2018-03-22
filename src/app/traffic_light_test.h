@@ -25,6 +25,9 @@ void save_video_frames_with_sp(std::string netFile, std::string xmlFile, std::st
 void save_video_frames_with_sp2(const std::string netFile, const std::string stateNetFile,
                                 const std::string xmlFile, const std::string resultFolder);
 
+void resnet_save_video_frames_with_sp2( const std::string netFile, const std::string stateNetFile,
+                                        const std::string xmlFile, const std::string resultFolder);
+
 void visualize_detection(std::string netFile, std::string imgFile);
 
 std::vector<std::vector<dlib::mmod_rect>> get_detected_rectanges(const std::string netFile, const std::string xmlFile);

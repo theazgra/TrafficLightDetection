@@ -21,7 +21,7 @@ namespace file
 	}
 }
 
-int start_train(const std::string xmlFile, const std::string xmlFile2 = "");
+int start_train(const std::string xmlFile, const std::string xmlFile2 = "", bool resnet = false);
 int start_test(const std::string netFile, const std::string xmlFile, bool display = false, bool displayErr = false);
 int start_train_state(const std::string xmlFile, const std::string outFile);
 int start_train_sp(const std::string netFile, const std::string xmlFile);
@@ -32,7 +32,7 @@ int start_crops(const std::string netFile, const std::string xmlFile, const std:
 int start_sized_crops(const std::string netFile, const std::string xmlFile, const std::string outFolder);
 int start_video(const std::string netFile, const std::string videoFile, const std::string outFolder);
 int start_video_frames(const std::string netFile, const std::string xmlFile, const std::string outFolder);
-int start_video_frames_sp(const std::string netFile, const std::string xmlFile, const std::string outFolder, const std::string stateNetFile = "");
+int start_video_frames_sp(const std::string netFile, const std::string xmlFile, const std::string outFolder, const std::string stateNetFile, bool resnet = false);
 /******************************************************************************************************************/
 int main(int argc, const char* argv[])
 {
@@ -68,6 +68,7 @@ int main(int argc, const char* argv[])
     //args::Group methodGroup(parser, "display arguments", args::Group::Validators::Xor);//Maybe xor
     args::Flag _display(parser, "display", "Display images.", {"display"});
     args::Flag _displayErr(parser, "display-error", "Display only errors.", {"display-error"});
+    args::Flag _resnet(parser, "resner", "Use resnet for trainin/testing", {'r', "resnet"});
 
     try {
         parser.ParseCLI(argc, argv);
@@ -125,7 +126,7 @@ int main(int argc, const char* argv[])
 
 }
 /******************************************************************************************************************/
-int start_train(const std::string xmlFile, const std::string xmlFile2)
+int start_train(const std::string xmlFile, const std::string xmlFile2, bool resnet)
 {
     if (!file::file_exists(xmlFile))
     {
@@ -148,14 +149,20 @@ int start_train(const std::string xmlFile, const std::string xmlFile2)
     Stopwatch stopwatch;
     stopwatch.start();
 
-    switch (TRAINING_METHOD)
+    if (!resnet){
+        switch (TRAINING_METHOD)
+        {
+            case 1:
+                train(xmlFile);
+                break;
+            case 2:
+                train(xmlFile, xmlFile2);
+                break;
+        }
+    }
+    else
     {
-        case 1:
-            train(xmlFile);
-            break;
-        case 2:
-            train(xmlFile, xmlFile2);
-            break;
+        train_resnet(xmlFile);
     }
 
     stopwatch.stop();
@@ -354,7 +361,7 @@ int start_video_frames(const std::string netFile, const std::string xmlFile, con
     return 0;
 }
 /******************************************************************************************************************/
-int start_video_frames_sp(const std::string netFile, const std::string xmlFile, const std::string outFolder, const std::string stateNetFile)
+int start_video_frames_sp(const std::string netFile, const std::string xmlFile, const std::string outFolder, const std::string stateNetFile, bool resnet)
 {
     if (!file::file_exists(netFile))
     {
@@ -369,9 +376,15 @@ int start_video_frames_sp(const std::string netFile, const std::string xmlFile, 
     }
 
     if (file::file_exists(stateNetFile))
-        save_video_frames_with_sp2(netFile, stateNetFile, xmlFile, outFolder);
+    {
+        if (!resnet)
+            save_video_frames_with_sp2(netFile, stateNetFile, xmlFile, outFolder);
+        else
+            resnet_save_video_frames_with_sp2(netFile, stateNetFile, xmlFile, outFolder);
+    }
     else
+    {
         save_video_frames_with_sp(netFile, xmlFile, outFolder);
-
+    }
     return 0;
 }
