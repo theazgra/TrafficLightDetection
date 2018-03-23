@@ -7,6 +7,8 @@
 
 bool load_settings(const char* xmlSettingsFile);
 
+extern float FRAME_SCALING;
+extern bool ONLY_TOP_HALF;
 
 #define MULTIPLE_GPUS
 extern std::vector<int> CUDA_DEVICES;// = {0, 1, 2, 3}; //{0, 1, 2, 3};

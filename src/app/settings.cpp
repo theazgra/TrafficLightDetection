@@ -2,7 +2,8 @@
 // Created by azgra on 17.1.18.
 //
 #include "settings.h"
-
+float FRAME_SCALING = 1.0;
+bool ONLY_TOP_HALF = false;
 std::vector<int> CUDA_DEVICES = std::vector<int>();
 uint BATCH_SIZE = 20;
 uint CHIP_WIDTH = 200;
@@ -60,6 +61,13 @@ bool load_settings(const char* xmlSettingsFile)
 
     xml_node root = document.child("app_settings");
 
+    xml_node testingNode = root.child("testing");
+    FRAME_SCALING = testingNode.child("frame_scale").text().as_float(1.0f);
+    ONLY_TOP_HALF = testingNode.child("only_top_half").text().as_bool(false);
+
+    if (ONLY_TOP_HALF)
+        std::cout << "Cropping top half of image." << std::endl;
+
     //Cuda settings
     xml_node cuda_devices = root.child("cuda_devices");
     for (xml_node cuda_device : cuda_devices.children("device"))
@@ -79,7 +87,7 @@ bool load_settings(const char* xmlSettingsFile)
     RANDOM_ROTATION_ANGLE = cropper.child("random_rotation_angle").text().as_uint(2);
     MAX_OBJECT_SIZE = cropper.child("max_object_size").text().as_float(0.5f);
     BACKGROUND_CROP_FRACTION = cropper.child("background_crop_fraction").text().as_float(0.25f);
-
+/*
     std::cout << "Loaded cropper settings: " << std::endl;
     std::cout << "=============================" << std::endl;
     std::cout << "Batch size: " << BATCH_SIZE << std::endl;
@@ -88,6 +96,7 @@ bool load_settings(const char* xmlSettingsFile)
     std::cout << "Random rotation angle: " << RANDOM_ROTATION_ANGLE << ", max object size: " <<  MAX_OBJECT_SIZE << std::endl;
     std::cout << "Backgroud crop fraction: " << BACKGROUND_CROP_FRACTION << std::endl;
     std::cout << "=============================" << std::endl;
+*/
     //mmod settings
     xml_node mmod = root.child("mmod_settings");
 

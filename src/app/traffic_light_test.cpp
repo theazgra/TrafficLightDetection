@@ -10,7 +10,6 @@
 
 //width used for drawing rectangle
 unsigned int RECT_WIDTH = 3;
-const float scale_factor = 2.0f;
 
 /**
  * Get the number of not ignored label boxes.
@@ -81,7 +80,7 @@ void test(std::string netFile, std::string testFile, TestType testType)
     {
         ++imgIndex;
 
-        scaledImage = matrix<rgb_pixel>(image.nr()*scale_factor, image.nc()*scale_factor);
+        scaledImage = matrix<rgb_pixel>(image.nr()*FRAME_SCALING, image.nc()*FRAME_SCALING);
         resize_image(image, scaledImage);
 
 
@@ -195,7 +194,7 @@ void save_video(std::string netFile, std::string videoFile, std::string resultFo
             matrix<rgb_pixel> imgData;
             assign_image(imgData, dlibImg);
 
-            scaledImage = matrix<rgb_pixel>(imgData.nr() * scale_factor, imgData.nc() * scale_factor);
+            scaledImage = matrix<rgb_pixel>(imgData.nr() * FRAME_SCALING, imgData.nc() * FRAME_SCALING);
             //resize up
             resize_image(imgData, scaledImage);
 
@@ -254,7 +253,7 @@ void save_video_frames(std::string netFile, std::string xmlFile, std::string res
 	    stopwatch.start();
         ++frameNum;
 
-    	scaledFrame = matrix<rgb_pixel>(frame.nr() * scale_factor, frame.nc() * scale_factor);
+    	scaledFrame = matrix<rgb_pixel>(frame.nr() * FRAME_SCALING, frame.nc() * FRAME_SCALING);
 
 	    resize_image(frame, scaledFrame);
         openCvImg = toMat(scaledFrame);
@@ -319,7 +318,7 @@ void save_video_frames_with_sp(std::string netFile, std::string xmlFile, std::st
             stopwatch.start();
             ++frameNum;
 
-            scaledFrame = matrix<rgb_pixel>(frame.nr() * scale_factor, frame.nc() * scale_factor);
+            scaledFrame = matrix<rgb_pixel>(frame.nr() * FRAME_SCALING, frame.nc() * FRAME_SCALING);
 
             resize_image(frame, scaledFrame);
             openCvImg = toMat(scaledFrame);
@@ -631,7 +630,7 @@ void save_detected_objects(const std::string netFile, const std::string xmlFile,
     {
         ++frameNum;
 
-        scaledFrame = matrix<rgb_pixel>(frame.nr() * scale_factor, frame.nc() * scale_factor);
+        scaledFrame = matrix<rgb_pixel>(frame.nr() * FRAME_SCALING, frame.nc() * FRAME_SCALING);
 
         resize_image(frame, scaledFrame);
 
@@ -694,7 +693,7 @@ void save_video_frames_with_sp2(const std::string netFile, const std::string sta
     int frameNum = -1;
 
     //cv::Mat openCvImg, croppedImage;
-    matrix<rgb_pixel> scaledFrame;
+    matrix<rgb_pixel> scaledFrame, topHalfCrop, scaledTopHalfCrop;
 
     int locationDetectionStopwatch = stopwatch.get_next_stopwatch_id();
     int stateDetectionStopwatch = stopwatch.get_next_stopwatch_id();
@@ -705,14 +704,31 @@ void save_video_frames_with_sp2(const std::string netFile, const std::string sta
         stopwatch.start_new_lap(wholeFrameOperationStopwatch);
 
         ++frameNum;
-        scaledFrame = matrix<rgb_pixel>(frame.nr() * scale_factor, frame.nc() * scale_factor);
-        resize_image(frame, scaledFrame);
+
+        if (ONLY_TOP_HALF)
+        {
+            rectangle cropRect(0, 0, frame.nc(), (frame.nr() / 2));
+            topHalfCrop = crop_image(frame, cropRect, true);
+
+            scaledTopHalfCrop = matrix<rgb_pixel>(topHalfCrop.nr() * FRAME_SCALING, topHalfCrop.nc() * FRAME_SCALING);
+            resize_image(topHalfCrop, scaledTopHalfCrop);
+        }
+        else
+        {
+            scaledFrame = matrix<rgb_pixel>(frame.nr() * FRAME_SCALING, frame.nc() * FRAME_SCALING);
+            resize_image(frame, scaledFrame);
+        }
 
         cout << "Processing frame: " << std::to_string(frameNum) << endl;
 
         stopwatch.start_new_lap(locationDetectionStopwatch);
 
-        std::vector<mmod_rect> detections = net(scaledFrame);
+        std::vector<mmod_rect> detections;
+
+        if (ONLY_TOP_HALF)
+            detections = net(scaledTopHalfCrop);
+        else
+            detections = net(scaledFrame);
 
         stopwatch.end_lap(locationDetectionStopwatch);
 
@@ -720,33 +736,66 @@ void save_video_frames_with_sp2(const std::string netFile, const std::string sta
         //TODO: Paralelize state detection?
         for (mmod_rect& detection : detections)
         {
-            full_object_detection fullObjectDetection = sp(scaledFrame, detection);
+            if (ONLY_TOP_HALF)
+            {
+                full_object_detection fullObjectDetection = sp(scaledTopHalfCrop, detection);
 
-            rectangle spImprovedRect;
-            for(unsigned long i = 0; i < fullObjectDetection.num_parts(); ++i)
-                spImprovedRect += fullObjectDetection.part(i);
+                rectangle spImprovedRect;
+                for(unsigned long i = 0; i < fullObjectDetection.num_parts(); ++i)
+                    spImprovedRect += fullObjectDetection.part(i);
 
-            if (!valid_rectangle(spImprovedRect, scaledFrame))
-                continue;
+                if (!valid_rectangle(spImprovedRect, scaledTopHalfCrop))
+                    continue;
 
-            matrix<rgb_pixel> foundTrafficLight = crop_image(scaledFrame, spImprovedRect);
-            std::vector<mmod_rect> trafficLightDets = stateNet(foundTrafficLight);
+                matrix<rgb_pixel> foundTrafficLight = crop_image(scaledTopHalfCrop, spImprovedRect);
+                std::vector<mmod_rect> trafficLightDets = stateNet(foundTrafficLight);
 
-            TLState detectedState = get_detected_state(trafficLightDets, foundTrafficLight);
+                TLState detectedState = get_detected_state(trafficLightDets, foundTrafficLight);
 
-            draw_rectangle(scaledFrame,
-                            spImprovedRect,
-                            get_color_for_state(detectedState),
-                            RECT_WIDTH);
+                draw_rectangle(scaledTopHalfCrop,
+                               spImprovedRect,
+                               get_color_for_state(detectedState),
+                               RECT_WIDTH);
+            }
+            else
+            {
+
+                full_object_detection fullObjectDetection = sp(scaledFrame, detection);
+
+                rectangle spImprovedRect;
+                for(unsigned long i = 0; i < fullObjectDetection.num_parts(); ++i)
+                    spImprovedRect += fullObjectDetection.part(i);
+
+                if (!valid_rectangle(spImprovedRect, scaledFrame))
+                    continue;
+
+                matrix<rgb_pixel> foundTrafficLight = crop_image(scaledFrame, spImprovedRect);
+                std::vector<mmod_rect> trafficLightDets = stateNet(foundTrafficLight);
+
+                TLState detectedState = get_detected_state(trafficLightDets, foundTrafficLight);
+
+                draw_rectangle(scaledFrame,
+                                spImprovedRect,
+                                get_color_for_state(detectedState),
+                                RECT_WIDTH);
+            }
         }
         stopwatch.end_lap(stateDetectionStopwatch);
 
-        resize_image(scaledFrame, frame);
+        if (ONLY_TOP_HALF)
+            resize_image(scaledTopHalfCrop, topHalfCrop);
+        else
+            resize_image(scaledFrame, frame);
 
         stopwatch.end_lap(wholeFrameOperationStopwatch);
 
         std::string fileName = resultFolder + "/" + std::to_string(frameNum) + ".png";
-        save_png(frame, fileName);
+
+        if (ONLY_TOP_HALF)
+            save_png(frame, topHalfCrop);
+        else
+            save_png(frame, fileName);
+
     }
 
     //Info print
@@ -789,7 +838,7 @@ void resnet_save_video_frames_with_sp2( const std::string netFile, const std::st
 
     for (matrix<rgb_pixel> &frame : videoFrames) {
         ++frameNum;
-        scaledFrame = matrix<rgb_pixel>(frame.nr() * scale_factor, frame.nc() * scale_factor);
+        scaledFrame = matrix<rgb_pixel>(frame.nr() * FRAME_SCALING, frame.nc() * FRAME_SCALING);
         resize_image(frame, scaledFrame);
         //openCvImg = toMat(scaledFrame);
         cout << "Processing frame: " << std::to_string(frameNum) << endl;
