@@ -792,7 +792,7 @@ void save_video_frames_with_sp2(const std::string netFile, const std::string sta
         std::string fileName = resultFolder + "/" + std::to_string(frameNum) + ".png";
 
         if (ONLY_TOP_HALF)
-            save_png(frame, topHalfCrop);
+            save_png(topHalfCrop, fileName);
         else
             save_png(frame, fileName);
 
