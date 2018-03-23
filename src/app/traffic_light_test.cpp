@@ -667,41 +667,56 @@ void save_video_frames_with_sp2(const std::string netFile, const std::string sta
     using namespace dlib;
 
     cout << "Saving frames with help of shape predictor and state net." << endl;
+    Stopwatch stopwatch;
 
     test_net_type net;
     shape_predictor sp;
     state_test_net_type stateNet;
 
+    int deserializeStopwatch = stopwatch.start_new_stopwatch();
+
     deserialize(netFile) >> net >> sp;
     deserialize(stateNetFile) >> stateNet;
+
+    stopwatch.stop(deserializeStopwatch);
+
 
     std::vector<matrix<rgb_pixel>> videoFrames;
     std::vector<std::vector<mmod_rect>> boxes;
 
+    int loadingStopwatch = stopwatch.start_new_stopwatch();
+
     load_image_dataset(videoFrames, boxes, xmlFile);
+
+    stopwatch.stop(loadingStopwatch);
     boxes.clear();
 
     int frameNum = -1;
 
     //cv::Mat openCvImg, croppedImage;
     matrix<rgb_pixel> scaledFrame;
-    Stopwatch stopwatch;
-    int netStopwatch = stopwatch.get_next_stopwatch_id();
-    int stateStopwatch = stopwatch.get_next_stopwatch_id();
+
+    int locationDetectionStopwatch = stopwatch.get_next_stopwatch_id();
+    int stateDetectionStopwatch = stopwatch.get_next_stopwatch_id();
+    int wholeFrameOperationStopwatch = stopwatch.get_next_stopwatch_id();
 
     for (matrix<rgb_pixel>& frame : videoFrames)
     {
+        stopwatch.start_new_lap(wholeFrameOperationStopwatch);
+
         ++frameNum;
         scaledFrame = matrix<rgb_pixel>(frame.nr() * scale_factor, frame.nc() * scale_factor);
         resize_image(frame, scaledFrame);
-        //openCvImg = toMat(scaledFrame);
+
         cout << "Processing frame: " << std::to_string(frameNum) << endl;
 
-        stopwatch.start(netStopwatch);
-        std::vector<mmod_rect> detections = net(scaledFrame);
-        stopwatch.stop(netStopwatch);
+        stopwatch.start_new_lap(locationDetectionStopwatch);
 
-        stopwatch.start(stateStopwatch);
+        std::vector<mmod_rect> detections = net(scaledFrame);
+
+        stopwatch.end_lap(locationDetectionStopwatch);
+
+        stopwatch.start_new_lap(stateDetectionStopwatch);
         //TODO: Paralelize state detection?
         for (mmod_rect& detection : detections)
         {
@@ -714,9 +729,6 @@ void save_video_frames_with_sp2(const std::string netFile, const std::string sta
             if (!valid_rectangle(spImprovedRect, scaledFrame))
                 continue;
 
-            //croppedImage = crop_image(openCvImg, spImprovedRect);
-            //TLState detectedState = get_traffic_light_state(croppedImage);
-
             matrix<rgb_pixel> foundTrafficLight = crop_image(scaledFrame, spImprovedRect);
             std::vector<mmod_rect> trafficLightDets = stateNet(foundTrafficLight);
 
@@ -727,15 +739,22 @@ void save_video_frames_with_sp2(const std::string netFile, const std::string sta
                             get_color_for_state(detectedState),
                             RECT_WIDTH);
         }
-        stopwatch.stop(stateStopwatch);
+        stopwatch.end_lap(stateDetectionStopwatch);
 
         resize_image(scaledFrame, frame);
 
-        cout << "Time for network pass: " << std::to_string(stopwatch.elapsed_milliseconds(netStopwatch)) << " ms" << endl;
-        cout << "Time for state detection: " << std::to_string(stopwatch.elapsed_milliseconds(stateStopwatch)) << " ms." << endl;
+        stopwatch.end_lap(wholeFrameOperationStopwatch);
+
         std::string fileName = resultFolder + "/" + std::to_string(frameNum) + ".png";
         save_png(frame, fileName);
     }
+
+    //Info print
+    cout << "Average times in milliseconds for operations: " << endl;
+    cout << "Traffic light location detection: " << stopwatch.average_lap_time_in_milliseconds(locationDetectionStopwatch) << " ms." << endl;
+    cout << "Traffic light state detection: " << stopwatch.average_lap_time_in_milliseconds(stateDetectionStopwatch) << " ms." << endl;
+    cout << "Whole operation (scaling): " << stopwatch.average_lap_time_in_milliseconds(wholeFrameOperationStopwatch) << " ms." << endl;
+
 }
 
 void resnet_save_video_frames_with_sp2( const std::string netFile, const std::string stateNetFile,

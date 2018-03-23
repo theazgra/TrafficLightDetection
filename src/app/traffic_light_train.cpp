@@ -461,8 +461,10 @@ void train_resnet(const std::string trainFile)
     using namespace std;
     using namespace dlib;
 
+    /*
     try
     {
+
         std::vector<matrix<rgb_pixel>>      trainingImages;
         std::vector<std::vector<mmod_rect>> trainingBoxes;
 
@@ -487,6 +489,7 @@ void train_resnet(const std::string trainFile)
             }
         }
 
+
         cout << "Number of boxes ignored because of overlapping: " << overlappingBoxesCount << endl;
         cout << "Number of boxes ignored because both sides are smaller than " << MIN_BOUNDING_BOX_SIZE << " : " << tooSmallBoxesCount << endl;
 
@@ -497,6 +500,7 @@ void train_resnet(const std::string trainFile)
         options.overlaps_ignore = test_box_overlap(OVERLAP_IOU, COVERED_THRESHOLD);
 
         cout << "Number of detector windows " << options.detector_windows.size() << endl;
+
         resnet_net_type net(options);
 
         net.subnet().layer_details().set_num_filters(options.detector_windows.size());
@@ -506,6 +510,7 @@ void train_resnet(const std::string trainFile)
 #else
         dnn_trainer<resnet_net_type> trainer(net, sgd(SGD_WEIGHT_DECAY, SGD_MOMENTUM));
 #endif
+
 
         trainer.be_verbose();
         trainer.set_learning_rate(LEARNING_RATE);
@@ -553,6 +558,7 @@ void train_resnet(const std::string trainFile)
 
         cout << "Training is completed." << endl;
         cout << "Training results: " << test_object_detection_function(net, trainingImages, trainingBoxes, test_box_overlap(), 0, options.overlaps_ignore) << endl;
+
     }
     catch (std::exception& e)
     {
@@ -560,6 +566,7 @@ void train_resnet(const std::string trainFile)
         cout << e.what() << endl;
         cout << "*******************" << endl;
     }
+*/
 }
 
 

@@ -78,8 +78,9 @@ template <typename SUBNET> using ares      = relu<residual<block,8,affine,SUBNET
 template <typename SUBNET> using res_down  = relu<residual_down<block,8,bn_con,SUBNET>>;
 template <typename SUBNET> using ares_down = relu<residual_down<block,8,affine,SUBNET>>;
 
-using resnet_net_type = loss_mmod<con<1,9,9,1,1,res<res<res<res_down<repeat<9,res,res_down<res<con5d<16, input_rgb_image_pyramid<pyramid_down<6>>>>>>>>>>>>;
-//using resnet_net_type=loss_mmod<con<1,9,9,1,1,con<25,5,5,1,1,con<20,5,5,2,2,input_rgb_image_pyramid<pyramid_down<6>>>>>>;
+using resnet_net_type = loss_mmod<con<1,9,9,1,1, res<res<res<res_down<repeat<9,res,res_down<res<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>>>>;
+//using resnet_net_type = loss_multiclass_log<fc<1,avg_pool_everything<res<res<res<res_down<repeat<9,res,res_down<res<input<matrix<unsigned char>>>>>>>>>>>>;
+
 
 using resnet_test_net_type = 
 loss_mmod<con<1,9,9,1,1,avg_pool_everything<ares<ares<ares<ares_down<repeat<9, ares, ares_down<ares<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>>>>>;
