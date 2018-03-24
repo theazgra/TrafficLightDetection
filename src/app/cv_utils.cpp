@@ -563,7 +563,7 @@ cv::Mat crop_image(const cv::Mat & mat, const dlib::rectangle& cropRectangle)
 dlib::matrix<dlib::rgb_pixel> crop_image(const dlib::matrix<dlib::rgb_pixel> &original, const dlib::rectangle& cropRectangle, bool exactCrop)
 {
     dlib::chip_details chipDetail;
-    if (exactCrop)
+   /* if (exactCrop)
     {
         if (cropRectangle.width() < 6 || cropRectangle.height() < 6)
             throw new std::runtime_error("Cannot size down that small rectangle!");
@@ -572,7 +572,8 @@ dlib::matrix<dlib::rgb_pixel> crop_image(const dlib::matrix<dlib::rgb_pixel> &or
     }
 
     else
-        chipDetail = dlib::chip_details(cropRectangle);
+	*/
+    chipDetail = dlib::chip_details(cropRectangle);
 
     dlib::matrix<dlib::rgb_pixel> crop;
 
@@ -684,3 +685,16 @@ void convert_to_grayscale(dlib::array2d<dlib::rgb_pixel>& image)
         }
     }
 }
+
+
+dlib::rectangle transform_rectangle_back(const dlib::rectangle& rect, const float scaleFactor)
+{
+	float scaleBackFactor = 1.0f / scaleFactor;
+	long newLeft = rect.tl_corner().x() * scaleBackFactor;
+	long newTop = rect.tl_corner().y() * scaleBackFactor;
+	long newWidth = rect.width() * scaleBackFactor;
+	long newHeight = rect.height() * scaleBackFactor;
+
+	return dlib::rectangle(newLeft, newTop, newLeft + newWidth, newTop + newHeight);
+}
+

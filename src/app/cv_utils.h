@@ -68,6 +68,8 @@ crop_image(const dlib::matrix<dlib::rgb_pixel> &original, const dlib::rectangle&
 bool valid_rectangle(const dlib::rectangle& rect, const cv::Mat& img);
 bool valid_rectangle(const dlib::rectangle& rect, const dlib::matrix<dlib::rgb_pixel>& img);
 
+dlib::rectangle transform_rectangle_back(const dlib::rectangle& rect, const float scaleFactor);
+
 void convert_to_grayscale(dlib::matrix<dlib::rgb_pixel>& image);
 void convert_to_grayscale(dlib::array2d<dlib::rgb_pixel>& image);
 

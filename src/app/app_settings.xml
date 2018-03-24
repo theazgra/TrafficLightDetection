@@ -3,7 +3,7 @@
     <testing>
         <frame_scale>2.0</frame_scale>
         <!-- true or false -->
-        <only_top_half>false</only_top_half>
+        <only_top_half>true</only_top_half>
     </testing>
     <cuda_devices>
         <device>0</device>

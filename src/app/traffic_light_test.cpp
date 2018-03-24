@@ -707,11 +707,13 @@ void save_video_frames_with_sp2(const std::string netFile, const std::string sta
 
         if (ONLY_TOP_HALF)
         {
-            rectangle cropRect(0, 0, frame.nc(), (frame.nr() / 2));
-            topHalfCrop = crop_image(frame, cropRect, true);
+            scaledFrame = matrix<rgb_pixel>(frame.nr() * FRAME_SCALING, frame.nc() * FRAME_SCALING);
+            rectangle cropRect(0, 0, scaledFrame.nc(), (scaledFrame.nr() / 2));
+            resize_image(frame, scaledFrame);
+            scaledTopHalfCrop = crop_image(scaledFrame, cropRect, true);
 
-            scaledTopHalfCrop = matrix<rgb_pixel>(topHalfCrop.nr() * FRAME_SCALING, topHalfCrop.nc() * FRAME_SCALING);
-            resize_image(topHalfCrop, scaledTopHalfCrop);
+            //scaledTopHalfCrop = matrix<rgb_pixel>(topHalfCrop.nr() * FRAME_SCALING, topHalfCrop.nc() * FRAME_SCALING);
+            //resize_image(topHalfCrop, scaledTopHalfCrop);
         }
         else
         {
@@ -752,8 +754,8 @@ void save_video_frames_with_sp2(const std::string netFile, const std::string sta
 
                 TLState detectedState = get_detected_state(trafficLightDets, foundTrafficLight);
 
-                draw_rectangle(scaledTopHalfCrop,
-                               spImprovedRect,
+                draw_rectangle(frame,
+                               transform_rectangle_back(spImprovedRect, FRAME_SCALING),
                                get_color_for_state(detectedState),
                                RECT_WIDTH);
             }
@@ -783,7 +785,9 @@ void save_video_frames_with_sp2(const std::string netFile, const std::string sta
         stopwatch.end_lap(stateDetectionStopwatch);
 
         if (ONLY_TOP_HALF)
-            resize_image(scaledTopHalfCrop, topHalfCrop);
+        {
+		//resize_image(scaledTopHalfCrop, topHalfCrop);
+	}
         else
             resize_image(scaledFrame, frame);
 
@@ -792,7 +796,7 @@ void save_video_frames_with_sp2(const std::string netFile, const std::string sta
         std::string fileName = resultFolder + "/" + std::to_string(frameNum) + ".png";
 
         if (ONLY_TOP_HALF)
-            save_png(topHalfCrop, fileName);
+            save_png(frame, fileName);
         else
             save_png(frame, fileName);
 
