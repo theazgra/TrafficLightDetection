@@ -3,12 +3,6 @@
 
 //#define WINDOW
 
-/**
- * Taken from http://dlib.net/dnn_mmod_train_find_cars_ex.cpp.html
- * @param boxes Vector of bounding boxes.
- * @param overlaps Function which determines if two boxes overlaps.
- * @return Number of ignored boxes.
- */
 int overlapped_boxes_count(std::vector<mmod_rect> boxes, const test_box_overlap& overlaps)
 {
     int num_ignored = 0;
@@ -37,8 +31,7 @@ int overlapped_boxes_count(std::vector<mmod_rect> boxes, const test_box_overlap&
 
     return num_ignored;
 }
-
-
+/*********************************************************************************************************************************************************/
 void train(const std::string trainFile)
 {
     using namespace std;
@@ -146,7 +139,7 @@ void train(const std::string trainFile)
         cout << "*******************" << endl;
     }
 }
-
+/*********************************************************************************************************************************************************/
 void train(const std::string trainFile, const std::string testFile)
 {
     using namespace std;
@@ -285,7 +278,7 @@ void train(const std::string trainFile, const std::string testFile)
         cout << "*******************" << endl;
     }
 }
-
+/*********************************************************************************************************************************************************/
 void train_shape_predictor(const std::string netFile, const std::string xmlFile)
 {
     using namespace std;
@@ -352,7 +345,7 @@ void train_shape_predictor(const std::string netFile, const std::string xmlFile)
     }
 
 }
-
+/*********************************************************************************************************************************************************/
 void train_state(const std::string trainFile, const std::string outFile)
 {
     using namespace dlib;
@@ -455,7 +448,7 @@ void train_state(const std::string trainFile, const std::string outFile)
         cout << "*******************" << endl;
     }
 }
-
+/*********************************************************************************************************************************************************/
 void train_resnet(const std::string trainFile)
 {
     using namespace std;
@@ -568,31 +561,3 @@ void train_resnet(const std::string trainFile)
     }
 */
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

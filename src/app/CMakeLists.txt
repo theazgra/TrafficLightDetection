@@ -7,9 +7,9 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES pugi_xml main.cpp net_definition.h settings.h settings.cpp traffic_light_train.cpp traffic_light_train.h
-        cropper_test.cpp cropper_test.h utils.cpp utils.h traffic_light_test.cpp traffic_light_test.h cv_utils.cpp cv_utils.h
-        Logger.cpp Logger.h Stopwatch.cpp Stopwatch.h)
+set(SOURCE_FILES extern_files/pugixml.cpp extern_files/args.hxx main.cpp net_definition.h settings.h settings.cpp traffic_light_train.cpp traffic_light_train.h
+        cropper_test.cpp cropper_test.h traffic_light_test.cpp traffic_light_test.h cv_utils.cpp cv_utils.h
+        Logger.cpp Logger.h Stopwatch.cpp Stopwatch.h main.h)
 #set(SOURCE_FILES main.cpp cropper_test.cpp cropper_test.h settings.h)
 
 add_executable(tld ${SOURCE_FILES})

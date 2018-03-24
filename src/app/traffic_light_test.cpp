@@ -28,29 +28,7 @@ int number_of_label_boxes(std::vector<dlib::mmod_rect> boxes)
 
     return count;
 }
-
-bool valid_rectangle(const dlib::rectangle& rect, const dlib::matrix<dlib::rgb_pixel>& img)
-{
-    if (rect.left() < 0 || rect.width() < 0 || rect.top() < 0 || rect.height() < 0)
-        return false;
-
-    if (rect.right() > img.nc() || rect.width() > img.nc() || rect.bottom() > img.nr() || rect.height() > img.nr())
-        return false;
-
-    return true;
-}
-
-bool valid_rectangle(const dlib::rectangle& rect, const cv::Mat& img)
-{
-    if (rect.left() < 0 || rect.width() < 0 || rect.top() < 0 || rect.height() < 0)
-        return false;
-
-    if (rect.right() > img.cols || rect.width() > img.cols || rect.bottom() > img.rows || rect.height() > img.rows)
-        return false;
-
-    return true;
-}
-
+/*********************************************************************************************************************************************************/
 void test(std::string netFile, std::string testFile, TestType testType)
 {
     using namespace std;
@@ -158,7 +136,7 @@ void test(std::string netFile, std::string testFile, TestType testType)
     cout << "==============================================" << endl;
 
 }
-
+/*********************************************************************************************************************************************************/
 void save_video(std::string netFile, std::string videoFile, std::string resultFolder)
 {
     using namespace dlib;
@@ -226,7 +204,7 @@ void save_video(std::string netFile, std::string videoFile, std::string resultFo
         logger.write_line(e.what());
     }
 }
-
+/*********************************************************************************************************************************************************/
 void save_video_frames(std::string netFile, std::string xmlFile, std::string resultFolder)
 {
     using namespace std;
@@ -283,7 +261,7 @@ void save_video_frames(std::string netFile, std::string xmlFile, std::string res
 
     logger.write_line("Succesfully saved all frames.");
 }
-
+/*********************************************************************************************************************************************************/
 void save_video_frames_with_sp(std::string netFile, std::string xmlFile, std::string resultFolder)
 {
     //TODO: (Moravec) count states to remove flickering.
@@ -377,7 +355,7 @@ void save_video_frames_with_sp(std::string netFile, std::string xmlFile, std::st
         logger.write_line(e.what());
     }
 }
-
+/*********************************************************************************************************************************************************/
 std::vector<std::vector<dlib::mmod_rect>> get_detected_rectanges(const std::string netFile, const std::string xmlFile)
 {
     using namespace dlib;
@@ -403,7 +381,7 @@ std::vector<std::vector<dlib::mmod_rect>> get_detected_rectanges(const std::stri
 
     return detections;
 }
-
+/*********************************************************************************************************************************************************/
 void visualize_detection(std::string netFile, std::string imgFile)
 {
 	using namespace dlib;
@@ -529,7 +507,7 @@ void visualize_detection(std::string netFile, std::string imgFile)
     std::cout << "Hit enter to end program" << std::endl;
     std::cin.get();
 }
-
+/*********************************************************************************************************************************************************/
 TLState detect_state(const std::string netFile, const dlib::matrix<dlib::rgb_pixel> dlibImg)
 {
     using namespace dlib;
@@ -562,7 +540,7 @@ TLState detect_state(const std::string netFile, const dlib::matrix<dlib::rgb_pix
 
     return Inactive;
 }
-
+/*********************************************************************************************************************************************************/
 TLState get_detected_state(const std::vector<dlib::mmod_rect>& detections, const dlib::matrix<dlib::rgb_pixel>& image)
 {
     Logger logger("state_detection_log.txt");
@@ -602,8 +580,7 @@ TLState get_detected_state(const std::vector<dlib::mmod_rect>& detections, const
 
     return Ambiguous;
 }
-
-
+/*********************************************************************************************************************************************************/
 void save_detected_objects(const std::string netFile, const std::string xmlFile, const std::string folderPath, dlib::rectangle sizeRect)
 {
     using namespace std;
@@ -658,7 +635,7 @@ void save_detected_objects(const std::string netFile, const std::string xmlFile,
     }
     cout << "Succesfully saved all frames." << endl;
 }
-
+/*********************************************************************************************************************************************************/
 void save_video_frames_with_sp2(const std::string netFile, const std::string stateNetFile,
                                 const std::string xmlFile, const std::string resultFolder)
 {
@@ -809,7 +786,7 @@ void save_video_frames_with_sp2(const std::string netFile, const std::string sta
     cout << "Whole operation (scaling): " << stopwatch.average_lap_time_in_milliseconds(wholeFrameOperationStopwatch) << " ms." << endl;
 
 }
-
+/*********************************************************************************************************************************************************/
 void resnet_save_video_frames_with_sp2( const std::string netFile, const std::string stateNetFile,
                                         const std::string xmlFile, const std::string resultFolder)
 {

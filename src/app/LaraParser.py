@@ -1,3 +1,7 @@
+"""@package LaraParser
+    Python script to parse Lara ground truth to imglab xml format.
+"""
+
 import xml.etree.ElementTree as ET
 
 class Rectangle(object):

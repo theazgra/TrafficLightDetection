@@ -40,7 +40,7 @@ int thread_count = 6;
 dlib::mutex count_mutex;
 dlib::signaler count_signaler(count_mutex);
 
-void show(cv::Mat & img, std::string winName = "")
+void show(cv::Mat & img, std::string winName)
 {
     if (winName == "")
         winName = "Window";
@@ -49,7 +49,14 @@ void show(cv::Mat & img, std::string winName = "")
     cv::imshow(winName, img);
     cv::waitKey(0);
 }
-
+/*********************************************************************************************************************************************************/
+void show(dlib::matrix<dlib::rgb_pixel>& image)
+{
+    dlib::image_window window;
+    window.set_image(image);
+    window.wait_until_closed();
+}
+/*********************************************************************************************************************************************************/
 bool all_below_or_equal(std::vector<float> values, float threshold)
 {
     for (float val : values)
@@ -61,7 +68,7 @@ bool all_below_or_equal(std::vector<float> values, float threshold)
     }
     return true;
 }
-
+/*********************************************************************************************************************************************************/
 bool all_over_or_equal(std::vector<float> values, float threshold)
 {
     for (float val : values)
@@ -73,6 +80,7 @@ bool all_over_or_equal(std::vector<float> values, float threshold)
     }
     return true;
 }
+/*********************************************************************************************************************************************************/
 std::string translate_TL_state(TLState state)
 {
     switch (state)
@@ -93,7 +101,7 @@ std::string translate_TL_state(TLState state)
 	    return "Error";
     }
 }
-
+/*********************************************************************************************************************************************************/
 long best_contour(std::vector<std::vector<cv::Point>> &contours, std::vector<cv::Vec4i>& hierarchy)
 {
     long bestSize = 0;
@@ -117,7 +125,7 @@ long best_contour(std::vector<std::vector<cv::Point>> &contours, std::vector<cv:
     //std::cout << "Best: " << bestSize << std::endl;
     return best_id;
 }
-
+/*********************************************************************************************************************************************************/
 TLState get_most_possible_state(std::vector<std::pair<TLState, float>> states)
 {
     TLState mostPossibleState = Inactive;
@@ -134,8 +142,7 @@ TLState get_most_possible_state(std::vector<std::pair<TLState, float>> states)
 
     return mostPossibleState;
 }
-
-
+/*********************************************************************************************************************************************************/
 void fix_mask(cv::Mat1b &mask)
 {
     int fromCol = (int)((mask.cols / 2.0f) - (mask.cols * 0.25f));
@@ -181,8 +188,7 @@ void fix_mask(cv::Mat1b &mask)
         mask = mask | fixMask;
     }
 }
-
-
+/*********************************************************************************************************************************************************/
 float get_average_brightness(cv::Mat & img)
 {
     float brightness = 0.0f;
@@ -198,7 +204,7 @@ float get_average_brightness(cv::Mat & img)
     return brightness;
 
 }
-
+/*********************************************************************************************************************************************************/
 float get_mask_coverage(HsvTestParam * partInfo)
 {
     long whitePixelCount = 0;
@@ -218,7 +224,7 @@ float get_mask_coverage(HsvTestParam * partInfo)
 
     return coveragePerc;
 }
-
+/*********************************************************************************************************************************************************/
 void hsvTest(void *param)
 {
     using namespace cv;
@@ -243,7 +249,7 @@ void hsvTest(void *param)
     count_signaler.signal();
 #endif
 }
-
+/*********************************************************************************************************************************************************/
 void grayScaleTest(void * param)
 {
     GrayScaleTestParam * info = (GrayScaleTestParam*)param;
@@ -256,7 +262,7 @@ void grayScaleTest(void * param)
 #endif
 
 }
-
+/*********************************************************************************************************************************************************/
 std::pair<int, int> find_vertical_boundaries(cv::Mat1b & img)
 {
     int top = -1;
@@ -298,7 +304,7 @@ std::pair<int, int> find_vertical_boundaries(cv::Mat1b & img)
 
     return std::make_pair(top, bottom);
 };
-
+/*********************************************************************************************************************************************************/
 float get_sum_in_range(cv::Mat &img, int lowRow, int highRow, int lowCol, int highCol, int &pixelCount)
 {
     float brightness = 0.0f;
@@ -314,8 +320,8 @@ float get_sum_in_range(cv::Mat &img, int lowRow, int highRow, int lowCol, int hi
 
     return brightness;
 }
-
-bool should_mask_contour(cv::Mat & grayImg)
+/*********************************************************************************************************************************************************/
+bool should_remove_background(cv::Mat &grayImg)
 {
     float bordersBrigthness  = 0.0f;
 
@@ -336,14 +342,13 @@ bool should_mask_contour(cv::Mat & grayImg)
 
     return (bordersBrigthness > centerBrightness);
 }
-
-
+/*********************************************************************************************************************************************************/
 void remove_background(cv::Mat & grayImg, cv::Mat & hsvImg, bool verbose)
 {
     using namespace cv;
     using namespace std;
 
-    if (should_mask_contour(grayImg))
+    if (should_remove_background(grayImg))
     {
         Mat1b contour, maskedImage;
         Mat hsvMasked, thresholdOut;
@@ -380,7 +385,7 @@ void remove_background(cv::Mat & grayImg, cv::Mat & hsvImg, bool verbose)
         hsvImg = hsvMasked;
     }
 }
-
+/*********************************************************************************************************************************************************/
 bool clear_hsv_test(float top, float middle, float bottom)
 {
     float threshold = 0.1f;
@@ -393,15 +398,8 @@ bool clear_hsv_test(float top, float middle, float bottom)
 
     return false;
 }
-
-TLState get_traffic_light_state2(dlib::matrix<dlib::rgb_pixel> dlibImg, bool verbose)
-{
-    //DLIB IMAGE IS IN RGB!
-
-    cv::Mat dlibMatImg = dlib::toMat(dlibImg);
-    return get_traffic_light_state(dlibMatImg, verbose);
-}
-
+/*********************************************************************************************************************************************************/
+/*********************************************************************************************************************************************************/
 bool is_orange(float grayTop, float grayMiddle, float grayBottom, float hsvTop, float hsvMiddle, float hsvBottom)
 {
     if (all_below_or_equal({hsvTop, hsvMiddle, hsvBottom}, 0))
@@ -415,7 +413,7 @@ bool is_orange(float grayTop, float grayMiddle, float grayBottom, float hsvTop, 
 
     return false;
 }
-
+/*********************************************************************************************************************************************************/
 TLState get_traffic_light_state(cv::Mat & img, bool verbose)
 {
     using namespace cv;
@@ -539,7 +537,7 @@ TLState get_traffic_light_state(cv::Mat & img, bool verbose)
     return grayScaleTest;
 
 }
-
+/*********************************************************************************************************************************************************/
 void save_found_crop(cv::Mat & mat, dlib::mmod_rect rectangle, int imgIndex, int labelIndex)
 {
     cv::Mat cropped = crop_image(mat, rectangle);
@@ -551,7 +549,7 @@ void save_found_crop(cv::Mat & mat, dlib::mmod_rect rectangle, int imgIndex, int
     std::cout << "Saving: " << fn << std::endl;
     cv::imwrite(fn , cropped);
 }
-
+/*********************************************************************************************************************************************************/
 cv::Mat crop_image(const cv::Mat & mat, const dlib::rectangle& cropRectangle)
 {
     cv::Rect roi(cropRectangle.left(), cropRectangle.top(), cropRectangle.width(), cropRectangle.height());
@@ -559,7 +557,7 @@ cv::Mat crop_image(const cv::Mat & mat, const dlib::rectangle& cropRectangle)
 
     return cropped;
 }
-
+/*********************************************************************************************************************************************************/
 dlib::matrix<dlib::rgb_pixel> crop_image(const dlib::matrix<dlib::rgb_pixel> &original, const dlib::rectangle& cropRectangle, bool exactCrop)
 {
     dlib::chip_details chipDetail;
@@ -581,7 +579,7 @@ dlib::matrix<dlib::rgb_pixel> crop_image(const dlib::matrix<dlib::rgb_pixel> &or
 
     return crop;
 }
-
+/*********************************************************************************************************************************************************/
 dlib::rgb_pixel get_color_for_state(TLState state)
 {
     std::cout << "Detected state: " << state << std::endl;
@@ -596,30 +594,7 @@ dlib::rgb_pixel get_color_for_state(TLState state)
 
     return dlib::rgb_pixel(10, 10, 10);
 }
-
-dlib::rectangle resized_rectangle(dlib::rectangle original, dlib::rectangle sizeRectangle)
-{
-    long halfDeltaW = (sizeRectangle.width() - original.width()) / 2;
-    long halfDeltaH = (sizeRectangle.height() - original.height()) / 2;
-
-    dlib::rectangle sized(  original.left() - halfDeltaW,   original.top() - halfDeltaH,
-                            original.right() + halfDeltaW,  original.bottom() + halfDeltaH);
-
-    if (sized.width() != sizeRectangle.width())
-    {
-        sized.set_right(sized.right() + (sizeRectangle.width() - sized.width()));
-    }
-
-    if (sized.height() != sizeRectangle.height())
-    {
-        sized.set_bottom(sized.bottom() + (sizeRectangle.height() - sized.height()));
-    }
-    
-    
-    return sized;
-
-}
-
+/*********************************************************************************************************************************************************/
 void save_found_crop(cv::Mat &mat, dlib::mmod_rect detRect, std::string fileName, dlib::rectangle sizeRect)
 {
 	using namespace cv;
@@ -655,7 +630,50 @@ void save_found_crop(cv::Mat &mat, dlib::mmod_rect detRect, std::string fileName
         }
     }
 }
+/*********************************************************************************************************************************************************/
+void save_found_crop(const dlib::matrix<dlib::rgb_pixel>& image, dlib::mmod_rect detRect, std::string fileName, dlib::rectangle sizeRect)
+{
+    using namespace dlib;
 
+    matrix<rgb_pixel> cropped = crop_image(image, detRect, false);
+    if (sizeRect.is_empty())
+    {
+        std::cout << "Saving: " << fileName << std::endl;
+        save_png(cropped, fileName);
+        return;
+    }
+    else
+    {
+        if (sizeRect.width() > detRect.rect.width() && sizeRect.height() > detRect.rect.height())
+        {
+            long DeltaW = sizeRect.width() - detRect.rect.width();
+            long DeltaH = sizeRect.height() - detRect.rect.height();
+
+            matrix<rgb_pixel> sized(sizeRect.height(), sizeRect.width());
+
+            assign_all_pixels(sized, rgb_pixel(0,0,0));
+            for (int r = 0; r < image.nr(); ++r)
+            {
+                for (int c = 0; c < image.nc(); ++c)
+                {
+                    assign_pixel(sized(r,c), image(r,c));
+                }
+            }
+
+            std::cout << "Saving sized up: " << fileName << std::endl;
+            save_png(sized, fileName);
+        }
+        else
+        {
+            matrix<rgb_pixel> sized(sizeRect.height(), sizeRect.width());
+            resize_image(cropped, sized);
+
+            std::cout << "Saving sized down: " << fileName << std::endl;
+            save_png(sized, fileName);
+        }
+    }
+}
+/*********************************************************************************************************************************************************/
 void convert_to_grayscale(dlib::matrix<dlib::rgb_pixel>& image)
 {
     int lumma;
@@ -670,7 +688,7 @@ void convert_to_grayscale(dlib::matrix<dlib::rgb_pixel>& image)
         }
     }
 }
-
+/*********************************************************************************************************************************************************/
 void convert_to_grayscale(dlib::array2d<dlib::rgb_pixel>& image)
 {
     int lumma;
@@ -685,8 +703,7 @@ void convert_to_grayscale(dlib::array2d<dlib::rgb_pixel>& image)
         }
     }
 }
-
-
+/*********************************************************************************************************************************************************/
 dlib::rectangle transform_rectangle_back(const dlib::rectangle& rect, const float scaleFactor)
 {
 	float scaleBackFactor = 1.0f / scaleFactor;
@@ -697,4 +714,25 @@ dlib::rectangle transform_rectangle_back(const dlib::rectangle& rect, const floa
 
 	return dlib::rectangle(newLeft, newTop, newLeft + newWidth, newTop + newHeight);
 }
+/*********************************************************************************************************************************************************/
+bool valid_rectangle(const dlib::rectangle& rect, const dlib::matrix<dlib::rgb_pixel>& img)
+{
+    if (rect.left() < 0 || rect.width() < 0 || rect.top() < 0 || rect.height() < 0)
+        return false;
 
+    if (rect.right() > img.nc() || rect.width() > img.nc() || rect.bottom() > img.nr() || rect.height() > img.nr())
+        return false;
+
+    return true;
+}
+/*********************************************************************************************************************************************************/
+bool valid_rectangle(const dlib::rectangle& rect, const cv::Mat& img)
+{
+    if (rect.left() < 0 || rect.width() < 0 || rect.top() < 0 || rect.height() < 0)
+        return false;
+
+    if (rect.right() > img.cols || rect.width() > img.cols || rect.bottom() > img.rows || rect.height() > img.rows)
+        return false;
+
+    return true;
+}

@@ -1,39 +1,12 @@
-#include "cropper_test.h"
-#include "traffic_light_train.h"
-#include "traffic_light_test.h"
-#include "utils.h"
-#include "cv_utils.h"
-#include "args.hxx"
+/** \file main.cpp
+ * File contating entry point of out application.
+ * Functions to start multiple methods are present and also argument parser from external library.
+ */
 
+#include "main.h"
 
-// ----------------------------------------------------------------------------------------
 using namespace std;
-
-namespace file
-{
-	bool file_exists(std::string file)
-	{
-        if (file.length() == 0)
-            return false;
-
-        std::ifstream infile(file);
-        return infile.good();
-	}
-}
-
-int start_train(const std::string xmlFile, const std::string xmlFile2 = "", bool resnet = false);
-int start_test(const std::string netFile, const std::string xmlFile, bool display = false, bool displayErr = false);
-int start_train_state(const std::string xmlFile, const std::string outFile);
-int start_train_sp(const std::string netFile, const std::string xmlFile);
-int start_cropper_test(const std::string xmlFile, bool display);
-int start_detect_state(const std::string netFile, const std::string imgFile);
-int start_visualize(const std::string netFile, const std::string imgFile);
-int start_crops(const std::string netFile, const std::string xmlFile, const std::string outFolder);
-int start_sized_crops(const std::string netFile, const std::string xmlFile, const std::string outFolder);
-int start_video(const std::string netFile, const std::string videoFile, const std::string outFolder);
-int start_video_frames(const std::string netFile, const std::string xmlFile, const std::string outFolder);
-int start_video_frames_sp(const std::string netFile, const std::string xmlFile, const std::string outFolder, const std::string stateNetFile, bool resnet = false);
-/******************************************************************************************************************/
+/*********************************************************************************************************************************************************/
 int main(int argc, const char* argv[])
 {
     if (!load_settings("../app_settings.xml"))
@@ -125,7 +98,7 @@ int main(int argc, const char* argv[])
     return 0;
 
 }
-/******************************************************************************************************************/
+/*********************************************************************************************************************************************************/
 int start_train(const std::string xmlFile, const std::string xmlFile2, bool resnet)
 {
     if (!file::file_exists(xmlFile))
@@ -169,7 +142,7 @@ int start_train(const std::string xmlFile, const std::string xmlFile2, bool resn
     cout << "Training finished after: " << stopwatch.formatted() << endl;
     return 0;
 }
-/******************************************************************************************************************/
+/*********************************************************************************************************************************************************/
 int start_test(const std::string netFile, const std::string xmlFile, bool display, bool displayErr)
 {
     if (!file::file_exists(netFile))
@@ -195,7 +168,7 @@ int start_test(const std::string netFile, const std::string xmlFile, bool displa
 
     return 0;
 }
-/******************************************************************************************************************/
+/*********************************************************************************************************************************************************/
 int start_train_sp(const std::string netFile, const std::string xmlFile)
 {
     if (!file::file_exists(netFile))
@@ -217,7 +190,7 @@ int start_train_sp(const std::string netFile, const std::string xmlFile)
     cout << "Shape predictor training finished after: " << stopwatch.formatted() << endl;
     return 0;
 }
-/******************************************************************************************************************/
+/*********************************************************************************************************************************************************/
 int start_train_state(const std::string xmlFile, const std::string outFile)
 {
     if (!file::file_exists(xmlFile))
@@ -233,7 +206,7 @@ int start_train_state(const std::string xmlFile, const std::string outFile)
     cout << "State net finished training after: " << stopwatch.formatted() << endl;
     return 0;
 }
-/******************************************************************************************************************/
+/*********************************************************************************************************************************************************/
 int start_cropper_test(const std::string xmlFile, bool display)
 {
     if (!file::file_exists(xmlFile))
@@ -245,7 +218,7 @@ int start_cropper_test(const std::string xmlFile, bool display)
     test_cropper(xmlFile, true, display);
     return 0;
 }
-/******************************************************************************************************************/
+/*********************************************************************************************************************************************************/
 int start_detect_state(const std::string netFile, const std::string imgFile)
 {
     if (!file::file_exists(netFile))
@@ -266,7 +239,7 @@ int start_detect_state(const std::string netFile, const std::string imgFile)
     detect_state(netFile, dlibImg);
     return 0;
 }
-/******************************************************************************************************************/
+/*********************************************************************************************************************************************************/
 int start_visualize(const std::string netFile, const std::string imgFile)
 {
     if (!file::file_exists(netFile))
@@ -284,7 +257,7 @@ int start_visualize(const std::string netFile, const std::string imgFile)
     visualize_detection(netFile, imgFile);
     return 0;
 }
-/******************************************************************************************************************/
+/*********************************************************************************************************************************************************/
 int start_crops(const std::string netFile, const std::string xmlFile, const std::string outFolder)
 {
     if (!file::file_exists(netFile))
@@ -303,7 +276,7 @@ int start_crops(const std::string netFile, const std::string xmlFile, const std:
     
     return 0;
 }
-/******************************************************************************************************************/
+/*********************************************************************************************************************************************************/
 int start_sized_crops(const std::string netFile, const std::string xmlFile, const std::string outFolder)
 {
     if (!file::file_exists(netFile))
@@ -323,7 +296,7 @@ int start_sized_crops(const std::string netFile, const std::string xmlFile, cons
     
     return 0;
 }
-/******************************************************************************************************************/
+/*********************************************************************************************************************************************************/
 int start_video(const std::string netFile, const std::string videoFile, const std::string outFolder)
 {
     if (!file::file_exists(netFile))
@@ -341,7 +314,7 @@ int start_video(const std::string netFile, const std::string videoFile, const st
 
     return 0;
 }
-/******************************************************************************************************************/
+/*********************************************************************************************************************************************************/
 int start_video_frames(const std::string netFile, const std::string xmlFile, const std::string outFolder)
 {
     if (!file::file_exists(netFile))
@@ -360,7 +333,7 @@ int start_video_frames(const std::string netFile, const std::string xmlFile, con
 
     return 0;
 }
-/******************************************************************************************************************/
+/*********************************************************************************************************************************************************/
 int start_video_frames_sp(const std::string netFile, const std::string xmlFile, const std::string outFolder, const std::string stateNetFile, bool resnet)
 {
     if (!file::file_exists(netFile))

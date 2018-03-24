@@ -1,3 +1,7 @@
+/** \file net_definition.h
+ * File contating all network types and its blocks.
+ */
+
 #ifndef NET_DEFINITION_H
 #define NET_DEFINITION_H
 
@@ -6,38 +10,43 @@
 #include <dlib/gui_widgets.h>
 
 using namespace dlib;
-/**
- * Convolutions of size 5
- */
+/// Convolution of size 5 with stride of 2 (downsampling).
 template <long num_filters, typename SUBNET> using con5d = con<num_filters,5,5,2,2,SUBNET>;
+/// Convolution of size 5 with stride of 1.
 template <long num_filters, typename SUBNET> using con5  = con<num_filters,5,5,1,1,SUBNET>;
 
- /**
- * Downsampler 8x using convolution of size 5
- */
+
+/// Downsampler, 3x con5d, downsampling 8x
 template <typename SUBNET> using downsampler8x  = relu<bn_con<con5d<32, relu<bn_con<con5d<32, relu<bn_con<con5d<16,SUBNET>>>>>>>>>;
+/// Downsampler, 3x con5d, downsampling 8x (bn_con replaced with affine for testing purposes)
 template <typename SUBNET> using a_downsampler8x  = relu<affine<con5d<32, relu<affine<con5d<32, relu<affine<con5d<16,SUBNET>>>>>>>>>;
 
+/// Downsampler, 2x con5d, downsampling 4x
 template <typename SUBNET> using downsampler4x  = relu<bn_con<con5d<32, relu<bn_con<con5d<16,SUBNET>>>>>>;
+/// Downsampler, 2x con5d, downsampling 4x (bn_con replaced with affine for testing purposes)
 template <typename SUBNET> using a_downsampler4x  = relu<affine<con5d<32, relu<affine<con5d<16,SUBNET>>>>>>;
 
-/**
- * CNN blocks using convolution of size 5, original filter size is 55
- */
-template <typename SUBNET> using rcon5_55  = relu<bn_con<con5<55,SUBNET>>>;
-template <typename SUBNET> using a_rcon5_55  = relu<affine<con5<55,SUBNET>>>;
 
+/// CNN block with filter size = 5 and 55 filters.
+template <typename SUBNET> using rcon5_55  = relu<bn_con<con5<55,SUBNET>>>;
+/// CNN block with filter size = 5 and 55 filters (affine instead of bn_con)
+template <typename SUBNET> using a_rcon5_55  = relu<affine<con5<55,SUBNET>>>;
+/// CNN block with filter size = 5 and 50 filters.
 template <typename SUBNET> using rcon5_50  = relu<bn_con<con5<50,SUBNET>>>;
+/// CNN block with filter size = 5 and 50 filters (affine instead of bn_con)
 template <typename SUBNET> using a_rcon5_50  = relu<affine<con5<50,SUBNET>>>;
+/// CNN block with filter size = 5 and 40 filters.
 template <typename SUBNET> using rcon5_40  = relu<bn_con<con5<40,SUBNET>>>;
+/// CNN block with filter size = 5 and 40 filters (affine instead of bn_con)
 template <typename SUBNET> using a_rcon5_40  = relu<affine<con5<40,SUBNET>>>;
+/// CNN block with filter size = 5 and 32 filters.
 template <typename SUBNET> using rcon5_32  = relu<bn_con<con5<32,SUBNET>>>;
+/// CNN block with filter size = 5 and 32 filters (affine instead of bn_con)
 template <typename SUBNET> using a_rcon5_32  = relu<affine<con5<32,SUBNET>>>;
 
-/**
- * Net types using convolution of size 5. Test net type has bn_con layer changed to affine layer.
- */
+/// Main CNN type
 using net_type = loss_mmod<con<1,9,9,1,1,rcon5_55<rcon5_55<rcon5_55<rcon5_40<downsampler8x<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>>;
+/// Test CNN type. Uses affine instead of bn_con
 using test_net_type = loss_mmod<con<1,9,9,1,1,a_rcon5_55<a_rcon5_55<a_rcon5_55<a_rcon5_40<a_downsampler8x<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>>;
 
 template <long num_filters, typename SUBNET> using con3  = con<num_filters,3,3,1,1,SUBNET>;
