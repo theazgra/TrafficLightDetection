@@ -835,7 +835,7 @@ void process_frames_in_parrallel(const std::string netFile, const std::string st
 
     double totalTime = 0;
     for (CudaJobInfo jobInfo : cudaJobs)
-        totalTime += jobInfo.stopwatch.elapsed_milliseconds();
+        totalTime += jobInfo.stopwatch.average_lap_time_in_milliseconds();
 
     double frameTime = totalTime / images.size();
     double FPS = 1000 / frameTime;
@@ -855,7 +855,6 @@ void cuda_device_process_job(CudaJobInfo& jobInfo)
     cudaSetDevice(jobInfo.deviceId);
 #endif
 
-    jobInfo.stopwatch.start();
 
     test_net_type net;
     shape_predictor sp;
@@ -870,6 +869,8 @@ void cuda_device_process_job(CudaJobInfo& jobInfo)
 
     for (const matrix<rgb_pixel>& frame : jobInfo.jobImages)
     {
+        
+        jobInfo.stopwatch.start_new_lap();
         ++frameNum;
 
         scaledFrame = matrix<rgb_pixel>(frame.nr() * FRAME_SCALING, frame.nc() * FRAME_SCALING);
@@ -900,13 +901,12 @@ void cuda_device_process_job(CudaJobInfo& jobInfo)
                            RECT_WIDTH);
 
         }
+        jobInfo.stopwatch.end_lap();
         resize_image(scaledFrame, frame);
 
         std::string fileName = jobInfo.resultFolder + "/" + std::to_string(frameNum) + ".png";
         save_png(frame, fileName);
     }
-
-    jobInfo.stopwatch.stop();
 }
 /*********************************************************************************************************************************************************/
 void resnet_save_video_frames_with_sp2( const std::string netFile, const std::string stateNetFile,
