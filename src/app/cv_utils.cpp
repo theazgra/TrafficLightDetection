@@ -582,7 +582,6 @@ dlib::matrix<dlib::rgb_pixel> crop_image(const dlib::matrix<dlib::rgb_pixel> &or
 /*********************************************************************************************************************************************************/
 dlib::rgb_pixel get_color_for_state(TLState state)
 {
-    std::cout << "Detected state: " << state << std::endl;
     if (state == Red)
         return dlib::rgb_pixel(255, 0, 0);
 

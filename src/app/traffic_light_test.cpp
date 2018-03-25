@@ -546,7 +546,7 @@ TLState detect_state(const std::string netFile, const dlib::matrix<dlib::rgb_pix
 /*********************************************************************************************************************************************************/
 TLState get_detected_state(const std::vector<dlib::mmod_rect>& detections, const dlib::matrix<dlib::rgb_pixel>& image)
 {
-    Logger logger("state_detection_log.txt");
+    //Logger logger("state_detection_log.txt");
 
     if (detections.empty())
         return Inactive;
@@ -568,7 +568,7 @@ TLState get_detected_state(const std::vector<dlib::mmod_rect>& detections, const
         if (rect.top() > height60Perc)
             return Green;
 
-        logger.write_line("Detections had size 1 but no templated was matched for state!");
+      //  logger.write_line("Detections had size 1 but no templated was matched for state!");
     }
     else if (detections.size() == 2)
     {
@@ -578,7 +578,7 @@ TLState get_detected_state(const std::vector<dlib::mmod_rect>& detections, const
         if ((state1 == Red && state2 == Orange) || (state1 == Orange && state2 == Red))
             return Orange;
 
-        logger.write_line("Detections had size 2 but no templates were matched for state!");
+        //logger.write_line("Detections had size 2 but no templates were matched for state!");
     }
 
     return Ambiguous;
@@ -806,11 +806,8 @@ void process_frames_in_parrallel(const std::string netFile, const std::string st
 
     std::vector<matrix<rgb_pixel>> images;
     std::vector<std::vector<mmod_rect>> boxes;
+    //TODO: Enhance
     load_image_dataset(images, boxes, xmlFile);
-
-    image_dataset_metadata::dataset xmlDataset;
-
-    image_dataset_metadata::load_image_dataset_metadata(xmlDataset, xmlFile);
 
     std::vector<CudaJobInfo> cudaJobs;
     ulong cudaDeviceCount = CUDA_DEVICES.size();
@@ -820,17 +817,6 @@ void process_frames_in_parrallel(const std::string netFile, const std::string st
     {
 
         CudaJobInfo jobInfo(CUDA_DEVICES.at(index), netFile, stateNetFile, resultFolder, (index * deviceJobSize));
-
-        /*
-        for (int i = (index * deviceJobSize);
-             i < (deviceJobSize + (i * deviceJobSize));
-             ++i)
-        {
-            jobInfo.jobImages.push_back(images.at(i));
-
-
-        }
-        */
 
         auto startIterator = images.begin() + (index * deviceJobSize);
         auto endIterator = (index == CUDA_DEVICES.size() - 1) ? (images.end()) : (startIterator + deviceJobSize);
@@ -843,10 +829,19 @@ void process_frames_in_parrallel(const std::string netFile, const std::string st
         std::cout << "  Job image count: " << jobInfo.jobImages.size() << std::endl;
     }
 
-
     dlib::parallel_for(0, cudaJobs.size(), [&](long i){
         cuda_device_process_job(cudaJobs.at(i));
     });
+
+    double totalTime = 0;
+    for (CudaJobInfo jobInfo : cudaJobs)
+        totalTime += jobInfo.stopwatch.elapsed_milliseconds();
+
+    double frameTime = totalTime / images.size();
+    double FPS = 1000 / frameTime;
+
+    std::cout << "Average frame time across all cuda devices: " << frameTime << std::endl;
+    std::cout << "Average FPS across all cuda devices: " << FPS << std::endl;
 
 }
 /*********************************************************************************************************************************************************/
@@ -879,8 +874,6 @@ void cuda_device_process_job(CudaJobInfo& jobInfo)
 
         scaledFrame = matrix<rgb_pixel>(frame.nr() * FRAME_SCALING, frame.nc() * FRAME_SCALING);
         resize_image(frame, scaledFrame);
-
-        cout << "Processing frame: " << std::to_string(frameNum) << endl;
 
         std::vector<mmod_rect> detections = net(scaledFrame);
 
