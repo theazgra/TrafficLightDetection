@@ -453,8 +453,8 @@ void train_resnet(const std::string trainFile)
 {
     using namespace std;
     using namespace dlib;
+/*
 
-    /*
     try
     {
 
@@ -499,9 +499,9 @@ void train_resnet(const std::string trainFile)
         net.subnet().layer_details().set_num_filters(options.detector_windows.size());
 
 #ifdef MULTIPLE_GPUS
-        dnn_trainer<resnet_net_type> trainer(net, sgd(SGD_WEIGHT_DECAY, SGD_MOMENTUM), CUDA_DEVICES);
+        dnn_trainer<resnet_net_type, sgd> trainer(net, sgd(SGD_WEIGHT_DECAY, SGD_MOMENTUM), CUDA_DEVICES);
 #else
-        dnn_trainer<resnet_net_type> trainer(net, sgd(SGD_WEIGHT_DECAY, SGD_MOMENTUM));
+        dnn_trainer<resnet_net_type, sgd> trainer(net, sgd(SGD_WEIGHT_DECAY, SGD_MOMENTUM));
 #endif
 
 

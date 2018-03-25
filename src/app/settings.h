@@ -12,6 +12,7 @@
 #include "net_definition.h"
 #include <vector>
 #include "extern_files/pugixml.hpp"
+#include <cuda_runtime_api.h>
 
 /// Loads settings from xml file. Setting global variables.
 /// \param xmlSettingsFile XML file with settings.

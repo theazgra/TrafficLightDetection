@@ -34,6 +34,9 @@ void test(std::string netFile, std::string testFile, TestType testType)
     using namespace std;
     using namespace dlib;
 
+
+    //cudaSetDevice(5);
+
     test_net_type net;
     shape_predictor sp;
     deserialize(netFile) >> net >> sp;
@@ -639,6 +642,9 @@ void save_detected_objects(const std::string netFile, const std::string xmlFile,
 void save_video_frames_with_sp2(const std::string netFile, const std::string stateNetFile,
                                 const std::string xmlFile, const std::string resultFolder)
 {
+    cudaSetDevice(2);
+    
+
     using namespace std;
     using namespace dlib;
 
