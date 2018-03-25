@@ -94,8 +94,9 @@ bool Stopwatch::stopwatch_exists(int stopwatchId)
     return true;
 }
 /*********************************************************************************************************************************************************/
-Stopwatch::Stopwatch()
+Stopwatch::Stopwatch(std::string stopwatchName)
 {
+    this->name = stopwatchName;
     this->stopwatches[this->basicStopwatchId] = BasicStopwatch();
 }
 /*********************************************************************************************************************************************************/
@@ -217,6 +218,11 @@ void Stopwatch::end_lap(int stopwatchId)
 {
     if (stopwatch_exists(stopwatchId))
         this->stopwatches[stopwatchId].end_lap();
+}
+/*********************************************************************************************************************************************************/
+const std::string Stopwatch::get_name()
+{
+    return this->name;
 }
 
 #pragma endregion

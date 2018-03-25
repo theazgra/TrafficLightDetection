@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['stopwatch',['Stopwatch',['../classStopwatch.html',1,'']]]
+  ['rectangle',['Rectangle',['../classLaraParser_1_1Rectangle.html',1,'LaraParser']]]
 ];

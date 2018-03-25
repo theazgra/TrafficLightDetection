@@ -80,10 +80,12 @@ private:
     /// \param milliseconds Number of milliseconds.
     /// \return String.
     std::string format_time(double milliseconds);
+    std::string name;
 
 public:
-    /// Create stopwatch.
-    Stopwatch();
+    /// Create stopwatch with optional name.
+    /// \param stopwatchName Name of stopwatches.
+    Stopwatch(std::string stopwatchName = "");
 
     /// Start new stopwatch and return its id.
     /// \return Id of new stopwatch.
@@ -142,6 +144,10 @@ public:
     /// \param stopwatchId Stopwatch id.
     /// \return Formatted string.
     std::string formatted_average(int stopwatchId = 0);
+
+    /// Get stopwatch name.
+    /// \return Name in string.
+    const std::string get_name();
 };
 
 

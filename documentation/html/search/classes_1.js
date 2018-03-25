@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['grayscaletestparam',['GrayScaleTestParam',['../structGrayScaleTestParam.html',1,'']]]
+  ['cudajobinfo',['CudaJobInfo',['../structCudaJobInfo.html',1,'']]]
 ];

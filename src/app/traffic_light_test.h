@@ -23,6 +23,32 @@ enum TestType
     OnlyErrorDisplay
 };
 
+/// This passes importatnt informations about job to be executed on cuda device.
+struct CudaJobInfo
+{
+    std::string netFile;
+    std::string stateNetFile;
+    std::string resultFolder;
+    std::vector<dlib::matrix<dlib::rgb_pixel>> jobImages;
+    Stopwatch stopwatch;
+    int deviceId;
+    uint frameIndexOffset;
+
+    CudaJobInfo(
+            int deviceId, const std::string netFile, const std::string stateNetFile,
+            const std::string resultFolder, uint frameIndexOffset)
+    {
+        this->netFile = netFile;
+        this->stateNetFile = stateNetFile;
+        this->deviceId = deviceId;
+
+        this->stopwatch = Stopwatch("Cuda device: " + std::to_string(deviceId));
+        this->frameIndexOffset = frameIndexOffset;
+        this->resultFolder = resultFolder;
+    }
+};
+
+
 /// Basic test method.
 /// \param netFile Serialized network.
 /// \param testFile Xml file with data annotations.
@@ -61,6 +87,21 @@ void save_video_frames_with_sp(std::string netFile, std::string xmlFile, std::st
 /// \param resultFolder Where to save images.
 void save_video_frames_with_sp2(const std::string netFile, const std::string stateNetFile,
                                 const std::string xmlFile, const std::string resultFolder);
+
+
+/// Process images defined in XML file on set cuda devices. Work same as save_video_frames_with_sp2 put is parrallelized.
+/// \param netFile Serialized network.
+/// \param stateNetFile Serialized state network.
+/// \param xmlFile Xml file with data annotations.
+/// \param resultFolder Where to save images.
+void process_frames_in_parrallel(   const std::string netFile, const std::string stateNetFile,
+                                    const std::string xmlFile, const std::string resultFolder);
+
+
+/// Cuda device job. Processing images given in jobinfo.
+/// \param jobInfo Structure containing all needed informations.
+void cuda_device_process_job(CudaJobInfo& jobInfo);
+
 
 /// Save processed from from xml file, uses shape predictor to enhance prediction and state net to detect traffic light state. (ResNet)
 /// \param netFile Serialized network.

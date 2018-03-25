@@ -68,6 +68,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
@@ -83,6 +84,12 @@ $(function() {
 </div>
 <p><a href="traffic__light__test_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCudaJobInfo.html">CudaJobInfo</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">This passes importatnt informations about job to be executed on cuda device.  <a href="structCudaJobInfo.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
 <tr class="memitem:aa56e0da0512d41d46d74aae4d7e81df6"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="traffic__light__test_8h.html#aa56e0da0512d41d46d74aae4d7e81df6">TestType</a> { <a class="el" href="traffic__light__test_8h.html#aa56e0da0512d41d46d74aae4d7e81df6a40ead90f2e97387e66fcb88b17954f22">Display</a>, 
@@ -106,6 +113,10 @@ Functions</h2></td></tr>
 <tr class="separator:a9ea2500b83b4d63a2ab11175cfff080e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf5585dedf39a46334938897334ee7ca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="traffic__light__test_8h.html#aaf5585dedf39a46334938897334ee7ca">save_video_frames_with_sp2</a> (const std::string netFile, const std::string stateNetFile, const std::string xmlFile, const std::string resultFolder)</td></tr>
 <tr class="separator:aaf5585dedf39a46334938897334ee7ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75d9879fd6cb49b5acfaf70b64736018"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="traffic__light__test_8h.html#a75d9879fd6cb49b5acfaf70b64736018">process_frames_in_parrallel</a> (const std::string netFile, const std::string stateNetFile, const std::string xmlFile, const std::string resultFolder)</td></tr>
+<tr class="separator:a75d9879fd6cb49b5acfaf70b64736018"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a562ad73390c1ab063b3b849616179b73"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="traffic__light__test_8h.html#a562ad73390c1ab063b3b849616179b73">cuda_device_process_job</a> (<a class="el" href="structCudaJobInfo.html">CudaJobInfo</a> &amp;jobInfo)</td></tr>
+<tr class="separator:a562ad73390c1ab063b3b849616179b73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3418a45cc3b2835ba11e82ce10cccb87"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="traffic__light__test_8h.html#a3418a45cc3b2835ba11e82ce10cccb87">resnet_save_video_frames_with_sp2</a> (const std::string netFile, const std::string stateNetFile, const std::string xmlFile, const std::string resultFolder)</td></tr>
 <tr class="separator:a3418a45cc3b2835ba11e82ce10cccb87"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2173ee45ebb20f201839c5dca99280ae"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="traffic__light__test_8h.html#a2173ee45ebb20f201839c5dca99280ae">visualize_detection</a> (std::string netFile, std::string imgFile)</td></tr>
@@ -147,6 +158,30 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a562ad73390c1ab063b3b849616179b73"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a562ad73390c1ab063b3b849616179b73">&#9670;&nbsp;</a></span>cuda_device_process_job()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cuda_device_process_job </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structCudaJobInfo.html">CudaJobInfo</a> &amp;&#160;</td>
+          <td class="paramname"><em>jobInfo</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Cuda device job. Processing images given in jobinfo. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">jobInfo</td><td>Structure containing all needed informations. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="ab36bfd6e570bd83fe0a1bfcf01f9cd15"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab36bfd6e570bd83fe0a1bfcf01f9cd15">&#9670;&nbsp;</a></span>detect_state()</h2>
 
@@ -284,6 +319,55 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Number of boxes which are not ignored. </dd></dl>
+
+</div>
+</div>
+<a id="a75d9879fd6cb49b5acfaf70b64736018"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75d9879fd6cb49b5acfaf70b64736018">&#9670;&nbsp;</a></span>process_frames_in_parrallel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void process_frames_in_parrallel </td>
+          <td>(</td>
+          <td class="paramtype">const std::string&#160;</td>
+          <td class="paramname"><em>netFile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string&#160;</td>
+          <td class="paramname"><em>stateNetFile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string&#160;</td>
+          <td class="paramname"><em>xmlFile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string&#160;</td>
+          <td class="paramname"><em>resultFolder</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Process images defined in XML file on set cuda devices. Work same as save_video_frames_with_sp2 put is parrallelized. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">netFile</td><td>Serialized network. </td></tr>
+    <tr><td class="paramname">stateNetFile</td><td>Serialized state network. </td></tr>
+    <tr><td class="paramname">xmlFile</td><td>Xml file with data annotations. </td></tr>
+    <tr><td class="paramname">resultFolder</td><td>Where to save images. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

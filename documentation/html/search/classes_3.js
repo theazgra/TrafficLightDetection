@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['logger',['Logger',['../classLogger.html',1,'']]]
+  ['hsvtestparam',['HsvTestParam',['../structHsvTestParam.html',1,'']]]
 ];

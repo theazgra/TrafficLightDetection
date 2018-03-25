@@ -79,10 +79,8 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a628b5ebeed5df065dd847e68fb6336cf"><td class="memItemLeft" align="right" valign="top"><a id="a628b5ebeed5df065dd847e68fb6336cf"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classStopwatch.html#a628b5ebeed5df065dd847e68fb6336cf">Stopwatch</a> ()</td></tr>
-<tr class="memdesc:a628b5ebeed5df065dd847e68fb6336cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create stopwatch. <br /></td></tr>
-<tr class="separator:a628b5ebeed5df065dd847e68fb6336cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f2fb9f6339987154bd860d49ecd475b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classStopwatch.html#a2f2fb9f6339987154bd860d49ecd475b">Stopwatch</a> (std::string stopwatchName=&quot;&quot;)</td></tr>
+<tr class="separator:a2f2fb9f6339987154bd860d49ecd475b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa6d6ab5b6fbc25914f2748ff0cf7d4d7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classStopwatch.html#aa6d6ab5b6fbc25914f2748ff0cf7d4d7">start_new_stopwatch</a> ()</td></tr>
 <tr class="separator:aa6d6ab5b6fbc25914f2748ff0cf7d4d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b8e9ba433039234b64975a1b745f5dc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classStopwatch.html#a3b8e9ba433039234b64975a1b745f5dc">start</a> (int stopwatchId=0)</td></tr>
@@ -109,10 +107,37 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a8c67c097535e9e933e2a88d2e71b550e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa254ae274cff5e357daf26573282270b"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classStopwatch.html#aa254ae274cff5e357daf26573282270b">formatted_average</a> (int stopwatchId=0)</td></tr>
 <tr class="separator:aa254ae274cff5e357daf26573282270b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5409fdd1dcbff14af0b4275073ac7e8"><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classStopwatch.html#ac5409fdd1dcbff14af0b4275073ac7e8">get_name</a> ()</td></tr>
+<tr class="separator:ac5409fdd1dcbff14af0b4275073ac7e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classStopwatch.html" title="Stopwatch class, support multiple stopwatches inside one instance. Contains functionality to manage t...">Stopwatch</a> class, support multiple stopwatches inside one instance. Contains functionality to manage those stopwatches. </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a2f2fb9f6339987154bd860d49ecd475b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f2fb9f6339987154bd860d49ecd475b">&#9670;&nbsp;</a></span>Stopwatch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Stopwatch::Stopwatch </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>stopwatchName</em> = <code>&quot;&quot;</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Create stopwatch with optional name. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">stopwatchName</td><td>Name of stopwatches. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
 <a id="a7d5fbaa0d2dcd5ff2ef2d5c5e3ee65a5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7d5fbaa0d2dcd5ff2ef2d5c5e3ee65a5">&#9670;&nbsp;</a></span>average_lap_time_in_milliseconds()</h2>
 
@@ -284,6 +309,24 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Formatted string. </dd></dl>
+
+</div>
+</div>
+<a id="ac5409fdd1dcbff14af0b4275073ac7e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5409fdd1dcbff14af0b4275073ac7e8">&#9670;&nbsp;</a></span>get_name()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::string Stopwatch::get_name </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Get stopwatch name. </p><dl class="section return"><dt>Returns</dt><dd>Name in string. </dd></dl>
 
 </div>
 </div>

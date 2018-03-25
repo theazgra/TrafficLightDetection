@@ -11,6 +11,8 @@ var searchData=
   ['crop_5fimage',['crop_image',['../cv__utils_8h.html#a3af35612f09a00c3a2c27aad128187d6',1,'crop_image(const cv::Mat &amp;mat, const dlib::rectangle &amp;cropRectangle):&#160;cv_utils.cpp'],['../cv__utils_8h.html#a3da58373468fb544053c3e24e9956129',1,'crop_image(const dlib::matrix&lt; dlib::rgb_pixel &gt; &amp;original, const dlib::rectangle &amp;cropRectangle, bool exactCrop=false):&#160;cv_utils.cpp']]],
   ['crop_5fwidth',['CROP_WIDTH',['../settings_8h.html#a3110b0006d1f11a6ebc8f1af8cbd0517',1,'settings.cpp']]],
   ['cropper_5ftest_2eh',['cropper_test.h',['../cropper__test_8h.html',1,'']]],
+  ['cuda_5fdevice_5fprocess_5fjob',['cuda_device_process_job',['../traffic__light__test_8h.html#a562ad73390c1ab063b3b849616179b73',1,'traffic_light_test.cpp']]],
   ['cuda_5fdevices',['CUDA_DEVICES',['../settings_8h.html#ad363b4297369bc625d605a31a523b61f',1,'settings.cpp']]],
+  ['cudajobinfo',['CudaJobInfo',['../structCudaJobInfo.html',1,'']]],
   ['cv_5futils_2eh',['cv_utils.h',['../cv__utils_8h.html',1,'']]]
 ];

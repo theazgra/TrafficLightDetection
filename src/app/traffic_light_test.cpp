@@ -642,8 +642,12 @@ void save_detected_objects(const std::string netFile, const std::string xmlFile,
 void save_video_frames_with_sp2(const std::string netFile, const std::string stateNetFile,
                                 const std::string xmlFile, const std::string resultFolder)
 {
-    cudaSetDevice(2);
-    
+
+#ifdef MULTIPLE_GPUS
+    process_frames_in_parrallel(netFile, stateNetFile, xmlFile, resultFolder);
+    return;
+#endif
+
 
     using namespace std;
     using namespace dlib;
@@ -791,6 +795,125 @@ void save_video_frames_with_sp2(const std::string netFile, const std::string sta
     cout << "Traffic light state detection: " << stopwatch.average_lap_time_in_milliseconds(stateDetectionStopwatch) << " ms." << endl;
     cout << "Whole operation (scaling): " << stopwatch.average_lap_time_in_milliseconds(wholeFrameOperationStopwatch) << " ms." << endl;
 
+}
+/*********************************************************************************************************************************************************/
+void process_frames_in_parrallel(const std::string netFile, const std::string stateNetFile,
+                                 const std::string xmlFile, const std::string resultFolder)
+{
+    using namespace dlib;
+
+    std::cout << "Processing in parrallel" << std::endl;
+
+    std::vector<matrix<rgb_pixel>> images;
+    std::vector<std::vector<mmod_rect>> boxes;
+    load_image_dataset(images, boxes, xmlFile);
+
+    image_dataset_metadata::dataset xmlDataset;
+
+    image_dataset_metadata::load_image_dataset_metadata(xmlDataset, xmlFile);
+
+    std::vector<CudaJobInfo> cudaJobs;
+    ulong cudaDeviceCount = CUDA_DEVICES.size();
+    int deviceJobSize = images.size() / cudaDeviceCount;
+
+    for(int index = 0; index < cudaDeviceCount; ++index)
+    {
+
+        CudaJobInfo jobInfo(CUDA_DEVICES.at(index), netFile, stateNetFile, resultFolder, (index * deviceJobSize));
+
+        /*
+        for (int i = (index * deviceJobSize);
+             i < (deviceJobSize + (i * deviceJobSize));
+             ++i)
+        {
+            jobInfo.jobImages.push_back(images.at(i));
+
+
+        }
+        */
+
+        auto startIterator = images.begin() + (index * deviceJobSize);
+        auto endIterator = (index == CUDA_DEVICES.size() - 1) ? (images.end()) : (startIterator + deviceJobSize);
+
+        jobInfo.jobImages.insert(jobInfo.jobImages.begin(), startIterator, endIterator);
+
+        cudaJobs.push_back(jobInfo);
+
+        std::cout << "Cuda device: " << jobInfo.deviceId << std::endl;
+        std::cout << "  Job image count: " << jobInfo.jobImages.size() << std::endl;
+    }
+
+
+    dlib::parallel_for(0, cudaJobs.size(), [&](long i){
+        cuda_device_process_job(cudaJobs.at(i));
+    });
+
+}
+/*********************************************************************************************************************************************************/
+void cuda_device_process_job(CudaJobInfo& jobInfo)
+{
+    using namespace std;
+    using namespace dlib;
+
+    std::cout << "Processing in cuda device: " << jobInfo.deviceId << std::endl;
+#ifdef MULTIPLE_GPUS
+    cudaSetDevice(jobInfo.deviceId);
+#endif
+
+    jobInfo.stopwatch.start();
+
+    test_net_type net;
+    shape_predictor sp;
+    state_test_net_type stateNet;
+
+    deserialize(jobInfo.netFile) >> net >> sp;
+    deserialize(jobInfo.stateNetFile) >> stateNet;
+
+    int frameNum = jobInfo.frameIndexOffset;
+
+    matrix<rgb_pixel> scaledFrame;
+
+    for (const matrix<rgb_pixel>& frame : jobInfo.jobImages)
+    {
+        ++frameNum;
+
+        scaledFrame = matrix<rgb_pixel>(frame.nr() * FRAME_SCALING, frame.nc() * FRAME_SCALING);
+        resize_image(frame, scaledFrame);
+
+        cout << "Processing frame: " << std::to_string(frameNum) << endl;
+
+        std::vector<mmod_rect> detections = net(scaledFrame);
+
+        for (mmod_rect& detection : detections)
+        {
+
+            full_object_detection fullObjectDetection = sp(scaledFrame, detection);
+
+            rectangle spImprovedRect;
+            for(unsigned long i = 0; i < fullObjectDetection.num_parts(); ++i)
+                spImprovedRect += fullObjectDetection.part(i);
+
+            if (!valid_rectangle(spImprovedRect, scaledFrame))
+                continue;
+
+            matrix<rgb_pixel> foundTrafficLight = crop_image(scaledFrame, spImprovedRect);
+            std::vector<mmod_rect> trafficLightDets = stateNet(foundTrafficLight);
+
+            TLState detectedState = get_detected_state(trafficLightDets, foundTrafficLight);
+
+            draw_rectangle(scaledFrame,
+                           spImprovedRect,
+                           get_color_for_state(detectedState),
+                           RECT_WIDTH);
+
+        }
+        resize_image(scaledFrame, frame);
+
+        std::string fileName = jobInfo.resultFolder + "/" + std::to_string(frameNum) + ".png";
+        save_png(frame, fileName);
+    }
+
+    jobInfo.stopwatch.stop();
 }
 /*********************************************************************************************************************************************************/
 void resnet_save_video_frames_with_sp2( const std::string netFile, const std::string stateNetFile,

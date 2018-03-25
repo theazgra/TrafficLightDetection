@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['hsvtestparam',['HsvTestParam',['../structHsvTestParam.html',1,'']]]
+  ['grayscaletestparam',['GrayScaleTestParam',['../structGrayScaleTestParam.html',1,'']]]
 ];

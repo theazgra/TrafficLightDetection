@@ -5,6 +5,10 @@ include(../dlib/dlib/cmake)
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
+find_package(CUDA QUIET REQUIRED)
+include_directories("${CUDA_INCLUDE_DIRS}")
+
+
 set(CMAKE_CXX_STANDARD 11)
 
 set(SOURCE_FILES extern_files/pugixml.cpp extern_files/args.hxx main.cpp net_definition.h settings.h settings.cpp traffic_light_train.cpp traffic_light_train.h
