@@ -586,7 +586,7 @@ public:
                 if (jobInfo.jobType == SaveCrops)
                 {
                     std::string fileName = jobInfo.resultFolder + "/crop_" + std::to_string(frameNum) + "_" + std::to_string(++labelIndex) + ".png";
-                    save_found_crop(frame, transform_rectangle_back(spImprovedRect, FRAME_SCALING), "", jobInfo.sizeRectangle);
+                    save_found_crop(frame, transform_rectangle_back(spImprovedRect, FRAME_SCALING), fileName, jobInfo.sizeRectangle);
                     jobInfo.stopwatch.end_lap();
                     continue;
                 }
