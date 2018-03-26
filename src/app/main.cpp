@@ -71,7 +71,7 @@ int main(int argc, const char* argv[])
     file = _file ? _file.Get() : "";
 
     if (_train)
-        return start_train(xmlFile, xmlFile2);
+        return start_train(xmlFile, xmlFile2, _resnet);
     if (_test)
         return start_test(netFile, xmlFile, _display, _displayErr);
     if (_trainState)

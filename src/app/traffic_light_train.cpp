@@ -453,7 +453,7 @@ void train_resnet(const std::string trainFile)
 {
     using namespace std;
     using namespace dlib;
-/*
+
 
     try
     {
@@ -497,13 +497,14 @@ void train_resnet(const std::string trainFile)
         resnet_net_type net(options);
 
         net.subnet().layer_details().set_num_filters(options.detector_windows.size());
+        //std::cout << net << std::endl;
+        //std::cout << layer<tag1>(net) << std::endl;
 
 #ifdef MULTIPLE_GPUS
         dnn_trainer<resnet_net_type, sgd> trainer(net, sgd(SGD_WEIGHT_DECAY, SGD_MOMENTUM), CUDA_DEVICES);
 #else
         dnn_trainer<resnet_net_type, sgd> trainer(net, sgd(SGD_WEIGHT_DECAY, SGD_MOMENTUM));
 #endif
-
 
         trainer.be_verbose();
         trainer.set_learning_rate(LEARNING_RATE);
@@ -551,7 +552,7 @@ void train_resnet(const std::string trainFile)
 
         cout << "Training is completed." << endl;
         cout << "Training results: " << test_object_detection_function(net, trainingImages, trainingBoxes, test_box_overlap(), 0, options.overlaps_ignore) << endl;
-
+   
     }
     catch (std::exception& e)
     {
@@ -559,5 +560,5 @@ void train_resnet(const std::string trainFile)
         cout << e.what() << endl;
         cout << "*******************" << endl;
     }
-*/
+
 }
