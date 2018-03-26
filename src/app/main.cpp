@@ -5,6 +5,7 @@
 
 #include "main.h"
 
+
 using namespace std;
 /*********************************************************************************************************************************************************/
 int main(int argc, const char* argv[])
@@ -126,7 +127,12 @@ int start_train(const std::string xmlFile, const std::string xmlFile2, bool resn
         switch (TRAINING_METHOD)
         {
             case 1:
-                train(xmlFile);
+                //train(xmlFile);
+            {
+                Traffic_light_detector_trainer<net_type, state_net_type> trainer(xmlFile, xmlFile);
+                trainer.train_location_network();
+            }
+
                 break;
             case 2:
                 train(xmlFile, xmlFile2);

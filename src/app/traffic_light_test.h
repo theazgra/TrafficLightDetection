@@ -5,12 +5,8 @@
 #ifndef BACHELOR_TRAFFIC_LIGHT_TEST_H
 #define BACHELOR_TRAFFIC_LIGHT_TEST_H
 
-#include <iostream>
-#include <dlib/image_io.h>
-#include <dlib/image_processing.h>
+
 #include "settings.h"
-#include "Stopwatch.h"
-#include "cv_utils.h"
 
 /// Test type
 enum TestType

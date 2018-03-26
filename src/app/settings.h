@@ -7,12 +7,17 @@
 #define SETTINGS_H
 
 /// Define use of more CUDA devices, set in xml settings file.
-#define MULTIPLE_GPUS
+//#define MULTIPLE_GPUS
 
-#include "net_definition.h"
 #include <vector>
 #include "extern_files/pugixml.hpp"
 #include <cuda_runtime_api.h>
+#include <iostream>
+#include <dlib/image_io.h>
+#include <dlib/image_processing.h>
+#include "net_definition.h"
+#include "cv_utils.h"
+#include "Stopwatch.h"
 
 /// Loads settings from xml file. Setting global variables.
 /// \param xmlSettingsFile XML file with settings.
