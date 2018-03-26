@@ -18,7 +18,8 @@
 #include "traffic_light_test.h"
 #include "cv_utils.h"
 #include "extern_files/args.hxx"
-#include "traffic_light_detector_trainer.h"
+#include "location_detector_trainer.h"
+#include "state_detector_trainer.h"
 
 namespace file
 {

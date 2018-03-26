@@ -12,7 +12,7 @@ template <
         typename StateTrainNetType,
         typename StateTestNetType
 >
-class Traffic_light_detector_trainer
+class Traffic_light_detector
 {
 private:
     LocationTrainNetType locationTrainNet;
@@ -23,13 +23,13 @@ private:
     std::string datasetFile;
 public:
 
-    Traffic_light_detector_trainer(LocationTrainNetType& trainNet, StateTrainNetType& stateTrainNet)
+    Traffic_light_detector(LocationTrainNetType& trainNet, StateTrainNetType& stateTrainNet)
     {
         this->locationTrainNet = trainNet;
         this->stateTrainNet = stateTrainNet;
     }
 
-    Traffic_light_detector_trainer(LocationTestNetType& locationTestNet, StateTestNetType& stateTestNet)
+    Traffic_light_detector(LocationTestNetType& locationTestNet, StateTestNetType& stateTestNet)
     {
         this->locationTestNet = locationTestNet;
         this->stateTestNet = stateTestNet;

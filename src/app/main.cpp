@@ -124,24 +124,33 @@ int start_train(const std::string xmlFile, const std::string xmlFile2, bool resn
     stopwatch.start();
 
     if (!resnet){
+        location_detector_trainer<net_type> TLTrainer;
+
+        cout << "LeNet" << endl;
         switch (TRAINING_METHOD)
         {
+
             case 1:
                 //train(xmlFile);
             {
-                Traffic_light_detector_trainer<net_type, state_net_type> trainer(xmlFile, xmlFile);
-                trainer.train_location_network();
+                TLTrainer.train_location_network(xmlFile);
             }
 
                 break;
             case 2:
-                train(xmlFile, xmlFile2);
+                //train(xmlFile, xmlFile2);
+            {
+                TLTrainer.train_location_network_with_tests(xmlFile, xmlFile2);
+            }
                 break;
         }
     }
     else
     {
-        train_resnet(xmlFile);
+        //train_resnet(xmlFile);
+        cout << "ResNet" << endl;
+        location_detector_trainer<resnet_net_type> TLTrainer;
+        TLTrainer.train_location_network(xmlFile);
     }
 
     stopwatch.stop();
@@ -191,7 +200,12 @@ int start_train_sp(const std::string netFile, const std::string xmlFile)
 
     Stopwatch stopwatch;
     stopwatch.start();
-    train_shape_predictor(netFile, xmlFile);
+    //train_shape_predictor(netFile, xmlFile);
+
+    location_detector_trainer<net_type> tld;
+    tld.train_shape_predictor(netFile, xmlFile);
+
+
     stopwatch.stop();
     cout << "Shape predictor training finished after: " << stopwatch.formatted() << endl;
     return 0;
@@ -207,7 +221,11 @@ int start_train_state(const std::string xmlFile, const std::string outFile)
 
     Stopwatch stopwatch;
     stopwatch.start();
-    train_state(xmlFile, outFile);
+    //train_state(xmlFile, outFile);
+
+    state_detector_trainer<state_net_type> stateDetectorTrainer;
+    stateDetectorTrainer.train_state_network(xmlFile, outFile);
+
     stopwatch.stop();
     cout << "State net finished training after: " << stopwatch.formatted() << endl;
     return 0;
