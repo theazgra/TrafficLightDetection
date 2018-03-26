@@ -538,7 +538,7 @@ TLState get_traffic_light_state(cv::Mat & img, bool verbose)
 
 }
 /*********************************************************************************************************************************************************/
-void save_found_crop(cv::Mat & mat, dlib::mmod_rect rectangle, int imgIndex, int labelIndex)
+void save_found_crop(cv::Mat & mat, dlib::rectangle rectangle, int imgIndex, int labelIndex)
 {
     cv::Mat cropped = crop_image(mat, rectangle);
 
@@ -594,10 +594,10 @@ dlib::rgb_pixel get_color_for_state(TLState state)
     return dlib::rgb_pixel(10, 10, 10);
 }
 /*********************************************************************************************************************************************************/
-void save_found_crop(cv::Mat &mat, dlib::mmod_rect detRect, std::string fileName, dlib::rectangle sizeRect)
+void save_found_crop(cv::Mat &mat, dlib::rectangle detRect, std::string fileName, dlib::rectangle sizeRect)
 {
 	using namespace cv;
-    cv::Mat cropped = crop_image(mat, detRect.rect);
+    cv::Mat cropped = crop_image(mat, detRect);
     cv::cvtColor(cropped, cropped, CV_BGR2RGB);
     if (sizeRect.is_empty())
     {
@@ -608,15 +608,15 @@ void save_found_crop(cv::Mat &mat, dlib::mmod_rect detRect, std::string fileName
     }
     else
     {
-        if (sizeRect.width() > detRect.rect.width() && sizeRect.height() > detRect.rect.height())
+        if (sizeRect.width() > detRect.width() && sizeRect.height() > detRect.height())
         {	
-            long DeltaW = sizeRect.width() - detRect.rect.width();
-            long DeltaH = sizeRect.height() - detRect.rect.height();
+            long DeltaW = sizeRect.width() - detRect.width();
+            long DeltaH = sizeRect.height() - detRect.height();
 
             cv::Mat resized = cv::Mat::zeros(sizeRect.height(), sizeRect.width(), mat.type());
 	    //cv::Scalar black = cv::Scalar::all(0);
             //cv::copyMakeBorder(cropped, resized, 0, DeltaH, 0, DeltaW, BORDER_CONSTANT, black);
-	    cropped.copyTo(resized(cv::Rect(0, 0, cropped.cols, cropped.rows)));
+	        cropped.copyTo(resized(cv::Rect(0, 0, cropped.cols, cropped.rows)));
             std::cout << "Saving sized up: " << fileName << std::endl;
             cv::imwrite(fileName, resized);
         }
@@ -630,7 +630,7 @@ void save_found_crop(cv::Mat &mat, dlib::mmod_rect detRect, std::string fileName
     }
 }
 /*********************************************************************************************************************************************************/
-void save_found_crop(const dlib::matrix<dlib::rgb_pixel>& image, dlib::mmod_rect detRect, std::string fileName, dlib::rectangle sizeRect)
+void save_found_crop(const dlib::matrix<dlib::rgb_pixel>& image, dlib::rectangle detRect, std::string fileName, dlib::rectangle sizeRect)
 {
     using namespace dlib;
 
@@ -643,10 +643,10 @@ void save_found_crop(const dlib::matrix<dlib::rgb_pixel>& image, dlib::mmod_rect
     }
     else
     {
-        if (sizeRect.width() > detRect.rect.width() && sizeRect.height() > detRect.rect.height())
+        if (sizeRect.width() > detRect.width() && sizeRect.height() > detRect.height())
         {
-            long DeltaW = sizeRect.width() - detRect.rect.width();
-            long DeltaH = sizeRect.height() - detRect.rect.height();
+            long DeltaW = sizeRect.width() - detRect.width();
+            long DeltaH = sizeRect.height() - detRect.height();
 
             matrix<rgb_pixel> sized(sizeRect.height(), sizeRect.width());
 
@@ -734,4 +734,17 @@ bool valid_rectangle(const dlib::rectangle& rect, const cv::Mat& img)
         return false;
 
     return true;
+}
+/*********************************************************************************************************************************************************/
+int number_of_label_boxes(std::vector<dlib::mmod_rect> boxes)
+{
+    int count = 0;
+
+    for (dlib::mmod_rect box : boxes)
+    {
+        if (!box.ignore)
+            ++count;
+    }
+
+    return count;
 }

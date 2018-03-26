@@ -19,6 +19,64 @@
 #include "cv_utils.h"
 #include "Stopwatch.h"
 
+/// Test type
+enum TestType
+{
+    /// Dipslay images
+    Display,
+    /// Don't display images.
+    NoDisplay,
+    /// Display only images with errors in detection
+    OnlyErrorDisplay
+};
+
+enum CudaJobType
+{
+    SaveCrops,
+    SaveImages
+};
+
+/// This passes importatnt informations about job to be executed on cuda device.
+struct CudaJobInfo
+{
+    std::string netFile;
+    std::string stateNetFile;
+    std::string resultFolder;
+    std::vector<dlib::matrix<dlib::rgb_pixel>> jobImages;
+    Stopwatch stopwatch;
+    int deviceId;
+    ulong frameIndexOffset;
+    ulong begin;
+    ulong end;
+    CudaJobType jobType;
+
+    dlib::rectangle sizeRectangle;
+
+    CudaJobInfo(
+            int deviceId,
+            const std::string& netFile,
+            const std::string& stateNetFile,
+            const std::string& resultFolder,
+            const std::vector<dlib::matrix<dlib::rgb_pixel>>& jobImages,
+            ulong begin,
+            ulong end,
+            CudaJobType jobType)
+    {
+        this->netFile = netFile;
+        this->stateNetFile = stateNetFile;
+        this->deviceId = deviceId;
+        this->begin = begin;
+        this->end = end;
+        this->jobImages = jobImages;
+
+        this->stopwatch = Stopwatch("Cuda device: " + std::to_string(deviceId));
+        this->frameIndexOffset = begin;
+        this->resultFolder = resultFolder;
+
+        this->jobType = jobType;
+    }
+};
+
 /// Loads settings from xml file. Setting global variables.
 /// \param xmlSettingsFile XML file with settings.
 /// \return True if load was successfull.

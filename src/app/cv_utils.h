@@ -183,21 +183,21 @@ TLState get_traffic_light_state(cv::Mat & img, bool verbose = false);
 /// \param rectangle Detection rectangle.
 /// \param imgIndex Image index, used to construct file name.
 /// \param labelIndex Label index, used to construct file name.
-void save_found_crop(cv::Mat & mat, dlib::mmod_rect rectangle, int imgIndex, int labelIndex);
+void save_found_crop(cv::Mat & mat, dlib::rectangle rectangle, int imgIndex, int labelIndex);
 
 /// Saves found object, with possibility to rescale saved image (OpenCV).
 /// \param mat OpenCV image, where object was found.
 /// \param detRect Detection rectangle.
 /// \param fileName file name of image.
 /// \param sizeRect Rectangle used to rescale image.
-void save_found_crop(cv::Mat & mat, dlib::mmod_rect detRect, std::string fileName, dlib::rectangle sizeRect = dlib::rectangle());
+void save_found_crop(cv::Mat & mat, dlib::rectangle detRect, std::string fileName, dlib::rectangle sizeRect = dlib::rectangle());
 
 /// Saves found object, with possibility to rescale saved image (Dlib).
 /// \param image Dlib image, where object was found.
 /// \param detRect Detection rectangle.
 /// \param fileName file name of image.
 /// \param sizeRect Rectangle used to rescale image.
-void save_found_crop(const dlib::matrix<dlib::rgb_pixel>& image, dlib::mmod_rect detRect, std::string fileName, dlib::rectangle sizeRect = dlib::rectangle());
+void save_found_crop(const dlib::matrix<dlib::rgb_pixel>& image, dlib::rectangle detRect, std::string fileName, dlib::rectangle sizeRect = dlib::rectangle());
 
 /// Crops OpenCV image with dlib rectangle.
 /// \param mat OpenCV image to crop.
@@ -239,6 +239,10 @@ void convert_to_grayscale(dlib::matrix<dlib::rgb_pixel>& image);
 /// \param image Reference to OpenCV img.
 void convert_to_grayscale(dlib::array2d<dlib::rgb_pixel>& image);
 
+/// Get number of valid label boxes.
+/// \param boxes All label boxes.
+/// \return Number of valid label boxes.
+int number_of_label_boxes(std::vector<dlib::mmod_rect> boxes);
 
 #endif //DISPLAYIMAGE_OPENCVUTILS_H
 

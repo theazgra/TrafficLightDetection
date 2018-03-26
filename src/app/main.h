@@ -47,7 +47,7 @@ int main(int argc, const char* argv[]);
 /// \param xmlFile2 Second XML file of data annotatations.
 /// \param resnet If ResNet should be used.
 /// \return Exit code.
-int start_train(std::string xmlFile, std::string xmlFile2 = "", bool resnet = false);
+int start_train(const std::string &xmlFile, bool resnet, const std::string &xmlFile2 = "");
 
 /// Start testing of CNN.
 /// \param netFile Serialized network.
@@ -55,65 +55,63 @@ int start_train(std::string xmlFile, std::string xmlFile2 = "", bool resnet = fa
 /// \param display If results should be displayed.
 /// \param displayErr If only error in detection should be displayed.
 /// \return Exit code.
-int start_test(std::string netFile, std::string xmlFile, bool display = false, bool displayErr = false);
+int start_test(const std::string &netFile, const std::string &stateNetFile, const std::string &xmlFile, bool displayErr,
+               bool display, bool resnet);
 
 /// Train state predicting CNN.
 /// \param xmlFile XML file of data annotatations.
 /// \param outFile File to which serialize results.
 /// \return Exit code.
-int start_train_state(std::string xmlFile, std::string outFile);
+int start_train_state(std::string &xmlFile, std::string &outFile);
 
 /// Train shape predictor, to improve traffic light detection.
 /// \param netFile Serialized network.
 /// \param xmlFile XML file of data annotatations.
 /// \return Exit code.
-int start_train_sp(std::string netFile, std::string xmlFile);
+int start_train_sp(std::string &netFile, std::string &xmlFile, bool resnet);
 
 /// Start cropper test.
 /// \param xmlFile XML file of data annotatations.
 /// \param display If crops should be displayed
 /// \return Exit code.
-int start_cropper_test(std::string xmlFile, bool display);
+int start_cropper_test(std::string &xmlFile, bool display);
 
 /// Test the state detection.
 /// \param netFile Serialized state network.
 /// \param imgFile Input image file.
 /// \return Exit code.
-int start_detect_state(std::string netFile, std::string imgFile);
+int start_detect_state(std::string &netFile, std::string &imgFile);
 
 /// Start visualization.
 /// \param netFile Serialized network.
 /// \param imgFile Input image file.
 /// \return Exit code.
-int start_visualize(std::string netFile, std::string imgFile);
+int start_visualize(std::string &netFile, std::string &imgFile, bool resnet);
 
 /// Start saving crops.
 /// \param netFile Serialized network.
 /// \param xmlFile XML file of data annotatations.
 /// \param outFolder Output folder, where to save results.
 /// \return Exit code.
-int start_crops(std::string netFile, std::string xmlFile, std::string outFolder);
+int start_crops(const std::string &netFile, const std::string &stateNetFile, const std::string &xmlFile,
+                const std::string &outFolder, bool resnet);
 
 /// Start saving sized crops. Size is defined in app_settings.xml
 /// \param netFile Serialized network.
 /// \param xmlFile XML file of data annotatations.
 /// \param outFolder Output folder, where to save results.
 /// \return Exit code.
-int start_sized_crops(std::string netFile, std::string xmlFile, std::string outFolder);
+int start_sized_crops(const std::string &netFile, const std::string &stateNetFile, const std::string &xmlFile,
+                      const std::string &outFolder, bool resnet);
 
 /// Start processing video file.
 /// \param netFile Serialized network.
 /// \param videoFile Input video file.
 /// \param outFolder Output folder, where to save results.
 /// \return Exit code.
-int start_video(std::string netFile, std::string videoFile, std::string outFolder);
+int start_video(const std::string &netFile, const std::string &stateNetFile, const std::string &videoFile,
+                const std::string &outFolder, bool resnet);
 
-/// Start processing frames from xml file.
-/// \param netFile Serialized network.
-/// \param xmlFile XML file of data annotatations.
-/// \param outFolder Output folder, where to save results.
-/// \return Exit code.
-int start_video_frames(std::string netFile, std::string xmlFile, std::string outFolder);
 
 /// Start processing frames from xml file and using shape predictor.
 /// \param netFile Serialized network.
@@ -122,7 +120,8 @@ int start_video_frames(std::string netFile, std::string xmlFile, std::string out
 /// \param stateNetFile Serialized state network.
 /// \param resnet If resnet should be used.
 /// \return Exit code.
-int start_video_frames_sp(std::string netFile, std::string xmlFile, std::string outFolder, std::string stateNetFile, bool resnet = false);
+int start_video_frames(const std::string netFile, const std::string stateNetFile, const std::string outFolder,
+                       const std::string xmlFile, bool resnet);
 
 
 #endif //TLD_MAIN_H

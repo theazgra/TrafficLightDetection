@@ -14,8 +14,7 @@
 /// \return Number of ignored boxes.
 int overlapped_boxes_count(std::vector<dlib::mmod_rect> boxes, const dlib::test_box_overlap& overlaps);
 
-/// First training method.
-/// \param trainFile XML file with data annotations.
+
 void train(const std::string trainFile);
 
 /// Second training method (train-test method)

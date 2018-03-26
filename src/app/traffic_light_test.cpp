@@ -11,24 +11,6 @@
 //width used for drawing rectangle
 unsigned int RECT_WIDTH = 3;
 
-/**
- * Get the number of not ignored label boxes.
- * @param boxes Vector of mmod_rectangles.
- * @return Number of boxes which are not ignored.
- */
-int number_of_label_boxes(std::vector<dlib::mmod_rect> boxes)
-{
-    int count = 0;
-
-    for (mmod_rect box : boxes)
-    {
-        if (!box.ignore)
-            ++count;
-    }
-
-    return count;
-}
-/*********************************************************************************************************************************************************/
 void test(std::string netFile, std::string testFile, TestType testType)
 {
     using namespace std;
@@ -800,6 +782,7 @@ void save_video_frames_with_sp2(const std::string netFile, const std::string sta
 void process_frames_in_parrallel(const std::string netFile, const std::string stateNetFile,
                                  const std::string xmlFile, const std::string resultFolder)
 {
+    /*
     using namespace dlib;
 
     std::cout << "Processing in parrallel" << std::endl;
@@ -842,6 +825,7 @@ void process_frames_in_parrallel(const std::string netFile, const std::string st
 
     std::cout << "Average frame time across all cuda devices: " << frameTime << std::endl;
     std::cout << "Average FPS across all cuda devices: " << FPS << std::endl;
+     */
 
 }
 /*********************************************************************************************************************************************************/

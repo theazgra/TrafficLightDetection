@@ -5,12 +5,18 @@
 #include <string>
 #include "settings.h"
 
+/// Template class for state detection trainers.
+/// \tparam StateNetType Type of CNN.
 template <
         typename StateNetType
 >
 class state_detector_trainer {
 
 public:
+
+    /// Train network for detection of state.
+    /// \param trainFile XML file with data annotations.
+    /// \param outFile Serialization file.
     void train_state_network(const std::string &stateDatasetFile, const std::string& outFile)
     {
         using namespace dlib;

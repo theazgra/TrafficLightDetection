@@ -8,41 +8,8 @@
 
 #include "settings.h"
 
-/// Test type
-enum TestType
-{
-    /// Dipslay images
-    Display,
-    /// Don't display images.
-    NoDisplay,
-    /// Display only images with errors in detection
-    OnlyErrorDisplay
-};
 
-/// This passes importatnt informations about job to be executed on cuda device.
-struct CudaJobInfo
-{
-    std::string netFile;
-    std::string stateNetFile;
-    std::string resultFolder;
-    std::vector<dlib::matrix<dlib::rgb_pixel>> jobImages;
-    Stopwatch stopwatch;
-    int deviceId;
-    uint frameIndexOffset;
 
-    CudaJobInfo(
-            int deviceId, const std::string netFile, const std::string stateNetFile,
-            const std::string resultFolder, uint frameIndexOffset)
-    {
-        this->netFile = netFile;
-        this->stateNetFile = stateNetFile;
-        this->deviceId = deviceId;
-
-        this->stopwatch = Stopwatch("Cuda device: " + std::to_string(deviceId));
-        this->frameIndexOffset = frameIndexOffset;
-        this->resultFolder = resultFolder;
-    }
-};
 
 
 /// Basic test method.
@@ -118,10 +85,6 @@ void visualize_detection(std::string netFile, std::string imgFile);
 /// \return Vector of detected objects locations.
 std::vector<std::vector<dlib::mmod_rect>> get_detected_rectanges(const std::string netFile, const std::string xmlFile);
 
-/// Get number of valid label boxes.
-/// \param boxes All label boxes.
-/// \return Number of valid label boxes.
-int number_of_label_boxes(std::vector<dlib::mmod_rect> boxes);
 
 /// Detect state of traffic light.
 /// \param netFile Serialized state network.

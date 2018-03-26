@@ -2,10 +2,10 @@
 #define TLD_TRAFFIC_LIGHT_DETECTOR_TRAINER_H
 
 
-#include <iostream>
-#include <string>
-#include "settings.h"
+#include "traffic_light_detector.h"
 
+/// Template class for location detection of traffic lights.
+/// \tparam LocationNetType Type of CNN.
 template <
         typename LocationNetType
 >
@@ -43,7 +43,9 @@ private:
 
 public:
 
-
+    /// First training metod, training in mini batches.
+    /// \param locationDatasetFile Xml file with data annotations.
+    /// \param outFile Output file for serialization.
     void train_location_network(const std::string &locationDatasetFile, const std::string& outFile = "") {
         using namespace std;
         using namespace dlib;
@@ -142,6 +144,10 @@ public:
     }
 
     /*********************************************************************************************************************************************************/
+    /// Second training method, with test every 30 training mini batches.
+    /// \param locationDatasetFile Xml file with data annotations.
+    /// \param testXmlFile Xml file with data annotations for test images.
+    /// \param outFile Output file for serialization.
     void train_location_network_with_tests(const std::string &locationDatasetFile, const std::string& testXmlFile, const std::string& outFile = "")
     {
         using namespace std;
@@ -264,6 +270,11 @@ public:
         cout << "Training is completed." << endl;
     }
     /*********************************************************************************************************************************************************/
+
+    /// Train shape predictor, to enhance traffic light detection.
+    /// \param serializedLocationNet Serialized network.
+    /// \param xmlFile XML file with data annotations.
+    template <typename LocationTestNetType, typename StateTestNetType>
     void train_shape_predictor(const std::string& serializedLocationNet, const std::string& xmlFile)
     {
         using namespace std;
@@ -272,7 +283,9 @@ public:
         string shapePredictorDatasetFile = xmlFile + "sp.xml";
 
         cout << "Getting detection rectangles." << endl;
-        std::vector<std::vector<mmod_rect>> detections = get_detected_rectanges(serializedLocationNet, xmlFile);
+        traffic_light_detector<LocationTestNetType, StateTestNetType> tl_detector;
+        //std::vector<std::vector<mmod_rect>> detections = get_detected_rectanges(serializedLocationNet, xmlFile);
+        std::vector<std::vector<mmod_rect>> detections = tl_detector.get_detected_rectanges_for_sp(serializedLocationNet, xmlFile);
 
         image_dataset_metadata::dataset xmlDataset, shapePredictorDataset;
 
