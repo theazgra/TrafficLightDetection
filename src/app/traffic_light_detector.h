@@ -117,6 +117,8 @@ public:
                 draw_state(scaledImage, spImprovedRect, detectedState);
 
             }
+
+            std::cin.get();
         }
 
         cout << "==============================================" << endl;
@@ -546,6 +548,7 @@ public:
 
         matrix<rgb_pixel> scaledFrame;
 
+
         for (const matrix<rgb_pixel>& frame : jobInfo.jobImages)
         {
 
@@ -557,6 +560,7 @@ public:
 
             std::vector<mmod_rect> detections = net(scaledFrame);
 
+            uint labelIndex = 0;
             for (mmod_rect& detection : detections)
             {
 
@@ -581,6 +585,7 @@ public:
 
                 if (jobInfo.jobType == SaveCrops)
                 {
+                    std::string fileName = jobInfo.resultFolder + "/crop_" + std::to_string(frameNum) + "_" + std::to_string(++labelIndex) + ".png";
                     save_found_crop(frame, transform_rectangle_back(spImprovedRect, FRAME_SCALING), "", jobInfo.sizeRectangle);
                     jobInfo.stopwatch.end_lap();
                     continue;
