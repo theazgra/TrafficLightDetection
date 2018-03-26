@@ -35,7 +35,7 @@ void test_cropper(const std::string xmlFile, bool display, bool displayOnly)
 
         cropper(BATCH_SIZE, imgs, boxes, batchImgs, batchBoxes);
 
-
+/*
         if (!displayOnly)
         {
             cout << endl << "Testing boxes..." << endl;
@@ -62,7 +62,7 @@ void test_cropper(const std::string xmlFile, bool display, bool displayOnly)
             cout << "Percent of boxes correct: " << percentCorrect << endl;
 
         }
-
+*/
         dlib::rand rnd;
 
         if (display || displayOnly)

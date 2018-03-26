@@ -298,8 +298,9 @@ int start_visualize(string &netFile, string &imgFile, bool resnet)
         cout << "Image does not exist!" << endl;
         return 1;
     }
-    
-    visualize_detection(netFile, imgFile);
+
+    cout << "Not supported at this moment" << endl;
+    //visualize_detection(netFile, imgFile);
     return 0;
 }
 /*********************************************************************************************************************************************************/

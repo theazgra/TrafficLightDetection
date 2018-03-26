@@ -643,6 +643,7 @@ void save_found_crop(const dlib::matrix<dlib::rgb_pixel>& image, dlib::rectangle
     }
     else
     {
+        //BUG HERE.
         if (sizeRect.width() > detRect.width() && sizeRect.height() > detRect.height())
         {
             long DeltaW = sizeRect.width() - detRect.width();

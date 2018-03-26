@@ -24,7 +24,11 @@ private:
 
 public:
 
-
+    /// Basic test method.
+    /// \param netFile Serialized network.
+    /// \param stateNetFile Serialized state network.
+    /// \param testFile Xml file with data annotations.
+    /// \param testType Test type.
     void test(const std::string& netFile, const std::string& stateNetFile, const std::string& testFile, TestType testType)
     {
         using namespace std;
@@ -128,6 +132,11 @@ public:
 
     }
     /*********************************************************************************************************************************************************/
+    /// Save processed frames from video file.
+    /// \param netFile Serialized network.
+    /// \param stateNetFile Serialized state network.
+    /// \param videoFile Video file.
+    /// \param resultFolder Where to save images.
     void save_video(const std::string& netFile, const std::string& stateNetFile, const std::string& videoFile, std::string resultFolder)
     {
         using namespace dlib;
@@ -205,6 +214,10 @@ public:
     }
 
 /*********************************************************************************************************************************************************/
+    /// Get detected object locations.
+    /// \param netFile Serialized network.
+    /// \param xmlFile Xml file with data annotations.
+    /// \return Vector of detected objects locations.
     std::vector<std::vector<dlib::mmod_rect>> get_detected_rectanges_for_sp(const std::string& netFile, const std::string& xmlFile)
     {
         using namespace dlib;
@@ -358,6 +371,11 @@ public:
          */
     }
 /*********************************************************************************************************************************************************/
+
+    /// Detect state of traffic light.
+    /// \param netFile Serialized state network.
+    /// \param dlibImg Image of found traffic light.
+    /// \return Detected state.
     TLState detect_state(const std::string &netFile, const dlib::matrix<dlib::rgb_pixel> dlibImg)
     {
         using namespace dlib;
@@ -390,6 +408,11 @@ public:
         return state;
     }
 /*********************************************************************************************************************************************************/
+
+    /// Get detected state based, based on state net detections.
+    /// \param detections State net detections.
+    /// \param image Found traffic light image.
+    /// \return Detected state.
     TLState get_detected_state(const std::vector<dlib::mmod_rect>& detections, const dlib::matrix<dlib::rgb_pixel>& image)
     {
 
@@ -427,6 +450,13 @@ public:
         return Ambiguous;
     }
 /*********************************************************************************************************************************************************/
+
+    /// Save detected objects.
+    /// \param netFile Serialized network.
+    /// \param stateNetFile Serialized state network.
+    /// \param xmlFile Xml file with data annotations.
+    /// \param folderPath Where to save images.
+    /// \param sizeRect Optional image size.
     void save_detected_objects(const std::string& netFile, const std::string& stateNetFile, const std::string &folderPath, dlib::rectangle sizeRect,
                                const std::string &xmlFile)
     {
@@ -479,6 +509,11 @@ public:
 
     }
 /*********************************************************************************************************************************************************/
+    /// Save processed from from xml file, uses shape predictor to enhance prediction and state net to detect traffic light state. (ResNet)
+    /// \param netFile Serialized network.
+    /// \param stateNetFile Serialized state network.
+    /// \param xmlFile Xml file with data annotations.
+    /// \param resultFolder Where to save images.
     void save_video_frames_with_sp2(const std::string& netFile, const std::string& stateNetFile, const std::string& xmlFile, const std::string& resultFolder)
     {
         using namespace dlib;
@@ -528,6 +563,8 @@ public:
 
     }
 /*********************************************************************************************************************************************************/
+    /// Cuda device job. Processing images given in jobinfo.
+    /// \param jobInfo Structure containing all needed informations.
     void cuda_device_process_job(CudaJobInfo& jobInfo)
     {
         using namespace std;

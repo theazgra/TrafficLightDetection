@@ -6,7 +6,7 @@
 
 #include "settings.h"
 #include <iostream>
-#include "traffic_light_train.h"
+#include "traffic_light_detector.h"
 #include <dlib/image_transforms.h>
 
 /// Test random cropper with parameters set in app_settings.xml
