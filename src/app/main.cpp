@@ -218,11 +218,18 @@ int start_train_sp(string &netFile, string &xmlFile, bool resnet)
     stopwatch.start();
     //train_shape_predictor(netFile, xmlFile);
 
-    location_detector_trainer<net_type> tld;
+
     if (!resnet)
+    {
+        location_detector_trainer<net_type> tld;
         tld.train_shape_predictor<test_net_type, state_test_net_type>(netFile, xmlFile);
+    }
     else
+    {
+        location_detector_trainer<resnet_net_type> tld;
         tld.train_shape_predictor<resnet_test_net_type, state_test_net_type>(netFile, xmlFile);
+    }
+
 
     stopwatch.stop();
     cout << "Shape predictor training finished after: " << stopwatch.formatted() << endl;
