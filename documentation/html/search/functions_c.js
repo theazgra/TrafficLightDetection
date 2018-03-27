@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['process_5fframes_5fin_5fparrallel',['process_frames_in_parrallel',['../traffic__light__test_8h.html#a75d9879fd6cb49b5acfaf70b64736018',1,'traffic_light_test.cpp']]]
+  ['overlapped_5fboxes_5fcount',['overlapped_boxes_count',['../traffic__light__train_8h.html#a4fadb05491f0562a1053f181f9a272f9',1,'traffic_light_train.h']]]
 ];

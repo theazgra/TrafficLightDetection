@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['load_5fsettings',['load_settings',['../settings_8h.html#acc6ebae5a07da3047d2da77acf7189d5',1,'settings.cpp']]],
-  ['logger',['Logger',['../classLogger.html#a576a9dfc03231c55948043ea67f2639d',1,'Logger']]]
+  ['is_5fcorrect_5fdetection',['is_correct_detection',['../cv__utils_8h.html#aee144e1c88b32c83357c24e920e8eef6',1,'cv_utils.cpp']]]
 ];

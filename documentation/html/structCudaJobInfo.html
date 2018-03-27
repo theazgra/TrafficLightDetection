@@ -75,13 +75,13 @@ $(function() {
 <p>This passes importatnt informations about job to be executed on cuda device.  
  <a href="structCudaJobInfo.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="traffic__light__test_8h_source.html">traffic_light_test.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="settings_8h_source.html">settings.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a06acff0a202617d2f28d7e5b043c19cd"><td class="memItemLeft" align="right" valign="top"><a id="a06acff0a202617d2f28d7e5b043c19cd"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>CudaJobInfo</b> (int deviceId, const std::string netFile, const std::string stateNetFile, const std::string resultFolder, uint frameIndexOffset)</td></tr>
-<tr class="separator:a06acff0a202617d2f28d7e5b043c19cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8ddac39745d2d5f91bed33b1df9d401"><td class="memItemLeft" align="right" valign="top"><a id="aa8ddac39745d2d5f91bed33b1df9d401"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>CudaJobInfo</b> (int deviceId, const std::string &amp;netFile, const std::string &amp;stateNetFile, const std::string &amp;resultFolder, const std::vector&lt; dlib::matrix&lt; dlib::rgb_pixel &gt;&gt; &amp;jobImages, ulong begin, ulong end, CudaJobType jobType)</td></tr>
+<tr class="separator:aa8ddac39745d2d5f91bed33b1df9d401"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -103,14 +103,26 @@ std::vector&lt; dlib::matrix&lt; dlib::rgb_pixel &gt; &gt;&#160;</td><td class="
 <tr class="memitem:acf85ec76776a464874fc398fa9944f7b"><td class="memItemLeft" align="right" valign="top"><a id="acf85ec76776a464874fc398fa9944f7b"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>deviceId</b></td></tr>
 <tr class="separator:acf85ec76776a464874fc398fa9944f7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b2a4b0b9024be23d7d05e3eca181a53"><td class="memItemLeft" align="right" valign="top"><a id="a9b2a4b0b9024be23d7d05e3eca181a53"></a>
-uint&#160;</td><td class="memItemRight" valign="bottom"><b>frameIndexOffset</b></td></tr>
-<tr class="separator:a9b2a4b0b9024be23d7d05e3eca181a53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac06377f0793c4a37f596bee0cefd7dca"><td class="memItemLeft" align="right" valign="top"><a id="ac06377f0793c4a37f596bee0cefd7dca"></a>
+ulong&#160;</td><td class="memItemRight" valign="bottom"><b>frameIndexOffset</b></td></tr>
+<tr class="separator:ac06377f0793c4a37f596bee0cefd7dca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a958fe54a4e08880c72f0e8ac670b10a1"><td class="memItemLeft" align="right" valign="top"><a id="a958fe54a4e08880c72f0e8ac670b10a1"></a>
+ulong&#160;</td><td class="memItemRight" valign="bottom"><b>begin</b></td></tr>
+<tr class="separator:a958fe54a4e08880c72f0e8ac670b10a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6b950ea32a99ee33e6abb4ebca1a8bd"><td class="memItemLeft" align="right" valign="top"><a id="ac6b950ea32a99ee33e6abb4ebca1a8bd"></a>
+ulong&#160;</td><td class="memItemRight" valign="bottom"><b>end</b></td></tr>
+<tr class="separator:ac6b950ea32a99ee33e6abb4ebca1a8bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f43ec14cdca0c140bb3aba6d403faa3"><td class="memItemLeft" align="right" valign="top"><a id="a8f43ec14cdca0c140bb3aba6d403faa3"></a>
+CudaJobType&#160;</td><td class="memItemRight" valign="bottom"><b>jobType</b></td></tr>
+<tr class="separator:a8f43ec14cdca0c140bb3aba6d403faa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd6239cd405c61f7d02e7d2c92129c2e"><td class="memItemLeft" align="right" valign="top"><a id="acd6239cd405c61f7d02e7d2c92129c2e"></a>
+dlib::rectangle&#160;</td><td class="memItemRight" valign="bottom"><b>sizeRectangle</b></td></tr>
+<tr class="separator:acd6239cd405c61f7d02e7d2c92129c2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This passes importatnt informations about job to be executed on cuda device. </p>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
-<li>/home/azgra/repos/TrafficLightDetection/src/app/<a class="el" href="traffic__light__test_8h_source.html">traffic_light_test.h</a></li>
+<li>/home/azgra/repos/TrafficLightDetection/src/app/<a class="el" href="settings_8h_source.html">settings.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

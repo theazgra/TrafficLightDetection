@@ -1,3 +1,7 @@
+/** \file location_detector_trainer.h
+ * Routines to train location detector.
+ */
+
 #ifndef TLD_TRAFFIC_LIGHT_DETECTOR_TRAINER_H
 #define TLD_TRAFFIC_LIGHT_DETECTOR_TRAINER_H
 

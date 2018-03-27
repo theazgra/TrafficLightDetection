@@ -1,5 +1,5 @@
 /** \file traffic_light_train.h
- * Training methods.
+ * Routines moved to location_detector_trainer.h and state_detector_trainer.h
  */
 
 #ifndef BACHELOR_TRAFFIC_LIGHT_TRAIN_H

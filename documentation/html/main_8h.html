@@ -68,6 +68,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#namespaces">Namespaces</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">main.h File Reference</div>  </div>
@@ -78,68 +79,53 @@ $(function() {
 <code>#include &quot;<a class="el" href="traffic__light__test_8h_source.html">traffic_light_test.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="cv__utils_8h_source.html">cv_utils.h</a>&quot;</code><br />
 <code>#include &quot;extern_files/args.hxx&quot;</code><br />
+<code>#include &quot;<a class="el" href="location__detector__trainer_8h_source.html">location_detector_trainer.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="state__detector__trainer_8h_source.html">state_detector_trainer.h</a>&quot;</code><br />
 </div>
 <p><a href="main_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:namespacefile"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefile.html">file</a></td></tr>
+<tr class="memdesc:namespacefile"><td class="mdescLeft">&#160;</td><td class="mdescRight">Namespace used to avoid collisions with file_exists. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:af05ae8f239bcec4cfece8f330c1420e4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8h.html#af05ae8f239bcec4cfece8f330c1420e4">file::file_exists</a> (std::string file)</td></tr>
-<tr class="separator:af05ae8f239bcec4cfece8f330c1420e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc8eff4b3aa857466d27c5e940e3eb95"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefile.html#adc8eff4b3aa857466d27c5e940e3eb95">file::file_exists</a> (const std::string &amp;file)</td></tr>
+<tr class="separator:adc8eff4b3aa857466d27c5e940e3eb95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f704fe30575ed39fdfc872a4b7e468b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefile.html#a1f704fe30575ed39fdfc872a4b7e468b">file::files_exist</a> (const std::vector&lt; std::string &gt; &amp;fileNames)</td></tr>
+<tr class="separator:a1f704fe30575ed39fdfc872a4b7e468b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac0f2228420376f4db7e1274f2b41667c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8h.html#ac0f2228420376f4db7e1274f2b41667c">main</a> (int argc, const char *argv[])</td></tr>
 <tr class="separator:ac0f2228420376f4db7e1274f2b41667c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab574f5d58138e95a79bed45be42679a4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8h.html#ab574f5d58138e95a79bed45be42679a4">start_train</a> (std::string xmlFile, std::string xmlFile2=&quot;&quot;, bool resnet=false)</td></tr>
-<tr class="separator:ab574f5d58138e95a79bed45be42679a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a29a0cbf3b0dcc9c7163ff74f4622cbec"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8h.html#a29a0cbf3b0dcc9c7163ff74f4622cbec">start_test</a> (std::string netFile, std::string xmlFile, bool display=false, bool displayErr=false)</td></tr>
-<tr class="separator:a29a0cbf3b0dcc9c7163ff74f4622cbec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acdc2f69137582190df6dd7399766b43e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8h.html#acdc2f69137582190df6dd7399766b43e">start_train_state</a> (std::string xmlFile, std::string outFile)</td></tr>
-<tr class="separator:acdc2f69137582190df6dd7399766b43e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e177a5d73da5c5822afe3c3805236bc"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8h.html#a6e177a5d73da5c5822afe3c3805236bc">start_train_sp</a> (std::string netFile, std::string xmlFile)</td></tr>
-<tr class="separator:a6e177a5d73da5c5822afe3c3805236bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a244ae341f226953e64490b6812b6908f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8h.html#a244ae341f226953e64490b6812b6908f">start_cropper_test</a> (std::string xmlFile, bool display)</td></tr>
-<tr class="separator:a244ae341f226953e64490b6812b6908f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f9d3b5eec232253d63fd2e3c83294d8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8h.html#a1f9d3b5eec232253d63fd2e3c83294d8">start_detect_state</a> (std::string netFile, std::string imgFile)</td></tr>
-<tr class="separator:a1f9d3b5eec232253d63fd2e3c83294d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5e0e79dd5579428296271901993ebec"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8h.html#aa5e0e79dd5579428296271901993ebec">start_visualize</a> (std::string netFile, std::string imgFile)</td></tr>
-<tr class="separator:aa5e0e79dd5579428296271901993ebec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c89f733d0a3ff5517a61dae2f30326a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8h.html#a9c89f733d0a3ff5517a61dae2f30326a">start_crops</a> (std::string netFile, std::string xmlFile, std::string outFolder)</td></tr>
-<tr class="separator:a9c89f733d0a3ff5517a61dae2f30326a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab865c9c6b8e34ee126a7abf5d1e5a90"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8h.html#aab865c9c6b8e34ee126a7abf5d1e5a90">start_sized_crops</a> (std::string netFile, std::string xmlFile, std::string outFolder)</td></tr>
-<tr class="separator:aab865c9c6b8e34ee126a7abf5d1e5a90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53eb3c0267918455a162bde1664d4c73"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8h.html#a53eb3c0267918455a162bde1664d4c73">start_video</a> (std::string netFile, std::string videoFile, std::string outFolder)</td></tr>
-<tr class="separator:a53eb3c0267918455a162bde1664d4c73"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af87ec2aff81476b5409b16aef094fb9c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8h.html#af87ec2aff81476b5409b16aef094fb9c">start_video_frames</a> (std::string netFile, std::string xmlFile, std::string outFolder)</td></tr>
-<tr class="separator:af87ec2aff81476b5409b16aef094fb9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af22f366a29361540c97343ed5f965283"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8h.html#af22f366a29361540c97343ed5f965283">start_video_frames_sp</a> (std::string netFile, std::string xmlFile, std::string outFolder, std::string stateNetFile, bool resnet=false)</td></tr>
-<tr class="separator:af22f366a29361540c97343ed5f965283"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ba94234fcbd902bb3533dcb2062a720"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8h.html#a9ba94234fcbd902bb3533dcb2062a720">start_train</a> (const std::string &amp;xmlFile, bool resnet, const std::string &amp;xmlFile2=&quot;&quot;)</td></tr>
+<tr class="separator:a9ba94234fcbd902bb3533dcb2062a720"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acdd6e44a9ec8057a1eadc0120257fcd0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8h.html#acdd6e44a9ec8057a1eadc0120257fcd0">start_test</a> (const std::string &amp;netFile, const std::string &amp;stateNetFile, const std::string &amp;xmlFile, bool displayErr, bool display, bool resnet)</td></tr>
+<tr class="separator:acdd6e44a9ec8057a1eadc0120257fcd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a9ca7caa58a39b12c00421e585b93ba"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8h.html#a3a9ca7caa58a39b12c00421e585b93ba">start_f_one</a> (const std::string &amp;netFile, const std::string &amp;stateNetFile, const std::string &amp;xmlFile, bool resnet)</td></tr>
+<tr class="separator:a3a9ca7caa58a39b12c00421e585b93ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade3ae52137edf3f08e0802307b119491"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8h.html#ade3ae52137edf3f08e0802307b119491">start_train_state</a> (const std::string &amp;xmlFile, const std::string &amp;outFile)</td></tr>
+<tr class="separator:ade3ae52137edf3f08e0802307b119491"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d694af385dfe74c7269c4268d171c9e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8h.html#a9d694af385dfe74c7269c4268d171c9e">start_train_sp</a> (const std::string &amp;netFile, const std::string &amp;xmlFile, bool resnet)</td></tr>
+<tr class="separator:a9d694af385dfe74c7269c4268d171c9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58757c0730b8f951aad9c7993c681f32"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8h.html#a58757c0730b8f951aad9c7993c681f32">start_cropper_test</a> (const std::string &amp;xmlFile, bool display)</td></tr>
+<tr class="separator:a58757c0730b8f951aad9c7993c681f32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5556ab095aface6f98f39cfd95a4426d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8h.html#a5556ab095aface6f98f39cfd95a4426d">start_detect_state</a> (const std::string &amp;netFile, const std::string &amp;imgFile)</td></tr>
+<tr class="separator:a5556ab095aface6f98f39cfd95a4426d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab79c36c34b6c871d82ab5f21b1523acb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8h.html#ab79c36c34b6c871d82ab5f21b1523acb">start_visualize</a> (const std::string &amp;netFile, const std::string &amp;imgFile, bool resnet)</td></tr>
+<tr class="separator:ab79c36c34b6c871d82ab5f21b1523acb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7043f777077473e6feca67ac95e43da7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8h.html#a7043f777077473e6feca67ac95e43da7">start_crops</a> (const std::string &amp;netFile, const std::string &amp;stateNetFile, const std::string &amp;xmlFile, const std::string &amp;outFolder, bool resnet)</td></tr>
+<tr class="separator:a7043f777077473e6feca67ac95e43da7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe72b79e17d52685b55bca5046998ff2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8h.html#afe72b79e17d52685b55bca5046998ff2">start_sized_crops</a> (const std::string &amp;netFile, const std::string &amp;stateNetFile, const std::string &amp;xmlFile, const std::string &amp;outFolder, bool resnet)</td></tr>
+<tr class="separator:afe72b79e17d52685b55bca5046998ff2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0287c1e87c4ddb2d341fd67e57c44804"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8h.html#a0287c1e87c4ddb2d341fd67e57c44804">start_video</a> (const std::string &amp;netFile, const std::string &amp;stateNetFile, const std::string &amp;videoFile, const std::string &amp;outFolder, bool resnet)</td></tr>
+<tr class="separator:a0287c1e87c4ddb2d341fd67e57c44804"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8075ba95bd0621c56f57b73258f71453"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8h.html#a8075ba95bd0621c56f57b73258f71453">start_video_frames</a> (const std::string &amp;netFile, const std::string &amp;stateNetFile, const std::string &amp;outFolder, const std::string &amp;xmlFile, bool resnet)</td></tr>
+<tr class="separator:a8075ba95bd0621c56f57b73258f71453"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Entry point. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="file_af05ae8f239bcec4cfece8f330c1420e4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#file_af05ae8f239bcec4cfece8f330c1420e4">&#9670;&nbsp;</a></span>file_exists()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool file::file_exists </td>
-          <td>(</td>
-          <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>file</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Check if file exists. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">file</td><td>to check if exists. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>True if file exists. </dd></dl>
-
-</div>
-</div>
 <a id="ac0f2228420376f4db7e1274f2b41667c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac0f2228420376f4db7e1274f2b41667c">&#9670;&nbsp;</a></span>main()</h2>
 
@@ -176,8 +162,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a244ae341f226953e64490b6812b6908f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a244ae341f226953e64490b6812b6908f">&#9670;&nbsp;</a></span>start_cropper_test()</h2>
+<a id="a58757c0730b8f951aad9c7993c681f32"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58757c0730b8f951aad9c7993c681f32">&#9670;&nbsp;</a></span>start_cropper_test()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -185,7 +171,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">int start_cropper_test </td>
           <td>(</td>
-          <td class="paramtype">std::string&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>xmlFile</em>, </td>
         </tr>
         <tr>
@@ -212,8 +198,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a9c89f733d0a3ff5517a61dae2f30326a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9c89f733d0a3ff5517a61dae2f30326a">&#9670;&nbsp;</a></span>start_crops()</h2>
+<a id="a7043f777077473e6feca67ac95e43da7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7043f777077473e6feca67ac95e43da7">&#9670;&nbsp;</a></span>start_crops()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -221,20 +207,32 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">int start_crops </td>
           <td>(</td>
-          <td class="paramtype">std::string&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>netFile</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::string&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>stateNetFile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>xmlFile</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>outFolder</em>&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>outFolder</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>resnet</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -246,8 +244,10 @@ Functions</h2></td></tr>
 <p>Start saving crops. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">netFile</td><td>Serialized network. </td></tr>
+    <tr><td class="paramname">stateNetFile</td><td>Serialized state network. </td></tr>
     <tr><td class="paramname">xmlFile</td><td>XML file of data annotatations. </td></tr>
     <tr><td class="paramname">outFolder</td><td>Output folder, where to save results. </td></tr>
+    <tr><td class="paramname">resnet</td><td>Use ResNet model. </td></tr>
   </table>
   </dd>
 </dl>
@@ -255,8 +255,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a1f9d3b5eec232253d63fd2e3c83294d8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1f9d3b5eec232253d63fd2e3c83294d8">&#9670;&nbsp;</a></span>start_detect_state()</h2>
+<a id="a5556ab095aface6f98f39cfd95a4426d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5556ab095aface6f98f39cfd95a4426d">&#9670;&nbsp;</a></span>start_detect_state()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -264,13 +264,13 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">int start_detect_state </td>
           <td>(</td>
-          <td class="paramtype">std::string&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>netFile</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::string&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>imgFile</em>&#160;</td>
         </tr>
         <tr>
@@ -291,8 +291,58 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aab865c9c6b8e34ee126a7abf5d1e5a90"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aab865c9c6b8e34ee126a7abf5d1e5a90">&#9670;&nbsp;</a></span>start_sized_crops()</h2>
+<a id="a3a9ca7caa58a39b12c00421e585b93ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a9ca7caa58a39b12c00421e585b93ba">&#9670;&nbsp;</a></span>start_f_one()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int start_f_one </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>netFile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>stateNetFile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>xmlFile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>resnet</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Call to measure accurace of model, uses F One scoring </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">netFile</td><td>Serialized network. </td></tr>
+    <tr><td class="paramname">stateNetFile</td><td>Serialized state network. </td></tr>
+    <tr><td class="paramname">xmlFile</td><td>XML file of data annotatations. </td></tr>
+    <tr><td class="paramname">resnet</td><td>Use ResNet model. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Exit code. </dd></dl>
+
+</div>
+</div>
+<a id="afe72b79e17d52685b55bca5046998ff2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe72b79e17d52685b55bca5046998ff2">&#9670;&nbsp;</a></span>start_sized_crops()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -300,20 +350,32 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">int start_sized_crops </td>
           <td>(</td>
-          <td class="paramtype">std::string&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>netFile</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::string&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>stateNetFile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>xmlFile</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>outFolder</em>&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>outFolder</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>resnet</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -325,8 +387,10 @@ Functions</h2></td></tr>
 <p>Start saving sized crops. Size is defined in app_settings.xml </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">netFile</td><td>Serialized network. </td></tr>
+    <tr><td class="paramname">stateNetFile</td><td>Serialized state network. </td></tr>
     <tr><td class="paramname">xmlFile</td><td>XML file of data annotatations. </td></tr>
     <tr><td class="paramname">outFolder</td><td>Output folder, where to save results. </td></tr>
+    <tr><td class="paramname">resnet</td><td>Use ResNet model. </td></tr>
   </table>
   </dd>
 </dl>
@@ -334,8 +398,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a29a0cbf3b0dcc9c7163ff74f4622cbec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a29a0cbf3b0dcc9c7163ff74f4622cbec">&#9670;&nbsp;</a></span>start_test()</h2>
+<a id="acdd6e44a9ec8057a1eadc0120257fcd0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acdd6e44a9ec8057a1eadc0120257fcd0">&#9670;&nbsp;</a></span>start_test()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -343,26 +407,38 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">int start_test </td>
           <td>(</td>
-          <td class="paramtype">std::string&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>netFile</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::string&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>stateNetFile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>xmlFile</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>display</em> = <code>false</code>, </td>
+          <td class="paramname"><em>displayErr</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>displayErr</em> = <code>false</code>&#160;</td>
+          <td class="paramname"><em>display</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>resnet</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -374,9 +450,11 @@ Functions</h2></td></tr>
 <p>Start testing of CNN. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">netFile</td><td>Serialized network. </td></tr>
+    <tr><td class="paramname">stateNetFile</td><td>Serialized state network. </td></tr>
     <tr><td class="paramname">xmlFile</td><td>XML file of data annotatations. </td></tr>
+    <tr><td class="paramname">display</td><td>Err If only error in detection should be displayed. </td></tr>
     <tr><td class="paramname">display</td><td>If results should be displayed. </td></tr>
-    <tr><td class="paramname">displayErr</td><td>If only error in detection should be displayed. </td></tr>
+    <tr><td class="paramname">resnet</td><td>Use ResNet model. </td></tr>
   </table>
   </dd>
 </dl>
@@ -384,8 +462,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ab574f5d58138e95a79bed45be42679a4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab574f5d58138e95a79bed45be42679a4">&#9670;&nbsp;</a></span>start_train()</h2>
+<a id="a9ba94234fcbd902bb3533dcb2062a720"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ba94234fcbd902bb3533dcb2062a720">&#9670;&nbsp;</a></span>start_train()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -393,20 +471,20 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">int start_train </td>
           <td>(</td>
-          <td class="paramtype">std::string&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>xmlFile</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>xmlFile2</em> = <code>&quot;&quot;</code>, </td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>resnet</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>resnet</em> = <code>false</code>&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>xmlFile2</em> = <code>&quot;&quot;</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -427,8 +505,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a6e177a5d73da5c5822afe3c3805236bc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6e177a5d73da5c5822afe3c3805236bc">&#9670;&nbsp;</a></span>start_train_sp()</h2>
+<a id="a9d694af385dfe74c7269c4268d171c9e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d694af385dfe74c7269c4268d171c9e">&#9670;&nbsp;</a></span>start_train_sp()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -436,14 +514,20 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">int start_train_sp </td>
           <td>(</td>
-          <td class="paramtype">std::string&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>netFile</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>xmlFile</em>&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>xmlFile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>resnet</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -456,6 +540,7 @@ Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">netFile</td><td>Serialized network. </td></tr>
     <tr><td class="paramname">xmlFile</td><td>XML file of data annotatations. </td></tr>
+    <tr><td class="paramname">resnet</td><td>Use ResNet model. </td></tr>
   </table>
   </dd>
 </dl>
@@ -463,8 +548,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="acdc2f69137582190df6dd7399766b43e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acdc2f69137582190df6dd7399766b43e">&#9670;&nbsp;</a></span>start_train_state()</h2>
+<a id="ade3ae52137edf3f08e0802307b119491"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade3ae52137edf3f08e0802307b119491">&#9670;&nbsp;</a></span>start_train_state()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -472,13 +557,13 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">int start_train_state </td>
           <td>(</td>
-          <td class="paramtype">std::string&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>xmlFile</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::string&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>outFile</em>&#160;</td>
         </tr>
         <tr>
@@ -499,8 +584,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a53eb3c0267918455a162bde1664d4c73"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a53eb3c0267918455a162bde1664d4c73">&#9670;&nbsp;</a></span>start_video()</h2>
+<a id="a0287c1e87c4ddb2d341fd67e57c44804"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0287c1e87c4ddb2d341fd67e57c44804">&#9670;&nbsp;</a></span>start_video()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -508,20 +593,32 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">int start_video </td>
           <td>(</td>
-          <td class="paramtype">std::string&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>netFile</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::string&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>stateNetFile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>videoFile</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>outFolder</em>&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>outFolder</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>resnet</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -533,8 +630,10 @@ Functions</h2></td></tr>
 <p>Start processing video file. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">netFile</td><td>Serialized network. </td></tr>
+    <tr><td class="paramname">stateNetFile</td><td>Serialized state network. </td></tr>
     <tr><td class="paramname">videoFile</td><td>Input video file. </td></tr>
     <tr><td class="paramname">outFolder</td><td>Output folder, where to save results. </td></tr>
+    <tr><td class="paramname">resnet</td><td>Use ResNet model. </td></tr>
   </table>
   </dd>
 </dl>
@@ -542,8 +641,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="af87ec2aff81476b5409b16aef094fb9c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af87ec2aff81476b5409b16aef094fb9c">&#9670;&nbsp;</a></span>start_video_frames()</h2>
+<a id="a8075ba95bd0621c56f57b73258f71453"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8075ba95bd0621c56f57b73258f71453">&#9670;&nbsp;</a></span>start_video_frames()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -551,75 +650,32 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">int start_video_frames </td>
           <td>(</td>
-          <td class="paramtype">std::string&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>netFile</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>xmlFile</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>outFolder</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Start processing frames from xml file. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">netFile</td><td>Serialized network. </td></tr>
-    <tr><td class="paramname">xmlFile</td><td>XML file of data annotatations. </td></tr>
-    <tr><td class="paramname">outFolder</td><td>Output folder, where to save results. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Exit code. </dd></dl>
-
-</div>
-</div>
-<a id="af22f366a29361540c97343ed5f965283"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af22f366a29361540c97343ed5f965283">&#9670;&nbsp;</a></span>start_video_frames_sp()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int start_video_frames_sp </td>
-          <td>(</td>
-          <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>netFile</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>xmlFile</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>outFolder</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>stateNetFile</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>outFolder</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>xmlFile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>resnet</em> = <code>false</code>&#160;</td>
+          <td class="paramname"><em>resnet</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -631,10 +687,11 @@ Functions</h2></td></tr>
 <p>Start processing frames from xml file and using shape predictor. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">netFile</td><td>Serialized network. </td></tr>
+    <tr><td class="paramname">stateNetFile</td><td>Serialized state network. </td></tr>
     <tr><td class="paramname">xmlFile</td><td>XML file of data annotatations. </td></tr>
     <tr><td class="paramname">outFolder</td><td>Output folder, where to save results. </td></tr>
     <tr><td class="paramname">stateNetFile</td><td>Serialized state network. </td></tr>
-    <tr><td class="paramname">resnet</td><td>If resnet should be used. </td></tr>
+    <tr><td class="paramname">resnet</td><td>Use ResNet model. </td></tr>
   </table>
   </dd>
 </dl>
@@ -642,8 +699,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa5e0e79dd5579428296271901993ebec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa5e0e79dd5579428296271901993ebec">&#9670;&nbsp;</a></span>start_visualize()</h2>
+<a id="ab79c36c34b6c871d82ab5f21b1523acb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab79c36c34b6c871d82ab5f21b1523acb">&#9670;&nbsp;</a></span>start_visualize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -651,14 +708,20 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">int start_visualize </td>
           <td>(</td>
-          <td class="paramtype">std::string&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>netFile</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>imgFile</em>&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>imgFile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>resnet</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -671,6 +734,7 @@ Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">netFile</td><td>Serialized network. </td></tr>
     <tr><td class="paramname">imgFile</td><td>Input image file. </td></tr>
+    <tr><td class="paramname">resnet</td><td>Use ResNet model. </td></tr>
   </table>
   </dd>
 </dl>

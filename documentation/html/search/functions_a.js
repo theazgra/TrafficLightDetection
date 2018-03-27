@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['number_5fof_5flabel_5fboxes',['number_of_label_boxes',['../traffic__light__test_8h.html#a1ef6466cc0088ba3ca578f365bee1654',1,'traffic_light_test.cpp']]]
+  ['main',['main',['../main_8cpp.html#ac0f2228420376f4db7e1274f2b41667c',1,'main(int argc, const char *argv[]):&#160;main.cpp'],['../main_8h.html#ac0f2228420376f4db7e1274f2b41667c',1,'main(int argc, const char *argv[]):&#160;main.cpp']]]
 ];

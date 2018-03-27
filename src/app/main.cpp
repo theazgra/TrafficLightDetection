@@ -21,6 +21,7 @@ int main(int argc, const char* argv[])
     args::Flag _trainState(methodGroup, "train-state", "Training state CNN. <xml> <out-file>", {"train-state"});
     args::Flag _trainSp(methodGroup, "train-sp", "Training of shape predictor.<xml> <net>", {"train-sp"});
     args::Flag _test(methodGroup, "test", "Overall testing in window. <xml> <net> <state-net> [display, display-error]", {"test"});
+    args::Flag _f_one_score(methodGroup, "f-one", "Measure net accuracy in F One score <xml> <net> <state-net>", {'f', "f-one"});
     args::Flag _testState(methodGroup, "test-state", "Testing state detection. <net> <file>", {"test-state"});
     args::Flag _cropper(methodGroup, "cropper", "Testing cropper settings. <xml> [display]", {'c', "cropper"});
     args::Flag _visualize(methodGroup, "visualize", "Visualizing of main CNN output. <net> <file>", {"visualize"});
@@ -77,6 +78,8 @@ int main(int argc, const char* argv[])
         return start_train(xmlFile, _resnet, xmlFile2);
     if (_test)
         return start_test(netFile, stateNetFile, xmlFile, _displayErr, _display, _resnet);
+    if (_f_one_score)
+        return start_f_one(netFile, stateNetFile, xmlFile, _resnet);
     if (_trainState)
         return start_train_state(xmlFile, outFile);
     if (_trainSp)
@@ -102,11 +105,8 @@ int main(int argc, const char* argv[])
 /*********************************************************************************************************************************************************/
 int start_train(const string &xmlFile, bool resnet, const string &xmlFile2)
 {
-    if (!file::file_exists(xmlFile))
-    {
-        cout << "Xml file containing training data annotations does not exist!" << endl;
+    if (!file::files_exist({xmlFile}))
         return 1;
-    }
 
     cout << "Choosen training method (in xml):" << TRAINING_METHOD << endl;
 
@@ -159,23 +159,8 @@ int start_train(const string &xmlFile, bool resnet, const string &xmlFile2)
 int start_test(const std::string &netFile, const std::string &stateNetFile, const std::string &xmlFile, bool displayErr,
                bool display, bool resnet)
 {
-    if (!file::file_exists(netFile))
-    {
-        cout << "Net file does not exist!" << endl;
+    if (!file::files_exist({netFile, stateNetFile, xmlFile}))
         return 1;
-    }
-
-    if (!file::file_exists(stateNetFile))
-    {
-        cout << "State net file does not exist!" << endl;
-        return 1;
-    }
-
-    if (!file::file_exists(xmlFile))
-    {
-        cout << "Xml file containing testing data annotations does not exist!" << endl;
-        return 1;
-    }
 
     TestType testType = NoDisplay;
 
@@ -200,19 +185,33 @@ int start_test(const std::string &netFile, const std::string &stateNetFile, cons
     return 0;
 }
 /*********************************************************************************************************************************************************/
-int start_train_sp(string &netFile, string &xmlFile, bool resnet)
+int start_f_one(const std::string &netFile, const std::string &stateNetFile, const std::string &xmlFile, bool resnet)
 {
-    if (!file::file_exists(netFile))
-    {
-        cout << "Net file does not exist!" << endl;
+    if (!file::files_exist({netFile, stateNetFile, xmlFile}))
         return 1;
+
+    cout << "Staring f one scoring." << endl;
+    float score;
+    if (!resnet)
+    {
+        traffic_light_detector<test_net_type, state_test_net_type> detector;
+        score = detector.get_f_one_score(netFile, stateNetFile, xmlFile);
+    }
+    else
+    {
+        traffic_light_detector<resnet_test_net_type, state_test_net_type> detector;
+        score = detector.get_f_one_score(netFile, stateNetFile, xmlFile);
     }
 
-    if (!file::file_exists(xmlFile))
-    {
-        cout << "Xml file containing testing data annotations does not exist!" << endl;
+    cout << "F One score: " << score << " . More info in log." << endl;
+    return 0;
+
+}
+/*********************************************************************************************************************************************************/
+int start_train_sp(const string &netFile, const string &xmlFile, bool resnet)
+{
+    if (!file::files_exist({netFile, xmlFile}))
         return 1;
-    }
 
     Stopwatch stopwatch;
     stopwatch.start();
@@ -236,13 +235,10 @@ int start_train_sp(string &netFile, string &xmlFile, bool resnet)
     return 0;
 }
 /*********************************************************************************************************************************************************/
-int start_train_state(string &xmlFile, string &outFile)
+int start_train_state(const string &xmlFile, const string &outFile)
 {
-    if (!file::file_exists(xmlFile))
-    {
-        cout << "Xml file containing testing data annotations does not exist!" << endl;
+    if (!file::files_exist({xmlFile}))
         return 1;
-    }
 
     Stopwatch stopwatch;
     stopwatch.start();
@@ -256,31 +252,19 @@ int start_train_state(string &xmlFile, string &outFile)
     return 0;
 }
 /*********************************************************************************************************************************************************/
-int start_cropper_test(string &xmlFile, bool display)
+int start_cropper_test(const string &xmlFile, bool display)
 {
-    if (!file::file_exists(xmlFile))
-    {
-        cout << "Xml file containing testing data annotations does not exist!" << endl;
+    if (!file::files_exist({xmlFile}))
         return 1;
-    }
 
     test_cropper(xmlFile, true, display);
     return 0;
 }
 /*********************************************************************************************************************************************************/
-int start_detect_state(string &netFile, string &imgFile)
+int start_detect_state(const string &netFile, const string &imgFile)
 {
-    if (!file::file_exists(netFile))
-    {
-        cout << "Net file does not exist!" << endl;
+    if (!file::files_exist({netFile, imgFile}))
         return 1;
-    }
-
-    if (!file::file_exists(imgFile))
-    {
-        cout << "Image does not exist!" << endl;
-        return 1;
-    }
 
     dlib::matrix<dlib::rgb_pixel> dlibImg;
     dlib::load_image(dlibImg, imgFile);
@@ -292,19 +276,10 @@ int start_detect_state(string &netFile, string &imgFile)
     return 0;
 }
 /*********************************************************************************************************************************************************/
-int start_visualize(string &netFile, string &imgFile, bool resnet)
+int start_visualize(const string &netFile, const string &imgFile, bool resnet)
 {
-    if (!file::file_exists(netFile))
-    {
-        cout << "Net file does not exist!" << endl;
+    if (!file::files_exist({netFile, imgFile}))
         return 1;
-    }
-
-    if (!file::file_exists(imgFile))
-    {
-        cout << "Image does not exist!" << endl;
-        return 1;
-    }
 
     cout << "Not supported at this moment" << endl;
     //visualize_detection(netFile, imgFile);
@@ -314,23 +289,8 @@ int start_visualize(string &netFile, string &imgFile, bool resnet)
 int start_crops(const std::string &netFile, const std::string &stateNetFile, const std::string &xmlFile,
                 const std::string &outFolder, bool resnet)
 {
-    if (!file::file_exists(netFile))
-    {
-        cout << "Net file does not exist!" << endl;
+    if (!file::files_exist({netFile, stateNetFile, xmlFile}))
         return 1;
-    }
-
-    if (!file::file_exists(stateNetFile))
-    {
-        cout << "State net file does not exist!" << endl;
-        return 1;
-    }
-
-    if (!file::file_exists(xmlFile))
-    {
-        cout << "XML does not exist!" << endl;
-        return 1;
-    }
 
     if (!resnet)
     {
@@ -351,23 +311,8 @@ int start_crops(const std::string &netFile, const std::string &stateNetFile, con
 int start_sized_crops(const string &netFile, const std::string &stateNetFile, const string &xmlFile,
                       const string &outFolder, bool resnet)
 {
-    if (!file::file_exists(netFile))
-    {
-        cout << "Net file does not exist!" << endl;
+    if (!file::files_exist({netFile, stateNetFile, xmlFile}))
         return 1;
-    }
-
-    if (!file::file_exists(stateNetFile))
-    {
-        cout << "State net file does not exist!" << endl;
-        return 1;
-    }
-
-    if (!file::file_exists(xmlFile))
-    {
-        cout << "XML does not exist!" << endl;
-        return 1;
-    }
 
     dlib::rectangle sizeRect(CROP_WIDTH, CROP_HEIGHT);
     if (!resnet)
@@ -388,23 +333,8 @@ int start_sized_crops(const string &netFile, const std::string &stateNetFile, co
 int start_video(const std::string &netFile, const std::string &stateNetFile, const std::string &videoFile,
                 const std::string &outFolder, bool resnet)
 {
-    if (!file::file_exists(netFile))
-    {
-        cout << "Net file does not exist!" << endl;
+    if (!file::files_exist({netFile, stateNetFile, videoFile}))
         return 1;
-    }
-
-    if (!file::file_exists(stateNetFile))
-    {
-        cout << "State net file does not exist!" << endl;
-        return 1;
-    }
-
-    if (!file::file_exists(videoFile))
-    {
-        cout << "Video file does not exist!" << endl;
-        return 1;
-    }
 
     if (!resnet)
     {
@@ -422,26 +352,11 @@ int start_video(const std::string &netFile, const std::string &stateNetFile, con
     return 0;
 }
 /*********************************************************************************************************************************************************/
-int start_video_frames(const std::string netFile, const std::string stateNetFile, const std::string outFolder,
-                       const std::string xmlFile, bool resnet)
+int start_video_frames(const string &netFile, const string &stateNetFile, const string &outFolder,
+                       const string &xmlFile, bool resnet)
 {
-    if (!file::file_exists(netFile))
-    {
-        cout << "Net file does not exist!" << endl;
+    if (!file::files_exist({netFile, stateNetFile, xmlFile}))
         return 1;
-    }
-
-    if (!file::file_exists(stateNetFile))
-    {
-        cout << "State net file does not exist!" << endl;
-        return 1;
-    }
-
-    if (!file::file_exists(xmlFile))
-    {
-        cout << "XML does not exist!" << endl;
-        return 1;
-    }
 
     if (!resnet)
     {

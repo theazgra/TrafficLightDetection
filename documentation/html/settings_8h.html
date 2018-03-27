@@ -68,26 +68,52 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#define-members">Macros</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">settings.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="net__definition_8h_source.html">net_definition.h</a>&quot;</code><br />
-<code>#include &lt;vector&gt;</code><br />
+<div class="textblock"><code>#include &lt;vector&gt;</code><br />
 <code>#include &quot;extern_files/pugixml.hpp&quot;</code><br />
 <code>#include &lt;cuda_runtime_api.h&gt;</code><br />
+<code>#include &lt;iostream&gt;</code><br />
+<code>#include &lt;dlib/image_io.h&gt;</code><br />
+<code>#include &lt;dlib/image_processing.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="net__definition_8h_source.html">net_definition.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="cv__utils_8h_source.html">cv_utils.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Stopwatch_8h_source.html">Stopwatch.h</a>&quot;</code><br />
 </div>
 <p><a href="settings_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCudaJobInfo.html">CudaJobInfo</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">This passes importatnt informations about job to be executed on cuda device.  <a href="structCudaJobInfo.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a76d9da97e7160882acee8d4061da6f5c"><td class="memItemLeft" align="right" valign="top"><a id="a76d9da97e7160882acee8d4061da6f5c"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="settings_8h.html#a76d9da97e7160882acee8d4061da6f5c">MULTIPLE_GPUS</a></td></tr>
-<tr class="memdesc:a76d9da97e7160882acee8d4061da6f5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define use of more CUDA devices, set in xml settings file. <br /></td></tr>
-<tr class="separator:a76d9da97e7160882acee8d4061da6f5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2346aa55057393e9ea9804c9bf31884a"><td class="memItemLeft" align="right" valign="top"><a id="a2346aa55057393e9ea9804c9bf31884a"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="settings_8h.html#a2346aa55057393e9ea9804c9bf31884a">MULTIPLE_GPUSx</a></td></tr>
+<tr class="memdesc:a2346aa55057393e9ea9804c9bf31884a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define use of more CUDA devices, set in xml settings file. <br /></td></tr>
+<tr class="separator:a2346aa55057393e9ea9804c9bf31884a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:aa56e0da0512d41d46d74aae4d7e81df6"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="settings_8h.html#aa56e0da0512d41d46d74aae4d7e81df6">TestType</a> { <a class="el" href="settings_8h.html#aa56e0da0512d41d46d74aae4d7e81df6a40ead90f2e97387e66fcb88b17954f22">Display</a>, 
+<a class="el" href="settings_8h.html#aa56e0da0512d41d46d74aae4d7e81df6af1cb1a707700b6b6b4bb44af75814c81">NoDisplay</a>, 
+<a class="el" href="settings_8h.html#aa56e0da0512d41d46d74aae4d7e81df6aeab631e9a103c5d7eb86f8a99e577f5b">OnlyErrorDisplay</a>
+ }</td></tr>
+<tr class="memdesc:aa56e0da0512d41d46d74aae4d7e81df6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test type.  <a href="settings_8h.html#aa56e0da0512d41d46d74aae4d7e81df6">More...</a><br /></td></tr>
+<tr class="separator:aa56e0da0512d41d46d74aae4d7e81df6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae447e06946c01f59ca3f9687f8b024e9"><td class="memItemLeft" align="right" valign="top"><a id="ae447e06946c01f59ca3f9687f8b024e9"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>CudaJobType</b> { <b>SaveCrops</b>, 
+<b>SaveImages</b>
+ }</td></tr>
+<tr class="separator:ae447e06946c01f59ca3f9687f8b024e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -246,7 +272,32 @@ unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>All global variables are defined in this file. Those variables are then loaded from xml file. </p>
-</div><h2 class="groupheader">Function Documentation</h2>
+</div><h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="aa56e0da0512d41d46d74aae4d7e81df6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa56e0da0512d41d46d74aae4d7e81df6">&#9670;&nbsp;</a></span>TestType</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="settings_8h.html#aa56e0da0512d41d46d74aae4d7e81df6">TestType</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Test type. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aa56e0da0512d41d46d74aae4d7e81df6a40ead90f2e97387e66fcb88b17954f22"></a>Display&#160;</td><td class="fielddoc"><p>Dipslay images. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa56e0da0512d41d46d74aae4d7e81df6af1cb1a707700b6b6b4bb44af75814c81"></a>NoDisplay&#160;</td><td class="fielddoc"><p>Don't display images. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa56e0da0512d41d46d74aae4d7e81df6aeab631e9a103c5d7eb86f8a99e577f5b"></a>OnlyErrorDisplay&#160;</td><td class="fielddoc"><p>Display only images with errors in detection. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
 <a id="acc6ebae5a07da3047d2da77acf7189d5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acc6ebae5a07da3047d2da77acf7189d5">&#9670;&nbsp;</a></span>load_settings()</h2>
 

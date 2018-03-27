@@ -68,40 +68,18 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">traffic_light_test.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;iostream&gt;</code><br />
-<code>#include &lt;dlib/image_io.h&gt;</code><br />
-<code>#include &lt;dlib/image_processing.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="settings_8h_source.html">settings.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="Stopwatch_8h_source.html">Stopwatch.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="cv__utils_8h_source.html">cv_utils.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="settings_8h_source.html">settings.h</a>&quot;</code><br />
 </div>
 <p><a href="traffic__light__test_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCudaJobInfo.html">CudaJobInfo</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">This passes importatnt informations about job to be executed on cuda device.  <a href="structCudaJobInfo.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
-Enumerations</h2></td></tr>
-<tr class="memitem:aa56e0da0512d41d46d74aae4d7e81df6"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="traffic__light__test_8h.html#aa56e0da0512d41d46d74aae4d7e81df6">TestType</a> { <a class="el" href="traffic__light__test_8h.html#aa56e0da0512d41d46d74aae4d7e81df6a40ead90f2e97387e66fcb88b17954f22">Display</a>, 
-<a class="el" href="traffic__light__test_8h.html#aa56e0da0512d41d46d74aae4d7e81df6af1cb1a707700b6b6b4bb44af75814c81">NoDisplay</a>, 
-<a class="el" href="traffic__light__test_8h.html#aa56e0da0512d41d46d74aae4d7e81df6aeab631e9a103c5d7eb86f8a99e577f5b">OnlyErrorDisplay</a>
- }</td></tr>
-<tr class="memdesc:aa56e0da0512d41d46d74aae4d7e81df6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test type.  <a href="traffic__light__test_8h.html#aa56e0da0512d41d46d74aae4d7e81df6">More...</a><br /></td></tr>
-<tr class="separator:aa56e0da0512d41d46d74aae4d7e81df6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a65e402ce0db9def8b77b28d0ccef164f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="traffic__light__test_8h.html#a65e402ce0db9def8b77b28d0ccef164f">test</a> (std::string netFile, std::string testFile, <a class="el" href="traffic__light__test_8h.html#aa56e0da0512d41d46d74aae4d7e81df6">TestType</a> testType)</td></tr>
+<tr class="memitem:a65e402ce0db9def8b77b28d0ccef164f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="traffic__light__test_8h.html#a65e402ce0db9def8b77b28d0ccef164f">test</a> (std::string netFile, std::string testFile, <a class="el" href="settings_8h.html#aa56e0da0512d41d46d74aae4d7e81df6">TestType</a> testType)</td></tr>
 <tr class="separator:a65e402ce0db9def8b77b28d0ccef164f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35141ac7df48b2d5e260494abeb04ffc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="traffic__light__test_8h.html#a35141ac7df48b2d5e260494abeb04ffc">save_detected_objects</a> (const std::string netFile, const std::string xmlFile, const std::string folderPath, dlib::rectangle sizeRect=dlib::rectangle())</td></tr>
 <tr class="separator:a35141ac7df48b2d5e260494abeb04ffc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -123,41 +101,14 @@ Functions</h2></td></tr>
 <tr class="separator:a2173ee45ebb20f201839c5dca99280ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad9d1337bede9fc9e3856c364ab41fc31"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; dlib::mmod_rect &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="traffic__light__test_8h.html#ad9d1337bede9fc9e3856c364ab41fc31">get_detected_rectanges</a> (const std::string netFile, const std::string xmlFile)</td></tr>
 <tr class="separator:ad9d1337bede9fc9e3856c364ab41fc31"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ef6466cc0088ba3ca578f365bee1654"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="traffic__light__test_8h.html#a1ef6466cc0088ba3ca578f365bee1654">number_of_label_boxes</a> (std::vector&lt; dlib::mmod_rect &gt; boxes)</td></tr>
-<tr class="separator:a1ef6466cc0088ba3ca578f365bee1654"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab36bfd6e570bd83fe0a1bfcf01f9cd15"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cv__utils_8h.html#aa7babf912778d68abdd784924388893d">TLState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="traffic__light__test_8h.html#ab36bfd6e570bd83fe0a1bfcf01f9cd15">detect_state</a> (const std::string netFile, const dlib::matrix&lt; dlib::rgb_pixel &gt; dlibImg)</td></tr>
 <tr class="separator:ab36bfd6e570bd83fe0a1bfcf01f9cd15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f272b3fd37bf1e061a3b876225d17fc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cv__utils_8h.html#aa7babf912778d68abdd784924388893d">TLState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="traffic__light__test_8h.html#a4f272b3fd37bf1e061a3b876225d17fc">get_detected_state</a> (const std::vector&lt; dlib::mmod_rect &gt; &amp;detections, const dlib::matrix&lt; dlib::rgb_pixel &gt; &amp;image)</td></tr>
 <tr class="separator:a4f272b3fd37bf1e061a3b876225d17fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Testing methods. </p>
-</div><h2 class="groupheader">Enumeration Type Documentation</h2>
-<a id="aa56e0da0512d41d46d74aae4d7e81df6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa56e0da0512d41d46d74aae4d7e81df6">&#9670;&nbsp;</a></span>TestType</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="traffic__light__test_8h.html#aa56e0da0512d41d46d74aae4d7e81df6">TestType</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Test type. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aa56e0da0512d41d46d74aae4d7e81df6a40ead90f2e97387e66fcb88b17954f22"></a>Display&#160;</td><td class="fielddoc"><p>Dipslay images. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aa56e0da0512d41d46d74aae4d7e81df6af1cb1a707700b6b6b4bb44af75814c81"></a>NoDisplay&#160;</td><td class="fielddoc"><p>Don't display images. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="aa56e0da0512d41d46d74aae4d7e81df6aeab631e9a103c5d7eb86f8a99e577f5b"></a>OnlyErrorDisplay&#160;</td><td class="fielddoc"><p>Display only images with errors in detection. </p>
-</td></tr>
-</table>
-
-</div>
-</div>
-<h2 class="groupheader">Function Documentation</h2>
+<div class="textblock"><p>Routines moved to <a class="el" href="traffic__light__detector_8h.html">traffic_light_detector.h</a> </p>
+</div><h2 class="groupheader">Function Documentation</h2>
 <a id="a562ad73390c1ab063b3b849616179b73"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a562ad73390c1ab063b3b849616179b73">&#9670;&nbsp;</a></span>cuda_device_process_job()</h2>
 
@@ -287,38 +238,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Detected state. </dd></dl>
-
-</div>
-</div>
-<a id="a1ef6466cc0088ba3ca578f365bee1654"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1ef6466cc0088ba3ca578f365bee1654">&#9670;&nbsp;</a></span>number_of_label_boxes()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int number_of_label_boxes </td>
-          <td>(</td>
-          <td class="paramtype">std::vector&lt; dlib::mmod_rect &gt;&#160;</td>
-          <td class="paramname"><em>boxes</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Get number of valid label boxes. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">boxes</td><td>All label boxes. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Number of valid label boxes.</dd></dl>
-<p>Get the number of not ignored label boxes. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">boxes</td><td>Vector of mmod_rectangles. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Number of boxes which are not ignored. </dd></dl>
 
 </div>
 </div>
@@ -665,7 +584,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="traffic__light__test_8h.html#aa56e0da0512d41d46d74aae4d7e81df6">TestType</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="settings_8h.html#aa56e0da0512d41d46d74aae4d7e81df6">TestType</a>&#160;</td>
           <td class="paramname"><em>testType</em>&#160;</td>
         </tr>
         <tr>

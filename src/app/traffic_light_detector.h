@@ -1,3 +1,7 @@
+/** \file traffic_light_detector.h
+ * Routines to test location and state detection.
+ */
+
 #ifndef TLD_TRAFFICLIGHTDETECTOR_H
 #define TLD_TRAFFICLIGHTDETECTOR_H
 
@@ -17,9 +21,117 @@ class traffic_light_detector
 {
 private:
 
+    /// Draw rectanle on image based on detected state.
+    /// \param image Image where to draw.
+    /// \param rect Detectin rectangle.
+    /// \param detectedState Detected state.
     void draw_state(dlib::matrix<dlib::rgb_pixel>& image, dlib::rectangle rect, TLState detectedState)
     {
         draw_rectangle(image, rect, get_color_for_state(detectedState), RECT_WIDTH);
+    }
+    /*********************************************************************************************************************************************************/
+    /// Cuda device job. Processing images given in jobinfo.
+    /// \param jobInfo Structure containing all needed informations.
+    void cuda_device_process_job(CudaJobInfo& jobInfo)
+    {
+        using namespace std;
+        using namespace dlib;
+
+        std::cout << "Processing in cuda device: " << jobInfo.deviceId << std::endl;
+#ifdef MULTIPLE_GPUS
+        cudaSetDevice(jobInfo.deviceId);
+#endif
+        LocationNetType net;
+        shape_predictor sp;
+        StateNetType stateNet;
+
+        deserialize(jobInfo.netFile) >> net >> sp;
+        deserialize(jobInfo.stateNetFile) >> stateNet;
+
+        ulong frameNum = jobInfo.frameIndexOffset;
+
+        matrix<rgb_pixel> scaledFrame;
+
+
+        for (ulong i = jobInfo.begin; i < jobInfo.end; ++i)
+        {
+            const matrix<rgb_pixel>& frame = jobInfo.jobImages.at(i);
+
+            jobInfo.stopwatch.start_new_lap();
+            ++frameNum;
+
+            scaledFrame = matrix<rgb_pixel>((long)(frame.nr() * FRAME_SCALING), (long)(frame.nc() * FRAME_SCALING));
+            resize_image(frame, scaledFrame);
+
+            std::vector<mmod_rect> detections = net(scaledFrame);
+
+            uint labelIndex = 0;
+            for (mmod_rect& detection : detections)
+            {
+
+                full_object_detection fullObjectDetection = sp(scaledFrame, detection);
+
+                rectangle spImprovedRect;
+                for(unsigned long i = 0; i < fullObjectDetection.num_parts(); ++i)
+                    spImprovedRect += fullObjectDetection.part(i);
+
+                if (!valid_rectangle(spImprovedRect, scaledFrame))
+                    continue;
+
+                matrix<rgb_pixel> foundTrafficLight = crop_image(scaledFrame, spImprovedRect);
+                std::vector<mmod_rect> trafficLightDets = stateNet(foundTrafficLight);
+
+                TLState detectedState = get_detected_state(trafficLightDets, foundTrafficLight);
+
+                draw_rectangle(scaledFrame,
+                               spImprovedRect,
+                               get_color_for_state(detectedState),
+                               RECT_WIDTH);
+
+                if (jobInfo.jobType == SaveCrops)
+                {
+                    std::string fileName = jobInfo.resultFolder + "/crop_" + std::to_string(frameNum) + "_" + std::to_string(++labelIndex) + ".png";
+                    save_found_crop(frame, transform_rectangle_back(spImprovedRect, FRAME_SCALING), fileName, jobInfo.sizeRectangle);
+                    jobInfo.stopwatch.end_lap();
+                    continue;
+                }
+
+            }
+            jobInfo.stopwatch.end_lap();
+            resize_image(scaledFrame, frame);
+
+            if (jobInfo.jobType == SaveImages)
+            {
+                std::string fileName = jobInfo.resultFolder + "/" + std::to_string(frameNum) + ".png";
+                save_png(frame, fileName);
+            }
+        }
+    }
+    /*********************************************************************************************************************************************************/
+    /// Converts value type to float.
+    /// \tparam ValueType Type which to convert
+    /// \param value Value to convert.
+    /// \return Float value of passed parameter.
+    template <typename ValueType>
+    float to_float(ValueType value)
+    {
+        float floatValue = (float)value;
+        return floatValue;
+    }
+    /*********************************************************************************************************************************************************/
+
+    /// Calculates F ONE score from given stats.
+    /// \param truePositiveCount Number of correct positive detections.
+    /// \param positiveCount Number of all detections, both correct and false positive
+    /// \param groundTruthCount Number off all detections that should have been found. (Ground truth count)
+    /// \return Traditional F One score
+    float calculate_f_one_score(int truePositiveCount, int positiveCount, int groundTruthCount)
+    {
+        float precision = to_float<int>(truePositiveCount) / to_float<int>(positiveCount);
+        float recall = to_float<int>(truePositiveCount) / to_float<int>(groundTruthCount);
+
+        float F_ONE_score = 2.0f * ((precision * recall) / (precision + recall));
+        return F_ONE_score;
     }
 
 public:
@@ -68,7 +180,7 @@ public:
             std::vector<mmod_rect> detections = net(scaledImage);
             int detectionCount = detections.size();
 
-            int groundTruth = number_of_label_boxes(boxes.at(imgIndex));
+            int groundTruth = number_of_non_ignored_rectangles(boxes.at(imgIndex));
             float foundPercent = (detectionCount > groundTruth) ? 100.0f : (((float)detectionCount / (float)groundTruth) * 100.0f);
 
             if (detections.size() > groundTruth)
@@ -137,7 +249,7 @@ public:
     /// \param stateNetFile Serialized state network.
     /// \param videoFile Video file.
     /// \param resultFolder Where to save images.
-    void save_video(const std::string& netFile, const std::string& stateNetFile, const std::string& videoFile, std::string resultFolder)
+    void save_video(const std::string& netFile, const std::string& stateNetFile, const std::string& videoFile, const std::string& resultFolder)
     {
         using namespace dlib;
         Logger logger(videoFile + "_log.txt");
@@ -174,7 +286,7 @@ public:
             matrix<rgb_pixel> imgData;
             assign_image(imgData, dlibImg);
 
-            scaledImage = matrix<rgb_pixel>(imgData.nr() * FRAME_SCALING, imgData.nc() * FRAME_SCALING);
+            scaledImage = matrix<rgb_pixel>((long)(imgData.nr() * FRAME_SCALING), (long)(imgData.nc() * FRAME_SCALING));
             //resize up
             resize_image(imgData, scaledImage);
 
@@ -562,84 +674,100 @@ public:
         std::cout << "Average FPS across all cuda devices: " << FPS << std::endl;
 
     }
-/*********************************************************************************************************************************************************/
-    /// Cuda device job. Processing images given in jobinfo.
-    /// \param jobInfo Structure containing all needed informations.
-    void cuda_device_process_job(CudaJobInfo& jobInfo)
+    /*********************************************************************************************************************************************************/
+
+    /// Get precission of network by calculating F One score.
+    /// \param netFile Serialized network.
+    /// \param stateNetFile Serialized state network.
+    /// \param groundTruthXml XML with ground truth.
+    /// \return Accuracy of network, f one score.
+    float get_f_one_score(const std::string& netFile, const std::string& stateNetFile, const std::string& groundTruthXml)
     {
-        using namespace std;
         using namespace dlib;
 
-        std::cout << "Processing in cuda device: " << jobInfo.deviceId << std::endl;
-#ifdef MULTIPLE_GPUS
-        cudaSetDevice(jobInfo.deviceId);
-#endif
         LocationNetType net;
-        shape_predictor sp;
         StateNetType stateNet;
+        shape_predictor sp;
 
-        deserialize(jobInfo.netFile) >> net >> sp;
-        deserialize(jobInfo.stateNetFile) >> stateNet;
+        Logger logger("f_one_score_log.txt", true, false);
 
-        ulong frameNum = jobInfo.frameIndexOffset;
+        deserialize(netFile) >> net >> sp;
+        deserialize(stateNetFile) >> stateNet;
 
-        matrix<rgb_pixel> scaledFrame;
+        image_dataset_metadata::dataset datasetInfo;
+        image_dataset_metadata::load_image_dataset_metadata(datasetInfo, groundTruthXml);
 
+        std::vector<matrix<rgb_pixel>> testImages;
+        std::vector<std::vector<mmod_rect>> truthBoxes;
+        load_image_dataset(testImages, truthBoxes, groundTruthXml);
+        logger.write_line("Loaded " + std::to_string(testImages.size()) + " test images.");
 
-        for (ulong i = jobInfo.begin; i < jobInfo.end; ++i)
+        matrix<rgb_pixel> scaledImage, foundObjectCrop;
+
+        int truePositive = 0;
+        int falsePositive = 0;
+        int groundTruth = 0;
+
+        int stateError = 0;
+
+        for (uint i = 0; i < testImages.size(); ++i)
         {
-            const matrix<rgb_pixel>& frame = jobInfo.jobImages.at(i);
+            const matrix<rgb_pixel>& image = testImages.at(i);
+            const std::vector<mmod_rect>& groundTruthDetections = truthBoxes.at(i);
+            const std::string& fileName = datasetInfo.images.at(i).filename;
 
-            jobInfo.stopwatch.start_new_lap();
-            ++frameNum;
+            groundTruth += number_of_non_ignored_rectangles(groundTruthDetections);
 
-            scaledFrame = matrix<rgb_pixel>(frame.nr() * FRAME_SCALING, frame.nc() * FRAME_SCALING);
-            resize_image(frame, scaledFrame);
+            scaledImage = matrix<rgb_pixel>((long)(image.nr() * FRAME_SCALING), (long)(image.nc() * FRAME_SCALING));
+            resize_image(image, scaledImage);
 
-            std::vector<mmod_rect> detections = net(scaledFrame);
-
-            uint labelIndex = 0;
-            for (mmod_rect& detection : detections)
+            std::vector<mmod_rect> trafficLightDetections = net(scaledImage);
+            for (mmod_rect& detection : trafficLightDetections)
             {
-
-                full_object_detection fullObjectDetection = sp(scaledFrame, detection);
+                full_object_detection fullObjectDetection = sp(scaledImage, detection);
 
                 rectangle spImprovedRect;
                 for(unsigned long i = 0; i < fullObjectDetection.num_parts(); ++i)
                     spImprovedRect += fullObjectDetection.part(i);
 
-                if (!valid_rectangle(spImprovedRect, scaledFrame))
-                    continue;
-
-                matrix<rgb_pixel> foundTrafficLight = crop_image(scaledFrame, spImprovedRect);
-                std::vector<mmod_rect> trafficLightDets = stateNet(foundTrafficLight);
-
-                TLState detectedState = get_detected_state(trafficLightDets, foundTrafficLight);
-
-                draw_rectangle(scaledFrame,
-                               spImprovedRect,
-                               get_color_for_state(detectedState),
-                               RECT_WIDTH);
-
-                if (jobInfo.jobType == SaveCrops)
+                if (!valid_rectangle(spImprovedRect, scaledImage))
                 {
-                    std::string fileName = jobInfo.resultFolder + "/crop_" + std::to_string(frameNum) + "_" + std::to_string(++labelIndex) + ".png";
-                    save_found_crop(frame, transform_rectangle_back(spImprovedRect, FRAME_SCALING), fileName, jobInfo.sizeRectangle);
-                    jobInfo.stopwatch.end_lap();
+                    logger.write_line("Rectangle not valid! For image " + fileName + " and rectangle " + to_str(spImprovedRect));
+                    ++falsePositive;
                     continue;
                 }
 
-            }
-            jobInfo.stopwatch.end_lap();
-            resize_image(scaledFrame, frame);
+                //Set improved rectangle as detected.
+                detection.rect = spImprovedRect;
 
-            if (jobInfo.jobType == SaveImages)
-            {
-                std::string fileName = jobInfo.resultFolder + "/" + std::to_string(frameNum) + ".png";
-                save_png(frame, fileName);
+                foundObjectCrop = crop_image(scaledImage, detection.rect);
+                std::vector<mmod_rect> stateDetections = stateNet(foundObjectCrop);
+                TLState detectedState = get_detected_state(stateDetections, foundObjectCrop);
+                detection.label = translate_TL_state(detectedState);
+
+                std::pair<bool, bool> detResult = is_correct_detection(detection, groundTruthDetections);
+                /// Correct detection
+                if (detResult.first)
+                {
+                    ++truePositive;
+                    if (!detResult.second)
+                    {
+                        ++stateError;
+                        logger.write_line("Wrong state detection! For image " + fileName + " and rectangle " + to_str(detection.rect));
+                    }
+                }
+                else
+                {
+                    ++falsePositive;
+                    logger.write_line("False detection! For image " + fileName + " and rectangle " + to_str(detection.rect));
+                }
             }
         }
+
+        float f_one = calculate_f_one_score(truePositive, truePositive + falsePositive, groundTruth);
+        return f_one;
     }
+
 
 };
 

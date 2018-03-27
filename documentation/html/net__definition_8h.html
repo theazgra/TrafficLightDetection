@@ -185,10 +185,10 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>state_net_type</b> =
 <tr class="memitem:ade25e2731be258b1a02f8a0760aaae2d"><td class="memItemLeft" align="right" valign="top"><a id="ade25e2731be258b1a02f8a0760aaae2d"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>state_test_net_type</b> = loss_mmod&lt; con&lt; 1, 9, 9, 1, 1, arcon3_55&lt; arcon3_40&lt; input_rgb_image_pyramid&lt; pyramid_down&lt; 3 &gt; &gt;&gt; &gt;&gt; &gt;</td></tr>
 <tr class="separator:ade25e2731be258b1a02f8a0760aaae2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abfed16bd717060bb645910109c837e5a"><td class="memTemplParams" colspan="2"><a id="abfed16bd717060bb645910109c837e5a"></a>
+<tr class="memitem:a3ae0a3a810298a10b66240adb278dd25"><td class="memTemplParams" colspan="2"><a id="a3ae0a3a810298a10b66240adb278dd25"></a>
 template&lt;long num_filters, template&lt; typename &gt; class BN, long stride, typename SUBNET &gt; </td></tr>
-<tr class="memitem:abfed16bd717060bb645910109c837e5a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>block</b> = BN&lt; con&lt; num_filters, 3, 3, 1, 1, relu&lt; BN&lt; con&lt; num_filters, 3, 3, stride, stride, SUBNET &gt; &gt;&gt; &gt;&gt;</td></tr>
-<tr class="separator:abfed16bd717060bb645910109c837e5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ae0a3a810298a10b66240adb278dd25"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>block</b> = BN&lt; con&lt; num_filters, 5, 5, 1, 1, relu&lt; BN&lt; con&lt; num_filters, 5, 5, stride, stride, SUBNET &gt; &gt;&gt; &gt;&gt;</td></tr>
+<tr class="separator:a3ae0a3a810298a10b66240adb278dd25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a190f5d7272d8269700c03caf0314da71"><td class="memTemplParams" colspan="2"><a id="a190f5d7272d8269700c03caf0314da71"></a>
 template&lt;template&lt; long, template&lt; typename &gt;class, long, typename &gt; class block, long num_filters, template&lt; typename &gt;class BN, typename SUBNET &gt; </td></tr>
 <tr class="memitem:a190f5d7272d8269700c03caf0314da71"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>residual</b> = add_prev1&lt; block&lt; num_filters, BN, 1, tag1&lt; SUBNET &gt; &gt;&gt;</td></tr>
@@ -213,12 +213,12 @@ template&lt;typename SUBNET &gt; </td></tr>
 template&lt;typename SUBNET &gt; </td></tr>
 <tr class="memitem:a78cf48d1e14facca40615ffe3834bf1c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ares_down</b> = relu&lt; residual_down&lt; block, 8, affine, SUBNET &gt; &gt;</td></tr>
 <tr class="separator:a78cf48d1e14facca40615ffe3834bf1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa61e288369aec2c86f2a6c018a30425"><td class="memItemLeft" align="right" valign="top"><a id="aaa61e288369aec2c86f2a6c018a30425"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>resnet_net_type</b> = loss_mmod&lt; con&lt; 1, 9, 9, 1, 1, res&lt; res&lt; res&lt; res_down&lt; repeat&lt; 9, res, res_down&lt; res&lt; input_rgb_image_pyramid&lt; pyramid_down&lt; 6 &gt; &gt;&gt; &gt;&gt; &gt;&gt; &gt;&gt; &gt;&gt;</td></tr>
-<tr class="separator:aaa61e288369aec2c86f2a6c018a30425"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aefd1aa40e729b5cd4e93916aef45cb29"><td class="memItemLeft" align="right" valign="top"><a id="aefd1aa40e729b5cd4e93916aef45cb29"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>resnet_test_net_type</b> = loss_mmod&lt; con&lt; 1, 9, 9, 1, 1, avg_pool_everything&lt; ares&lt; ares&lt; ares&lt; ares_down&lt; repeat&lt; 9, ares, ares_down&lt; ares&lt; input_rgb_image_pyramid&lt; pyramid_down&lt; 6 &gt; &gt;&gt; &gt;&gt; &gt;&gt; &gt;&gt; &gt;&gt; &gt;</td></tr>
-<tr class="separator:aefd1aa40e729b5cd4e93916aef45cb29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc43b8d92f646d9fd3da11c64c7dce16"><td class="memItemLeft" align="right" valign="top"><a id="acc43b8d92f646d9fd3da11c64c7dce16"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>resnet_net_type</b> = loss_mmod&lt; con&lt; 1, 9, 9, 1, 1, res&lt; res&lt; res&lt; res_down&lt; res&lt; res&lt; res&lt; res&lt; res&lt; res&lt; res_down&lt; input_rgb_image_pyramid&lt; pyramid_down&lt; 6 &gt; &gt;&gt; &gt;&gt; &gt;&gt; &gt;&gt; &gt;&gt; &gt;&gt; &gt;&gt;</td></tr>
+<tr class="separator:acc43b8d92f646d9fd3da11c64c7dce16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b6ba86a78d90198bceeea18f7ca69c1"><td class="memItemLeft" align="right" valign="top"><a id="a0b6ba86a78d90198bceeea18f7ca69c1"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>resnet_test_net_type</b> = loss_mmod&lt; con&lt; 1, 9, 9, 1, 1, ares&lt; ares&lt; ares&lt; ares_down&lt; ares&lt; ares&lt; ares&lt; ares&lt; ares&lt; ares&lt; ares_down&lt; input_rgb_image_pyramid&lt; pyramid_down&lt; 6 &gt; &gt;&gt; &gt;&gt; &gt;&gt; &gt;&gt; &gt;&gt; &gt;&gt; &gt;&gt;</td></tr>
+<tr class="separator:a0b6ba86a78d90198bceeea18f7ca69c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>File contating all network types and its blocks. </p>

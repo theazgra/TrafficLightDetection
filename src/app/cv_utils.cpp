@@ -1,4 +1,5 @@
 #include <dlib/image_transforms/interpolation.h>
+#include <dlib/image_processing.h>
 #include "cv_utils.h"
 
 
@@ -737,7 +738,7 @@ bool valid_rectangle(const dlib::rectangle& rect, const cv::Mat& img)
     return true;
 }
 /*********************************************************************************************************************************************************/
-int number_of_label_boxes(std::vector<dlib::mmod_rect> boxes)
+int number_of_non_ignored_rectangles(const std::vector<dlib::mmod_rect> &boxes)
 {
     int count = 0;
 
@@ -749,3 +750,46 @@ int number_of_label_boxes(std::vector<dlib::mmod_rect> boxes)
 
     return count;
 }
+/*********************************************************************************************************************************************************/
+std::string to_str(const dlib::rectangle &rect)
+{
+    std::string str = "[Left, Top, Width, Height]: [" +
+            std::to_string(rect.tl_corner().x()) + ", " +
+            std::to_string(rect.tl_corner().y()) + ", " +
+            std::to_string(rect.width()) + ", " +
+            std::to_string(rect.height()) + "]";
+
+    return str;
+}
+/*********************************************************************************************************************************************************/
+std::pair<bool, bool> is_correct_detection(const dlib::mmod_rect& detection, const std::vector<dlib::mmod_rect>& truthBoxes)
+{
+    bool found = false;
+    dlib::mmod_rect foundGTBox;
+
+
+    for (const dlib::mmod_rect& gtBox : truthBoxes)
+    {
+        //Dlib way
+        
+        double IntersectionOverUnion = dlib::box_intersection_over_union(detection.rect, gtBox.rect);
+        if (IntersectionOverUnion > 0.5f)
+        {
+            foundGTBox = gtBox;
+            found = true;
+            break;
+        }
+
+        //If dlib way does not work, try rect.contains(detection.tl_cornet(), when rect is rect slight more left and top then gtBox
+    }
+
+    if (!found)
+    {
+        return std::make_pair<bool, bool>(false, false); // Wrong location detection.
+    }
+    else
+    {
+        return std::make_pair<bool, bool>(true, detection.label == foundGTBox.label);
+    }
+
+};

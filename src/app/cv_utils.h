@@ -19,6 +19,7 @@
 #include <dlib/data_io/load_image_dataset.h>
 #include <dlib/gui_widgets.h>
 #include <dlib/opencv.h>
+#include <dlib/algs.h>
 #include <exception>
 #include "Stopwatch.h"
 #include "Logger.h"
@@ -242,7 +243,17 @@ void convert_to_grayscale(dlib::array2d<dlib::rgb_pixel>& image);
 /// Get number of valid label boxes.
 /// \param boxes All label boxes.
 /// \return Number of valid label boxes.
-int number_of_label_boxes(std::vector<dlib::mmod_rect> boxes);
+int number_of_non_ignored_rectangles(const std::vector<dlib::mmod_rect> &boxes);
+
+/// Check if given detection is correct.
+/// \param detection Detected rectangle.
+/// \param truthBoxes Grount truth rectangles for current image.
+/// \return Pair of bools, (correct detection, correct state detection).
+std::pair<bool, bool> is_correct_detection(const dlib::mmod_rect& detection, const std::vector<dlib::mmod_rect>& truthBoxes);
+
+/// Get string annotation this rectangle.
+/// \return Rectangle instance.
+std::string to_str(const dlib::rectangle &);
 
 #endif //DISPLAYIMAGE_OPENCVUTILS_H
 

@@ -81,6 +81,7 @@ $(function() {
 <code>#include &lt;dlib/data_io/load_image_dataset.h&gt;</code><br />
 <code>#include &lt;dlib/gui_widgets.h&gt;</code><br />
 <code>#include &lt;dlib/opencv.h&gt;</code><br />
+<code>#include &lt;dlib/algs.h&gt;</code><br />
 <code>#include &lt;exception&gt;</code><br />
 <code>#include &quot;<a class="el" href="Stopwatch_8h_source.html">Stopwatch.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Logger_8h_source.html">Logger.h</a>&quot;</code><br />
@@ -161,12 +162,12 @@ Functions</h2></td></tr>
 <tr class="separator:a34d9b97a14bfd5e4a8d2f52524a469d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36756ad3738e6bfc77fb9bac991e7cb3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cv__utils_8h.html#aa7babf912778d68abdd784924388893d">TLState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cv__utils_8h.html#a36756ad3738e6bfc77fb9bac991e7cb3">get_traffic_light_state</a> (cv::Mat &amp;img, bool verbose=false)</td></tr>
 <tr class="separator:a36756ad3738e6bfc77fb9bac991e7cb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af3c354535b4831dd3d052c9ba11acc78"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cv__utils_8h.html#af3c354535b4831dd3d052c9ba11acc78">save_found_crop</a> (cv::Mat &amp;mat, dlib::mmod_rect rectangle, int imgIndex, int labelIndex)</td></tr>
-<tr class="separator:af3c354535b4831dd3d052c9ba11acc78"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a06486a4ff5a7b2a46dee0fb9913054c4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cv__utils_8h.html#a06486a4ff5a7b2a46dee0fb9913054c4">save_found_crop</a> (cv::Mat &amp;mat, dlib::mmod_rect detRect, std::string fileName, dlib::rectangle sizeRect=dlib::rectangle())</td></tr>
-<tr class="separator:a06486a4ff5a7b2a46dee0fb9913054c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b39db9663ef4aab663d6b843c9b78e6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cv__utils_8h.html#a0b39db9663ef4aab663d6b843c9b78e6">save_found_crop</a> (const dlib::matrix&lt; dlib::rgb_pixel &gt; &amp;image, dlib::mmod_rect detRect, std::string fileName, dlib::rectangle sizeRect=dlib::rectangle())</td></tr>
-<tr class="separator:a0b39db9663ef4aab663d6b843c9b78e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a016accb304bc1e55462d228a0a7b0c6c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cv__utils_8h.html#a016accb304bc1e55462d228a0a7b0c6c">save_found_crop</a> (cv::Mat &amp;mat, dlib::rectangle rectangle, int imgIndex, int labelIndex)</td></tr>
+<tr class="separator:a016accb304bc1e55462d228a0a7b0c6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e784f39b3020466486c0326edf0b3ba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cv__utils_8h.html#a3e784f39b3020466486c0326edf0b3ba">save_found_crop</a> (cv::Mat &amp;mat, dlib::rectangle detRect, std::string fileName, dlib::rectangle sizeRect=dlib::rectangle())</td></tr>
+<tr class="separator:a3e784f39b3020466486c0326edf0b3ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aacd9dff543cc636d37dda0e1c7f792d9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cv__utils_8h.html#aacd9dff543cc636d37dda0e1c7f792d9">save_found_crop</a> (const dlib::matrix&lt; dlib::rgb_pixel &gt; &amp;image, dlib::rectangle detRect, std::string fileName, dlib::rectangle sizeRect=dlib::rectangle())</td></tr>
+<tr class="separator:aacd9dff543cc636d37dda0e1c7f792d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3af35612f09a00c3a2c27aad128187d6"><td class="memItemLeft" align="right" valign="top">cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cv__utils_8h.html#a3af35612f09a00c3a2c27aad128187d6">crop_image</a> (const cv::Mat &amp;mat, const dlib::rectangle &amp;cropRectangle)</td></tr>
 <tr class="separator:a3af35612f09a00c3a2c27aad128187d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3da58373468fb544053c3e24e9956129"><td class="memItemLeft" align="right" valign="top">dlib::matrix&lt; dlib::rgb_pixel &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cv__utils_8h.html#a3da58373468fb544053c3e24e9956129">crop_image</a> (const dlib::matrix&lt; dlib::rgb_pixel &gt; &amp;original, const dlib::rectangle &amp;cropRectangle, bool exactCrop=false)</td></tr>
@@ -181,6 +182,12 @@ Functions</h2></td></tr>
 <tr class="separator:abc7cf4e05e3078bf865f623423e6e1a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2065c44de61bf09370f9ad609be455b1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cv__utils_8h.html#a2065c44de61bf09370f9ad609be455b1">convert_to_grayscale</a> (dlib::array2d&lt; dlib::rgb_pixel &gt; &amp;image)</td></tr>
 <tr class="separator:a2065c44de61bf09370f9ad609be455b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aabfdde5fd91dd9089ead3af05f045ffa"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cv__utils_8h.html#aabfdde5fd91dd9089ead3af05f045ffa">number_of_non_ignored_rectangles</a> (const std::vector&lt; dlib::mmod_rect &gt; &amp;boxes)</td></tr>
+<tr class="separator:aabfdde5fd91dd9089ead3af05f045ffa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee144e1c88b32c83357c24e920e8eef6"><td class="memItemLeft" align="right" valign="top">std::pair&lt; bool, bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cv__utils_8h.html#aee144e1c88b32c83357c24e920e8eef6">is_correct_detection</a> (const dlib::mmod_rect &amp;detection, const std::vector&lt; dlib::mmod_rect &gt; &amp;truthBoxes)</td></tr>
+<tr class="separator:aee144e1c88b32c83357c24e920e8eef6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6e59a6d1dd9425f44dada6ad44d48e2"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cv__utils_8h.html#ac6e59a6d1dd9425f44dada6ad44d48e2">to_str</a> (const dlib::rectangle &amp;)</td></tr>
+<tr class="separator:ac6e59a6d1dd9425f44dada6ad44d48e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Functions using both OpenCV and dlib libraries to perform operations on images. </p>
@@ -791,6 +798,67 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="aee144e1c88b32c83357c24e920e8eef6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee144e1c88b32c83357c24e920e8eef6">&#9670;&nbsp;</a></span>is_correct_detection()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::pair&lt;bool, bool&gt; is_correct_detection </td>
+          <td>(</td>
+          <td class="paramtype">const dlib::mmod_rect &amp;&#160;</td>
+          <td class="paramname"><em>detection</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; dlib::mmod_rect &gt; &amp;&#160;</td>
+          <td class="paramname"><em>truthBoxes</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Check if given detection is correct. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">detection</td><td>Detected rectangle. </td></tr>
+    <tr><td class="paramname">truthBoxes</td><td>Grount truth rectangles for current image. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Pair of bools, (correct detection, correct state detection). </dd></dl>
+
+</div>
+</div>
+<a id="aabfdde5fd91dd9089ead3af05f045ffa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aabfdde5fd91dd9089ead3af05f045ffa">&#9670;&nbsp;</a></span>number_of_non_ignored_rectangles()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int number_of_non_ignored_rectangles </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; dlib::mmod_rect &gt; &amp;&#160;</td>
+          <td class="paramname"><em>boxes</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Get number of valid label boxes. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">boxes</td><td>All label boxes. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Number of valid label boxes. </dd></dl>
+
+</div>
+</div>
 <a id="a1f4aa2eb1c1019e6a6be8febefbb3674"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1f4aa2eb1c1019e6a6be8febefbb3674">&#9670;&nbsp;</a></span>remove_background()</h2>
 
@@ -833,8 +901,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="af3c354535b4831dd3d052c9ba11acc78"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af3c354535b4831dd3d052c9ba11acc78">&#9670;&nbsp;</a></span>save_found_crop() <span class="overload">[1/3]</span></h2>
+<a id="a016accb304bc1e55462d228a0a7b0c6c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a016accb304bc1e55462d228a0a7b0c6c">&#9670;&nbsp;</a></span>save_found_crop() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -848,7 +916,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">dlib::mmod_rect&#160;</td>
+          <td class="paramtype">dlib::rectangle&#160;</td>
           <td class="paramname"><em>rectangle</em>, </td>
         </tr>
         <tr>
@@ -882,8 +950,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a06486a4ff5a7b2a46dee0fb9913054c4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a06486a4ff5a7b2a46dee0fb9913054c4">&#9670;&nbsp;</a></span>save_found_crop() <span class="overload">[2/3]</span></h2>
+<a id="a3e784f39b3020466486c0326edf0b3ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e784f39b3020466486c0326edf0b3ba">&#9670;&nbsp;</a></span>save_found_crop() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -897,7 +965,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">dlib::mmod_rect&#160;</td>
+          <td class="paramtype">dlib::rectangle&#160;</td>
           <td class="paramname"><em>detRect</em>, </td>
         </tr>
         <tr>
@@ -931,8 +999,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a0b39db9663ef4aab663d6b843c9b78e6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0b39db9663ef4aab663d6b843c9b78e6">&#9670;&nbsp;</a></span>save_found_crop() <span class="overload">[3/3]</span></h2>
+<a id="aacd9dff543cc636d37dda0e1c7f792d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aacd9dff543cc636d37dda0e1c7f792d9">&#9670;&nbsp;</a></span>save_found_crop() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -946,7 +1014,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">dlib::mmod_rect&#160;</td>
+          <td class="paramtype">dlib::rectangle&#160;</td>
           <td class="paramname"><em>detRect</em>, </td>
         </tr>
         <tr>
@@ -1061,6 +1129,25 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="ac6e59a6d1dd9425f44dada6ad44d48e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac6e59a6d1dd9425f44dada6ad44d48e2">&#9670;&nbsp;</a></span>to_str()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string to_str </td>
+          <td>(</td>
+          <td class="paramtype">const dlib::rectangle &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Get string annotation this rectangle. </p><dl class="section return"><dt>Returns</dt><dd>Rectangle instance. </dd></dl>
 
 </div>
 </div>

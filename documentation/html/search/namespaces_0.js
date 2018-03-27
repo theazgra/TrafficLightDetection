@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['laraparser',['LaraParser',['../namespaceLaraParser.html',1,'']]]
+  ['file',['file',['../namespacefile.html',1,'']]]
 ];

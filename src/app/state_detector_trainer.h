@@ -1,3 +1,7 @@
+/** \file state_detector_trainer.h
+ * Routines to train state detector.
+ */
+
 #ifndef TLD_STATE_DETECTION_TRAINER_H
 #define TLD_STATE_DETECTION_TRAINER_H
 

@@ -1,5 +1,5 @@
 /** \file traffic_light_test.h
- * Testing methods.
+ * Routines moved to traffic_light_detector.h
  */
 
 #ifndef BACHELOR_TRAFFIC_LIGHT_TEST_H

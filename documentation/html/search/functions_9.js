@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['main',['main',['../main_8cpp.html#ac0f2228420376f4db7e1274f2b41667c',1,'main(int argc, const char *argv[]):&#160;main.cpp'],['../main_8h.html#ac0f2228420376f4db7e1274f2b41667c',1,'main(int argc, const char *argv[]):&#160;main.cpp']]]
+  ['load_5fsettings',['load_settings',['../settings_8h.html#acc6ebae5a07da3047d2da77acf7189d5',1,'settings.cpp']]],
+  ['logger',['Logger',['../classLogger.html#a576a9dfc03231c55948043ea67f2639d',1,'Logger']]]
 ];
