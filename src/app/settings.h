@@ -7,7 +7,7 @@
 #define SETTINGS_H
 
 /// Define use of more CUDA devices, set in xml settings file.
-//#define MULTIPLE_GPUS
+#define MULTIPLE_GPUS
 
 #include <vector>
 #include "extern_files/pugixml.hpp"

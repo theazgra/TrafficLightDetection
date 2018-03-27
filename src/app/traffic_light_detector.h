@@ -501,7 +501,7 @@ public:
         for (CudaJobInfo jobInfo : cudaJobs)
             totalTime += jobInfo.stopwatch.average_lap_time_in_milliseconds();
 
-        double frameTime = totalTime / images.size();
+        double frameTime = totalTime / cudaJobs.size();
         double FPS = 1000 / frameTime;
 
         std::cout << "Average frame time across all cuda devices: " << frameTime << std::endl;
@@ -555,7 +555,7 @@ public:
         for (CudaJobInfo jobInfo : cudaJobs)
             totalTime += jobInfo.stopwatch.average_lap_time_in_milliseconds();
 
-        double frameTime = totalTime / images.size();
+        double frameTime = totalTime / cudaJobs.size();
         double FPS = 1000 / frameTime;
 
         std::cout << "Average frame time across all cuda devices: " << frameTime << std::endl;
@@ -586,8 +586,9 @@ public:
         matrix<rgb_pixel> scaledFrame;
 
 
-        for (const matrix<rgb_pixel>& frame : jobInfo.jobImages)
+        for (ulong i = jobInfo.begin; i < jobInfo.end; ++i)
         {
+            const matrix<rgb_pixel>& frame = jobInfo.jobImages.at(i);
 
             jobInfo.stopwatch.start_new_lap();
             ++frameNum;
