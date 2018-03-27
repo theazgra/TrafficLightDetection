@@ -767,7 +767,6 @@ std::pair<bool, bool> is_correct_detection(const dlib::mmod_rect& detection, con
     bool found = false;
     dlib::mmod_rect foundGTBox;
 
-
     for (const dlib::mmod_rect& gtBox : truthBoxes)
     {
         //Dlib way

@@ -764,6 +764,15 @@ public:
             }
         }
 
+        logger.write_line("*********************************************************************");
+        logger.write_line("True positive: " + std::to_string(truePositive));
+        logger.write_line("False positive: " + std::to_string(falsePositive));
+        logger.write_line("Ground truth: " + std::to_string(groundTruth));
+        logger.write_line("------------");
+        logger.write_line("State error count: " + std::to_string(stateError));
+        logger.write_line("State precision: " + std::to_string((100.0f - (((float)stateError / (float)groundTruth) * 100.0f))) + " %.");
+        logger.write_line("*********************************************************************");
+
         float f_one = calculate_f_one_score(truePositive, truePositive + falsePositive, groundTruth);
         return f_one;
     }
