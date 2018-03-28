@@ -762,16 +762,15 @@ std::string to_str(const dlib::rectangle &rect)
     return str;
 }
 /*********************************************************************************************************************************************************/
-std::pair<bool, bool> is_correct_detection(const dlib::mmod_rect& detection, const std::vector<dlib::mmod_rect>& truthBoxes)
+std::pair<bool, bool> is_correct_detection(const dlib::mmod_rect& detection, const std::vector<dlib::mmod_rect>& truthBoxes, const float scaling)
 {
     bool found = false;
     dlib::mmod_rect foundGTBox;
-
     for (const dlib::mmod_rect& gtBox : truthBoxes)
     {
         //Dlib way
         
-        double IntersectionOverUnion = dlib::box_intersection_over_union(detection.rect, gtBox.rect);
+        double IntersectionOverUnion = dlib::box_intersection_over_union(gtBox.rect, transform_rectangle_back(detection.rect, scaling));
         if (IntersectionOverUnion > 0.5f)
         {
             foundGTBox = gtBox;

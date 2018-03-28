@@ -689,7 +689,7 @@ public:
         StateNetType stateNet;
         shape_predictor sp;
 
-        Logger logger("f_one_score_log.txt", true, false);
+        Logger logger("f_one_score_log.txt", true, true);
 
         deserialize(netFile) >> net >> sp;
         deserialize(stateNetFile) >> stateNet;
@@ -709,7 +709,9 @@ public:
         int groundTruth = 0;
 
         int stateError = 0;
-
+        Stopwatch stopwatch;
+	int swWS = stopwatch.get_next_stopwatch_id();
+	int swNS = stopwatch.get_next_stopwatch_id();
         for (uint i = 0; i < testImages.size(); ++i)
         {
             const matrix<rgb_pixel>& image = testImages.at(i);
@@ -717,10 +719,11 @@ public:
             const std::string& fileName = datasetInfo.images.at(i).filename;
 
             groundTruth += number_of_non_ignored_rectangles(groundTruthDetections);
-
+            
+            stopwatch.start_new_lap(swWS);
             scaledImage = matrix<rgb_pixel>((long)(image.nr() * FRAME_SCALING), (long)(image.nc() * FRAME_SCALING));
             resize_image(image, scaledImage);
-
+            stopwatch.start_new_lap(swNS);
             std::vector<mmod_rect> trafficLightDetections = net(scaledImage);
             for (mmod_rect& detection : trafficLightDetections)
             {
@@ -745,7 +748,7 @@ public:
                 TLState detectedState = get_detected_state(stateDetections, foundObjectCrop);
                 detection.label = translate_TL_state(detectedState);
 
-                std::pair<bool, bool> detResult = is_correct_detection(detection, groundTruthDetections);
+                std::pair<bool, bool> detResult = is_correct_detection(detection, groundTruthDetections, FRAME_SCALING);
                 /// Correct detection
                 if (detResult.first)
                 {
@@ -762,7 +765,14 @@ public:
                     logger.write_line("False detection! For image " + fileName + " and rectangle " + to_str(detection.rect));
                 }
             }
+            stopwatch.end_lap(swNS);
+            stopwatch.end_lap(swWS);
         }
+
+        float averageTimeWS = stopwatch.average_lap_time_in_milliseconds(swWS);
+        float averageTimeNS = stopwatch.average_lap_time_in_milliseconds(swNS);
+        float fpsWS = 1000 / averageTimeWS;
+        float fpsNS = 1000 / averageTimeNS;
 
         logger.write_line("*********************************************************************");
         logger.write_line("True positive: " + std::to_string(truePositive));
@@ -771,6 +781,10 @@ public:
         logger.write_line("------------");
         logger.write_line("State error count: " + std::to_string(stateError));
         logger.write_line("State precision: " + std::to_string((100.0f - (((float)stateError / (float)groundTruth) * 100.0f))) + " %.");
+        logger.write_line("Average time per image: " + std::to_string(averageTimeNS));
+        logger.write_line("Average time per image (with scaling): " + std::to_string(averageTimeWS));
+        logger.write_line("Average FPS: " + std::to_string(fpsNS));
+        logger.write_line("Average FPS (with scaling): " + std::to_string(fpsWS));
         logger.write_line("*********************************************************************");
 
         float f_one = calculate_f_one_score(truePositive, truePositive + falsePositive, groundTruth);

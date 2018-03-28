@@ -248,8 +248,9 @@ int number_of_non_ignored_rectangles(const std::vector<dlib::mmod_rect> &boxes);
 /// Check if given detection is correct.
 /// \param detection Detected rectangle.
 /// \param truthBoxes Grount truth rectangles for current image.
+/// \param scaling Frame scaling.
 /// \return Pair of bools, (correct detection, correct state detection).
-std::pair<bool, bool> is_correct_detection(const dlib::mmod_rect& detection, const std::vector<dlib::mmod_rect>& truthBoxes);
+std::pair<bool, bool> is_correct_detection(const dlib::mmod_rect& detection, const std::vector<dlib::mmod_rect>& truthBoxes, const float scaling);
 
 /// Get string annotation this rectangle.
 /// \return Rectangle instance.
