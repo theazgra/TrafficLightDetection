@@ -190,7 +190,7 @@ int start_f_one(const std::string &netFile, const std::string &stateNetFile, con
     if (!file::files_exist({netFile, stateNetFile, xmlFile}))
         return 1;
 
-    cout << "Staring f one scoring." << endl;
+    cout << "Starting f one scoring." << endl;
     float score;
     if (!resnet)
     {

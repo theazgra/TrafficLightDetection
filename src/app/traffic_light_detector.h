@@ -712,6 +712,7 @@ public:
         Stopwatch stopwatch;
 	int swWS = stopwatch.get_next_stopwatch_id();
 	int swNS = stopwatch.get_next_stopwatch_id();
+        int swState = stopwatch.get_next_stopwatch_id();
         for (uint i = 0; i < testImages.size(); ++i)
         {
             const matrix<rgb_pixel>& image = testImages.at(i);
@@ -742,10 +743,19 @@ public:
 
                 //Set improved rectangle as detected.
                 detection.rect = spImprovedRect;
-
+                TLState detectedState;
                 foundObjectCrop = crop_image(scaledImage, detection.rect);
+#if 1
+                stopwatch.start_new_lap(swState);
                 std::vector<mmod_rect> stateDetections = stateNet(foundObjectCrop);
-                TLState detectedState = get_detected_state(stateDetections, foundObjectCrop);
+                detectedState = get_detected_state(stateDetections, foundObjectCrop);
+                stopwatch.end_lap(swState);
+#else
+                stopwatch.start_new_lap(swState);
+                cv::Mat cvCrop = toMat(foundObjectCrop); 
+                detectedState = get_traffic_light_state(cvCrop);
+                stopwatch.end_lap(swState);
+#endif
                 detection.label = translate_TL_state(detectedState);
 
                 std::pair<bool, bool> detResult = is_correct_detection(detection, groundTruthDetections, FRAME_SCALING);
@@ -771,6 +781,7 @@ public:
 
         double averageTimeWS = stopwatch.average_lap_time_in_milliseconds(swWS);
         double averageTimeNS = stopwatch.average_lap_time_in_milliseconds(swNS);
+        double averageTimeState = stopwatch.average_lap_time_in_milliseconds(swState);
         float fpsWS = (float)(1000 / averageTimeWS);
         float fpsNS = (float)(1000 / averageTimeNS);
 
@@ -785,6 +796,7 @@ public:
         logger.write_line("Average time per image (with scaling) [ms]: " + std::to_string(averageTimeWS));
         logger.write_line("Average FPS: " + std::to_string(fpsNS));
         logger.write_line("Average FPS (with scaling): " + std::to_string(fpsWS));
+        logger.write_line("Average time for state detection per traffic light [ms]: " + std::to_string(averageTimeState));
         logger.write_line("*********************************************************************");
 
         float f_one = calculate_f_one_score(truePositive, truePositive + falsePositive, groundTruth);

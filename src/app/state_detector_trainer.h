@@ -50,6 +50,7 @@ public:
         trainer.set_learning_rate(LEARNING_RATE);
         trainer.set_iterations_without_progress_threshold(STATE_ITERATION_WITHOUT_PROGRESS_THRESHOLD);
         trainer.set_synchronization_file("STATE_SYNC", std::chrono::minutes(SYNC_INTERVAL));
+        trainer.set_max_num_epochs(20000);
 
         trainer.train(trainingImages, trainingBoxes);
 
