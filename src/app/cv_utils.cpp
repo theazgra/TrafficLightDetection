@@ -645,6 +645,11 @@ void save_found_crop(const dlib::matrix<dlib::rgb_pixel>& image, dlib::rectangle
     else
     {
         //BUG HERE.
+        try
+        {
+
+
+
         if (sizeRect.width() > detRect.width() && sizeRect.height() > detRect.height())
         {
             long DeltaW = sizeRect.width() - detRect.width();
@@ -653,6 +658,7 @@ void save_found_crop(const dlib::matrix<dlib::rgb_pixel>& image, dlib::rectangle
             matrix<rgb_pixel> sized(sizeRect.height(), sizeRect.width());
 
             assign_all_pixels(sized, rgb_pixel(0,0,0));
+
             for (int r = 0; r < image.nr(); ++r)
             {
                 for (int c = 0; c < image.nc(); ++c)
@@ -663,6 +669,8 @@ void save_found_crop(const dlib::matrix<dlib::rgb_pixel>& image, dlib::rectangle
 
             std::cout << "Saving sized up: " << fileName << std::endl;
             save_png(sized, fileName);
+            std::cout << "Saved sized up." << std::endl;
+
         }
         else
         {
@@ -671,6 +679,11 @@ void save_found_crop(const dlib::matrix<dlib::rgb_pixel>& image, dlib::rectangle
 
             std::cout << "Saving sized down: " << fileName << std::endl;
             save_png(sized, fileName);
+        }
+        }
+        catch(std::exception& e)
+        {
+            std::cout << e.what() << std::endl;
         }
     }
 }

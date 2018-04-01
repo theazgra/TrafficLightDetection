@@ -769,10 +769,10 @@ public:
             stopwatch.end_lap(swWS);
         }
 
-        float averageTimeWS = stopwatch.average_lap_time_in_milliseconds(swWS);
-        float averageTimeNS = stopwatch.average_lap_time_in_milliseconds(swNS);
-        float fpsWS = 1000 / averageTimeWS;
-        float fpsNS = 1000 / averageTimeNS;
+        double averageTimeWS = stopwatch.average_lap_time_in_milliseconds(swWS);
+        double averageTimeNS = stopwatch.average_lap_time_in_milliseconds(swNS);
+        float fpsWS = (float)(1000 / averageTimeWS);
+        float fpsNS = (float)(1000 / averageTimeNS);
 
         logger.write_line("*********************************************************************");
         logger.write_line("True positive: " + std::to_string(truePositive));
@@ -781,8 +781,8 @@ public:
         logger.write_line("------------");
         logger.write_line("State error count: " + std::to_string(stateError));
         logger.write_line("State precision: " + std::to_string((100.0f - (((float)stateError / (float)groundTruth) * 100.0f))) + " %.");
-        logger.write_line("Average time per image: " + std::to_string(averageTimeNS));
-        logger.write_line("Average time per image (with scaling): " + std::to_string(averageTimeWS));
+        logger.write_line("Average time per image [ms]: " + std::to_string(averageTimeNS));
+        logger.write_line("Average time per image (with scaling) [ms]: " + std::to_string(averageTimeWS));
         logger.write_line("Average FPS: " + std::to_string(fpsNS));
         logger.write_line("Average FPS (with scaling): " + std::to_string(fpsWS));
         logger.write_line("*********************************************************************");
