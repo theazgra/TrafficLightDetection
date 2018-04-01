@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <app_settings>
     <testing>
-        <frame_scale>1.0</frame_scale>
+        <frame_scale>2.0</frame_scale>
         <!-- true or false -->
         <only_top_half>false</only_top_half>
     </testing>
