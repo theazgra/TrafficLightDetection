@@ -25,6 +25,27 @@
 #include "Logger.h"
 #include <cmath>
 
+/// Structure holding info about detection result.
+struct Result
+{
+    /// Detected label name.
+    std::string detectedLabel;
+    /// Ground trurh label name.
+    std::string truthLabel;
+    /// If traffic light detection was correct.
+    bool correctLocationDetection;
+    /// If state detection was correct.
+    bool correctStateDetection;
+    /// Intersect over union of detected and ground truth box.
+    float IOU;
+    Result()
+    {
+        correctLocationDetection = false;
+        correctStateDetection = false;
+        IOU = 0.0f;
+    }
+};
+
 /// Structure used to pass parameters to thread for grayscale test.
 struct GrayScaleTestParam
 {
@@ -249,8 +270,10 @@ int number_of_non_ignored_rectangles(const std::vector<dlib::mmod_rect> &boxes);
 /// \param detection Detected rectangle.
 /// \param truthBoxes Grount truth rectangles for current image.
 /// \param scaling Frame scaling.
-/// \return Pair of bools, (correct detection, correct state detection).
-std::pair<bool, bool> is_correct_detection(const dlib::mmod_rect& detection, const std::vector<dlib::mmod_rect>& truthBoxes, const float scaling);
+/// \return Result structure.
+// \return Pair of bools, (correct detection, correct state detection).
+Result is_correct_detection(const dlib::mmod_rect& detection, const std::vector<dlib::mmod_rect>& truthBoxes, const float scaling);
+//std::pair<bool, bool> is_correct_detection(const dlib::mmod_rect& detection, const std::vector<dlib::mmod_rect>& truthBoxes, const float scaling);
 
 /// Get string annotation this rectangle.
 /// \return Rectangle instance.

@@ -494,15 +494,17 @@ public:
 
         StateNetType net;
         deserialize(netFile) >> net;
+        matrix<rgb_pixel> scaled(dlibImg.nr()*FRAME_SCALING, dlibImg.nc()*FRAME_SCALING);
+        resize_image(dlibImg, scaled);
 
         Stopwatch netPass;
         netPass.start();
-        std::vector<mmod_rect> dets = net(dlibImg);
+        std::vector<mmod_rect> dets = net(scaled);
         netPass.stop();
 
         std::cout << "Net pass time: " << netPass.formatted() << std::endl;
 
-        TLState  state = get_detected_state(dets, dlibImg);
+        TLState  state = get_detected_state(dets, scaled);
 
         std::cout << "Detected state: " << translate_TL_state(state) << std::endl;
 
@@ -510,7 +512,7 @@ public:
         image_window window;
 
         window.clear_overlay();
-        window.set_image(dlibImg);
+        window.set_image(scaled);
 
         for (mmod_rect& rect : dets)
             window.add_overlay(rect, rgb_pixel(255,255,255));
@@ -556,7 +558,7 @@ public:
             TLState state2 = get_detected_state({detections.at(1)}, image);
 
             if ((state1 == Red && state2 == Orange) || (state1 == Orange && state2 == Red))
-                return Orange;
+                return RedOrange;
         }
 
         return Ambiguous;
@@ -746,6 +748,8 @@ public:
                 TLState detectedState;
                 foundObjectCrop = crop_image(scaledImage, detection.rect);
 #if 1
+                //matrix<rgb_pixel> scaled(foundObjectCrop.nr()*(1/FRAME_SCALING), foundObjectCrop.nc()*(1/FRAME_SCALING));
+                //resize_image(foundObjectCrop, scaled);
                 stopwatch.start_new_lap(swState);
                 std::vector<mmod_rect> stateDetections = stateNet(foundObjectCrop);
                 detectedState = get_detected_state(stateDetections, foundObjectCrop);
@@ -758,15 +762,17 @@ public:
 #endif
                 detection.label = translate_TL_state(detectedState);
 
-                std::pair<bool, bool> detResult = is_correct_detection(detection, groundTruthDetections, FRAME_SCALING);
+                //std::pair<bool, bool> detResult = is_correct_detection(detection, groundTruthDetections, FRAME_SCALING);
+                Result detResult = is_correct_detection(detection, groundTruthDetections, FRAME_SCALING);
                 /// Correct detection
-                if (detResult.first)
+                if (detResult.correctLocationDetection)
                 {
                     ++truePositive;
-                    if (!detResult.second)
+                    if (!detResult.correctStateDetection)
                     {
                         ++stateError;
-                        logger.write_line("Wrong state detection! For image " + fileName + " and rectangle " + to_str(detection.rect));
+                        logger.write_line("Wrong state detection! For image " + fileName + " and rectangle " + to_str(detection.rect) +
+                        ";detected: " + detResult.detectedLabel + "; GT: " + detResult.truthLabel);
                     }
                 }
                 else

@@ -763,10 +763,23 @@ std::string to_str(const dlib::rectangle &rect)
     return str;
 }
 /*********************************************************************************************************************************************************/
-std::pair<bool, bool> is_correct_detection(const dlib::mmod_rect& detection, const std::vector<dlib::mmod_rect>& truthBoxes, const float scaling)
+bool is_same_label(const std::string& l1, const std::string& l2)
+{
+    if (l1 == l2)
+        return true;
+
+    if ((l1 == "Orange" && l2 == "RedOrange") || (l1 == "RedOrange" && l2 == "Orange"))
+        return true;
+
+    return false;
+}
+/*********************************************************************************************************************************************************/
+//std::pair<bool, bool> is_correct_detection(const dlib::mmod_rect& detection, const std::vector<dlib::mmod_rect>& truthBoxes, const float scaling)
+Result is_correct_detection(const dlib::mmod_rect& detection, const std::vector<dlib::mmod_rect>& truthBoxes, const float scaling)
 {
     bool found = false;
     dlib::mmod_rect foundGTBox;
+    float iou = 0.0f;
     for (const dlib::mmod_rect& gtBox : truthBoxes)
     {
         //Dlib way
@@ -776,19 +789,28 @@ std::pair<bool, bool> is_correct_detection(const dlib::mmod_rect& detection, con
         {
             foundGTBox = gtBox;
             found = true;
+            iou = IntersectionOverUnion;
             break;
         }
 
         //If dlib way does not work, try rect.contains(detection.tl_cornet(), when rect is rect slight more left and top then gtBox
     }
-
+    Result result;
     if (!found)
     {
-        return std::make_pair<bool, bool>(false, false); // Wrong location detection.
+        //return std::make_pair<bool, bool>(false, false); // Wrong location detection.
+        //result.detectedLabel = detection.label;
+        
     }
     else
     {
-        return std::make_pair<bool, bool>(true, detection.label == foundGTBox.label);
+        //return std::make_pair<bool, bool>(true, detection.label == foundGTBox.label);
+        result.IOU = iou;
+        result.detectedLabel = detection.label;
+        result.truthLabel = foundGTBox.label;
+        result.correctLocationDetection = true;
+        result.correctStateDetection = is_same_label(detection.label, foundGTBox.label);
     }
+    return result;
 
 };
