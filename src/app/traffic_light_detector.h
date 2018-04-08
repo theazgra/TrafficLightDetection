@@ -686,7 +686,7 @@ public:
     float get_f_one_score(const std::string& netFile, const std::string& stateNetFile, const std::string& groundTruthXml)
     {
         using namespace dlib;
-
+        cudaSetDevice(1);
         LocationNetType net;
         StateNetType stateNet;
         shape_predictor sp;
@@ -715,6 +715,7 @@ public:
 	int swWS = stopwatch.get_next_stopwatch_id();
 	int swNS = stopwatch.get_next_stopwatch_id();
         int swState = stopwatch.get_next_stopwatch_id();
+        int swTest = stopwatch.get_next_stopwatch_id();
         for (uint i = 0; i < testImages.size(); ++i)
         {
             const matrix<rgb_pixel>& image = testImages.at(i);
@@ -756,8 +757,10 @@ public:
                 stopwatch.end_lap(swState);
 #else
                 stopwatch.start_new_lap(swState);
+                stopwatch.start(swTest);
                 cv::Mat cvCrop = toMat(foundObjectCrop); 
                 detectedState = get_traffic_light_state(cvCrop);
+                stopwatch.stop(swTest);
                 stopwatch.end_lap(swState);
 #endif
                 detection.label = translate_TL_state(detectedState);
@@ -791,6 +794,7 @@ public:
         float fpsWS = (float)(1000 / averageTimeWS);
         float fpsNS = (float)(1000 / averageTimeNS);
 
+        float f_one = calculate_f_one_score(truePositive, truePositive + falsePositive, groundTruth);
         logger.write_line("*********************************************************************");
         logger.write_line("True positive: " + std::to_string(truePositive));
         logger.write_line("False positive: " + std::to_string(falsePositive));
@@ -803,9 +807,9 @@ public:
         logger.write_line("Average FPS: " + std::to_string(fpsNS));
         logger.write_line("Average FPS (with scaling): " + std::to_string(fpsWS));
         logger.write_line("Average time for state detection per traffic light [ms]: " + std::to_string(averageTimeState));
+        logger.write_line("F one score: " + std::to_string(f_one));
         logger.write_line("*********************************************************************");
 
-        float f_one = calculate_f_one_score(truePositive, truePositive + falsePositive, groundTruth);
         return f_one;
     }
 

@@ -64,7 +64,7 @@ template <
         long stride,
         typename SUBNET
 >
-using block  = BN<con<num_filters,3,3,1,1,relu<BN<con<num_filters,3,3,stride,stride,SUBNET>>>>>;
+using block  = BN<con<num_filters,5,5,1,1,relu<BN<con<num_filters,5,5,stride,stride,SUBNET>>>>>;
 
 template <
         template <long,template<typename>class,long,typename> class block,
