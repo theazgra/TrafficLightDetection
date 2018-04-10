@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['multiple_5fgpusx',['MULTIPLE_GPUSx',['../settings_8h.html#a2346aa55057393e9ea9804c9bf31884a',1,'settings.h']]]
+  ['multiple_5fgpus',['MULTIPLE_GPUS',['../settings_8h.html#a76d9da97e7160882acee8d4061da6f5c',1,'settings.h']]]
 ];

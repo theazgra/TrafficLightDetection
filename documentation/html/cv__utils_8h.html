@@ -91,6 +91,9 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structResult.html">Result</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure holding info about detection result.  <a href="structResult.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structGrayScaleTestParam.html">GrayScaleTestParam</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure used to pass parameters to thread for grayscale test.  <a href="structGrayScaleTestParam.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -184,8 +187,8 @@ Functions</h2></td></tr>
 <tr class="separator:a2065c44de61bf09370f9ad609be455b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aabfdde5fd91dd9089ead3af05f045ffa"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cv__utils_8h.html#aabfdde5fd91dd9089ead3af05f045ffa">number_of_non_ignored_rectangles</a> (const std::vector&lt; dlib::mmod_rect &gt; &amp;boxes)</td></tr>
 <tr class="separator:aabfdde5fd91dd9089ead3af05f045ffa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee144e1c88b32c83357c24e920e8eef6"><td class="memItemLeft" align="right" valign="top">std::pair&lt; bool, bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cv__utils_8h.html#aee144e1c88b32c83357c24e920e8eef6">is_correct_detection</a> (const dlib::mmod_rect &amp;detection, const std::vector&lt; dlib::mmod_rect &gt; &amp;truthBoxes)</td></tr>
-<tr class="separator:aee144e1c88b32c83357c24e920e8eef6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b45250243dbdf90dd855e1d33c995ee"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structResult.html">Result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cv__utils_8h.html#a3b45250243dbdf90dd855e1d33c995ee">is_correct_detection</a> (const dlib::mmod_rect &amp;detection, const std::vector&lt; dlib::mmod_rect &gt; &amp;truthBoxes, const float scaling)</td></tr>
+<tr class="separator:a3b45250243dbdf90dd855e1d33c995ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6e59a6d1dd9425f44dada6ad44d48e2"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cv__utils_8h.html#ac6e59a6d1dd9425f44dada6ad44d48e2">to_str</a> (const dlib::rectangle &amp;)</td></tr>
 <tr class="separator:ac6e59a6d1dd9425f44dada6ad44d48e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -798,14 +801,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aee144e1c88b32c83357c24e920e8eef6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aee144e1c88b32c83357c24e920e8eef6">&#9670;&nbsp;</a></span>is_correct_detection()</h2>
+<a id="a3b45250243dbdf90dd855e1d33c995ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b45250243dbdf90dd855e1d33c995ee">&#9670;&nbsp;</a></span>is_correct_detection()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::pair&lt;bool, bool&gt; is_correct_detection </td>
+          <td class="memname"><a class="el" href="structResult.html">Result</a> is_correct_detection </td>
           <td>(</td>
           <td class="paramtype">const dlib::mmod_rect &amp;&#160;</td>
           <td class="paramname"><em>detection</em>, </td>
@@ -814,7 +817,13 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const std::vector&lt; dlib::mmod_rect &gt; &amp;&#160;</td>
-          <td class="paramname"><em>truthBoxes</em>&#160;</td>
+          <td class="paramname"><em>truthBoxes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const float&#160;</td>
+          <td class="paramname"><em>scaling</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -827,10 +836,11 @@ Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">detection</td><td>Detected rectangle. </td></tr>
     <tr><td class="paramname">truthBoxes</td><td>Grount truth rectangles for current image. </td></tr>
+    <tr><td class="paramname">scaling</td><td>Frame scaling. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Pair of bools, (correct detection, correct state detection). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structResult.html" title="Structure holding info about detection result. ">Result</a> structure. </dd></dl>
 
 </div>
 </div>

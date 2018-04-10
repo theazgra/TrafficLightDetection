@@ -24,5 +24,6 @@ var searchData=
   ['training_5fmethod',['TRAINING_METHOD',['../settings_8h.html#a5c3b2c559c3c1d469314a598b7a108c3',1,'settings.cpp']]],
   ['transform_5frectangle_5fback',['transform_rectangle_back',['../cv__utils_8h.html#a79ee98b4b5c154dacaec12c94db0d3ab',1,'cv_utils.cpp']]],
   ['translate_5ftl_5fstate',['translate_TL_state',['../cv__utils_8h.html#afcab4b3ba105c7de803e69e3c0193e29',1,'cv_utils.cpp']]],
-  ['tree_5fdepth',['TREE_DEPTH',['../settings_8h.html#a74d62cd0f9480da7d891c2040fe17c2c',1,'settings.cpp']]]
+  ['tree_5fdepth',['TREE_DEPTH',['../settings_8h.html#a74d62cd0f9480da7d891c2040fe17c2c',1,'settings.cpp']]],
+  ['truthlabel',['truthLabel',['../structResult.html#ac1a972ff5868e068f6152a85865dc750',1,'Result']]]
 ];
