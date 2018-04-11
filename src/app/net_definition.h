@@ -49,47 +49,45 @@ using net_type = loss_mmod<con<1,9,9,1,1,rcon5_55<rcon5_55<rcon5_55<rcon5_40<dow
 /// Test CNN type. Uses affine instead of bn_con
 using test_net_type = loss_mmod<con<1,9,9,1,1,a_rcon5_55<a_rcon5_55<a_rcon5_55<a_rcon5_40<a_downsampler8x<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>>;
 
+/// Convolution of size 3
 template <long num_filters, typename SUBNET> using con3  = con<num_filters,3,3,1,1,SUBNET>;
+/// Convolution block with 55 filters.
 template <typename SUBNET> using rcon3_55  = relu<bn_con<con3<55, SUBNET>>>;
+/// Convolution block with 40 filters.
 template <typename SUBNET> using rcon3_40  = relu<bn_con<con3<40, SUBNET>>>;
+/// Convolution block with 55 filters and affine layer.
 template <typename SUBNET> using arcon3_55  = relu<affine<con3<55, SUBNET>>>;
+/// Convolution block with 40 filters and affine layer.
 template <typename SUBNET> using arcon3_40  = relu<affine<con3<40, SUBNET>>>;
+/// Net type for state detection training.
 using state_net_type = loss_mmod<con<1,9,9,1,1,rcon3_55<rcon3_40<input_rgb_image_pyramid<pyramid_down<3>>>>>>;
+/// Net type for state detection testing.
 using state_test_net_type = loss_mmod<con<1,9,9,1,1,arcon3_55<arcon3_40<input_rgb_image_pyramid<pyramid_down<3>>>>>>;
 
 //**********************************ResNet*****************************************
-template <
-        long num_filters,
-        template <typename> class BN,
-        long stride,
-        typename SUBNET
->
+/// This is basic convolutional block for ResNet.
+template <long num_filters,template <typename> class BN, long stride,typename SUBNET>
 using block  = BN<con<num_filters,5,5,1,1,relu<BN<con<num_filters,5,5,stride,stride,SUBNET>>>>>;
-
-template <
-        template <long,template<typename>class,long,typename> class block,
-        long num_filters,
-        template<typename>class BN,
-        typename SUBNET
->
+/// This is residual block using convolutional block, this implements the skip mechanism.
+template <template <long,template<typename>class,long,typename> class block, long num_filters, template<typename>class BN, typename SUBNET>
 using residual = add_prev1<block<num_filters,BN,1,tag1<SUBNET>>>;
-
-template <
-        template <long,template<typename>class,long,typename> class block,
-        long num_filters,
-        template<typename>class BN,
-        typename SUBNET
->
+/// This is same as residual but it does downsampling, it has stride of 2.
+template <template <long,template<typename>class,long,typename> class block, long num_filters, template<typename>class BN, typename SUBNET>
 using residual_down = add_prev2<avg_pool<2,2,2,2,skip1<tag2<block<num_filters,BN,2,tag1<SUBNET>>>>>>;
 
+/// Residual block connected to relu.
 template <typename SUBNET> using res       = relu<residual<block,8,bn_con,SUBNET>>;
+/// Residual block for testing purposes, bn_con is changed to affine layer.
 template <typename SUBNET> using ares      = relu<residual<block,8,affine,SUBNET>>;
+/// Residual block connected to ReLu with downsampling.
 template <typename SUBNET> using res_down  = relu<residual_down<block,8,bn_con,SUBNET>>;
+/// Residual block connected to ReLu with downsampling and affine layer.
 template <typename SUBNET> using ares_down = relu<residual_down<block,8,affine,SUBNET>>;
 
+/// ResNet type.
 using resnet_net_type = loss_mmod<con<1,9,9,1,1, res<res<res<res_down<res<res<res<res<res<res<res_down<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>>>>>>>>;
 
-
+/// Test ResNet type with affine layers.
 using resnet_test_net_type = loss_mmod<con<1,9,9,1,1, ares<ares<ares<ares_down<ares<ares<ares<ares<ares<ares<ares_down<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>>>>>>>>;
 
 #endif //NET_DEFINITION_H
