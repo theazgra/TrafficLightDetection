@@ -2,6 +2,8 @@ var searchData=
 [
   ['random_5fflip',['RANDOM_FLIP',['../settings_8h.html#a32f1a420143436b239c284ef12a6c27b',1,'settings.h']]],
   ['random_5frotation_5fangle',['RANDOM_ROTATION_ANGLE',['../settings_8h.html#a6f5b5fe4a6a4a000ce13292be0d245fc',1,'settings.cpp']]],
+  ['rcon3_5f40',['rcon3_40',['../net__definition_8h.html#ad6d9108d4a07006520dcaaa07623ba76',1,'net_definition.h']]],
+  ['rcon3_5f55',['rcon3_55',['../net__definition_8h.html#ae054e9a11398fee7d97e2653e614043a',1,'net_definition.h']]],
   ['rcon5_5f32',['rcon5_32',['../net__definition_8h.html#a2c26798e828871a1d37b70a9b631adfb',1,'net_definition.h']]],
   ['rcon5_5f40',['rcon5_40',['../net__definition_8h.html#a5fe456aefc9584779424396baa83d527',1,'net_definition.h']]],
   ['rcon5_5f50',['rcon5_50',['../net__definition_8h.html#a6bbb6a426fd3d1be3138c32a84e0b688',1,'net_definition.h']]],
@@ -10,8 +12,14 @@ var searchData=
   ['red',['Red',['../cv__utils_8h.html#aa7babf912778d68abdd784924388893dad3163c1fcda01965b692ec2c3122b743',1,'cv_utils.h']]],
   ['redorange',['RedOrange',['../cv__utils_8h.html#aa7babf912778d68abdd784924388893da881a763ef5e70e3140b911d54044dd60',1,'cv_utils.h']]],
   ['remove_5fbackground',['remove_background',['../cv__utils_8h.html#a1f4aa2eb1c1019e6a6be8febefbb3674',1,'cv_utils.cpp']]],
+  ['res',['res',['../net__definition_8h.html#a7a3240bf0857c3aec146d2ce82f85b48',1,'net_definition.h']]],
+  ['res_5fdown',['res_down',['../net__definition_8h.html#a6f6739ee1a18aee15b8eae6c93561dae',1,'net_definition.h']]],
   ['reset',['reset',['../classStopwatch.html#ad5a5c47930c52ef16eafc6c5e7f53e9f',1,'Stopwatch']]],
+  ['residual',['residual',['../net__definition_8h.html#a190f5d7272d8269700c03caf0314da71',1,'net_definition.h']]],
+  ['residual_5fdown',['residual_down',['../net__definition_8h.html#ae944ba939cf72831ae93cd2cc536e227',1,'net_definition.h']]],
+  ['resnet_5fnet_5ftype',['resnet_net_type',['../net__definition_8h.html#acc43b8d92f646d9fd3da11c64c7dce16',1,'net_definition.h']]],
   ['resnet_5fsave_5fvideo_5fframes_5fwith_5fsp2',['resnet_save_video_frames_with_sp2',['../traffic__light__test_8h.html#a3418a45cc3b2835ba11e82ce10cccb87',1,'traffic_light_test.cpp']]],
+  ['resnet_5ftest_5fnet_5ftype',['resnet_test_net_type',['../net__definition_8h.html#a0b6ba86a78d90198bceeea18f7ca69c1',1,'net_definition.h']]],
   ['result',['Result',['../structResult.html',1,'Result'],['../structGrayScaleTestParam.html#ab5fadfa09145d99dc9f255ada5ae6590',1,'GrayScaleTestParam::result()']]],
   ['resultmask',['resultMask',['../structHsvTestParam.html#a2691f162ca265a4146388222c21886f9',1,'HsvTestParam']]]
 ];

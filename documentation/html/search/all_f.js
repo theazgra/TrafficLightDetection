@@ -32,6 +32,8 @@ var searchData=
   ['state_5fdetector_5ftrainer',['state_detector_trainer',['../classstate__detector__trainer.html',1,'']]],
   ['state_5fdetector_5ftrainer_2eh',['state_detector_trainer.h',['../state__detector__trainer_8h.html',1,'']]],
   ['state_5fiteration_5fwithout_5fprogress_5fthreshold',['STATE_ITERATION_WITHOUT_PROGRESS_THRESHOLD',['../settings_8h.html#aeb416613a4ec1b5f7aed206b59c6d4d2',1,'settings.cpp']]],
+  ['state_5fnet_5ftype',['state_net_type',['../net__definition_8h.html#aee7e3e10afcc77b1d8d311587b028178',1,'net_definition.h']]],
+  ['state_5ftest_5fnet_5ftype',['state_test_net_type',['../net__definition_8h.html#ade25e2731be258b1a02f8a0760aaae2d',1,'net_definition.h']]],
   ['state_5fwindow_5fheight',['STATE_WINDOW_HEIGHT',['../settings_8h.html#addf766b33a9d70fac90593adbe3b4222',1,'settings.cpp']]],
   ['state_5fwindow_5fwidth',['STATE_WINDOW_WIDTH',['../settings_8h.html#a288dd18a326c11bf1c90f978ce30fc3a',1,'settings.cpp']]],
   ['stop',['stop',['../classStopwatch.html#a993ebd1488b758834882c03d10802800',1,'Stopwatch']]],

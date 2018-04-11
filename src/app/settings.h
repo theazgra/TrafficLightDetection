@@ -30,6 +30,7 @@ enum TestType
     OnlyErrorDisplay
 };
 
+/// Type of cuda job.
 enum CudaJobType
 {
     SaveCrops,

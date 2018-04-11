@@ -10,5 +10,9 @@ var searchData=
   ['all_5fover_5for_5fequal',['all_over_or_equal',['../cv__utils_8h.html#ac2e90d5dbd879f6298a347f5e79c4610',1,'cv_utils.cpp']]],
   ['ambiguous',['Ambiguous',['../cv__utils_8h.html#aa7babf912778d68abdd784924388893da8b6aaae09cff57a6af002d994ec5c647',1,'cv_utils.h']]],
   ['annotation',['Annotation',['../classLaraParser_1_1Annotation.html',1,'LaraParser']]],
+  ['arcon3_5f40',['arcon3_40',['../net__definition_8h.html#acd5b590cf11370122dde8374995e411d',1,'net_definition.h']]],
+  ['arcon3_5f55',['arcon3_55',['../net__definition_8h.html#ab1936cdd67238dfbca9fe52521137118',1,'net_definition.h']]],
+  ['ares',['ares',['../net__definition_8h.html#a527cc0ceb4c0132286a302f94f2fa09f',1,'net_definition.h']]],
+  ['ares_5fdown',['ares_down',['../net__definition_8h.html#a78cf48d1e14facca40615ffe3834bf1c',1,'net_definition.h']]],
   ['average_5flap_5ftime_5fin_5fmilliseconds',['average_lap_time_in_milliseconds',['../classStopwatch.html#a7d5fbaa0d2dcd5ff2ef2d5c5e3ee65a5',1,'Stopwatch']]]
 ];

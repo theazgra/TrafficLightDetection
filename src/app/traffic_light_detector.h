@@ -355,6 +355,8 @@ public:
         return detections;
     }
 /*********************************************************************************************************************************************************/
+    /// This function is not working at this moment.
+    /// \param imgFile Image file.
     void visualize_detection(std::string imgFile)
     {
         /*
@@ -712,8 +714,8 @@ public:
 
         int stateError = 0;
         Stopwatch stopwatch;
-	int swWS = stopwatch.get_next_stopwatch_id();
-	int swNS = stopwatch.get_next_stopwatch_id();
+        int swWS = stopwatch.get_next_stopwatch_id();
+        int swNS = stopwatch.get_next_stopwatch_id();
         int swState = stopwatch.get_next_stopwatch_id();
         int swTest = stopwatch.get_next_stopwatch_id();
         for (uint i = 0; i < testImages.size(); ++i)
