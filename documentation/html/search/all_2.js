@@ -6,6 +6,8 @@ var searchData=
   ['con5',['con5',['../net__definition_8h.html#a873d731c45f555d07c657b7d3062043d',1,'net_definition.h']]],
   ['con5d',['con5d',['../net__definition_8h.html#ac62fe11b22606a6c06e2d85aa8100078',1,'net_definition.h']]],
   ['convert_5fto_5fgrayscale',['convert_to_grayscale',['../cv__utils_8h.html#abc7cf4e05e3078bf865f623423e6e1a1',1,'convert_to_grayscale(dlib::matrix&lt; dlib::rgb_pixel &gt; &amp;image):&#160;cv_utils.cpp'],['../cv__utils_8h.html#a2065c44de61bf09370f9ad609be455b1',1,'convert_to_grayscale(dlib::array2d&lt; dlib::rgb_pixel &gt; &amp;image):&#160;cv_utils.cpp']]],
+  ['correctlocationdetection',['correctLocationDetection',['../structResult.html#a0e982ebf12cae0be573a387553f14f88',1,'Result']]],
+  ['correctstatedetection',['correctStateDetection',['../structResult.html#ab551a1e489bc871f5c39d3bc0528eedd',1,'Result']]],
   ['covered_5fthreshold',['COVERED_THRESHOLD',['../settings_8h.html#a806906fbde65d52c8a74712f51b66042',1,'settings.cpp']]],
   ['crop_5fheight',['CROP_HEIGHT',['../settings_8h.html#a71c2ae5dd6b77fdbef527dd7d3c22379',1,'settings.cpp']]],
   ['crop_5fimage',['crop_image',['../cv__utils_8h.html#a3af35612f09a00c3a2c27aad128187d6',1,'crop_image(const cv::Mat &amp;mat, const dlib::rectangle &amp;cropRectangle):&#160;cv_utils.cpp'],['../cv__utils_8h.html#a3da58373468fb544053c3e24e9956129',1,'crop_image(const dlib::matrix&lt; dlib::rgb_pixel &gt; &amp;original, const dlib::rectangle &amp;cropRectangle, bool exactCrop=false):&#160;cv_utils.cpp']]],

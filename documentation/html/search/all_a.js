@@ -10,5 +10,5 @@ var searchData=
   ['min_5fobject_5fsize_5fl',['MIN_OBJECT_SIZE_L',['../settings_8h.html#abf161cdcfaadba3c0e83d3a28208531a',1,'settings.cpp']]],
   ['min_5fobject_5fsize_5fs',['MIN_OBJECT_SIZE_S',['../settings_8h.html#ae4302998f2902b3659c008bd61775fbd',1,'settings.cpp']]],
   ['minimal_5flearning_5frate',['MINIMAL_LEARNING_RATE',['../settings_8h.html#a49800d59b078c9761c4b7f1dcb83362c',1,'settings.cpp']]],
-  ['multiple_5fgpusx',['MULTIPLE_GPUSx',['../settings_8h.html#a2346aa55057393e9ea9804c9bf31884a',1,'settings.h']]]
+  ['multiple_5fgpus',['MULTIPLE_GPUS',['../settings_8h.html#a76d9da97e7160882acee8d4061da6f5c',1,'settings.h']]]
 ];
